@@ -1,82 +1,81 @@
-jQuery(function($) {
-    jQuery(document).ready(function() {
-        // countdown and limit word typing to textarea
-        $('#charNum').html(0 + '/' + $('#description-member').attr("maxlength"));
-        $('#skillNumb').html(0 + '/' + $('#skill-require').attr("maxlength"));
-        $('#projectNumb').html(0 + '/' + $('#project-description').attr("maxlength"));
-        $('#description-member').keyup(function() {
-            litmitTextArea($('#description-member'), $('#charNum'));
-        })
-        $('#skill-require').keyup(function() {
-            litmitTextArea($('#skill-require'), $('#skillNumb'));
-        })
-        $('project-description').keyup(function() {
-            litmitTextArea($('#project-description'), $('#projectNumb'));
-        })
-
-        $('#btnFindMember').on('click', function(e) {
-            if ($('#user-id').val() != 0) {
-                formFindMember(e);
-            } else {
-                verifyLogged(e);
-            }
+jQuery(function ($) {
+    jQuery(document).ready(function () {
+        $('.menu-items').on('click', function () {
+            toggleMenu(this);
         });
+        $('div#home-view').on('click', function () {
+            $('#profile-contents').text('');
+            dataLink();
 
-        function verifyLogged(e) {
-            $('body').prepend('<div class="login_overlay"></div>');
-            $('form#login').fadeIn(500);
-            $('div.login_overlay, form#login a.close').on('click', function() {
-                $('div.login_overlay').remove();
-                $('form#login').hide();
-            });
-            $('#closeForm').on('click', function() {
-                $('div.login_overlay').remove();
-                $('form#login').hide();
-            });
-            e.preventDefault();
-        }
-
-        function formFindMember(e) {
-            $('body').prepend('<div class="login_overlay"></div>');
-            $('form#findMember').fadeIn(500);
-            $('div.login_overlay, form#findMember a.close').on('click', function() {
-                $('div.login_overlay').remove();
-                $('form#findMember').hide();
-            });
-            $('#closeFormFind').on('click', function() {
-                $('div.login_overlay').remove();
-                $('form#findMember').hide();
-            });
-            e.preventDefault();
-        }
-
-        function litmitTextArea(elementID, outputID) {
-            var text_max = elementID.attr("maxlength");
-            var text_length = elementID.val().length;
-            outputID.html(text_length + '/' + text_max);
-        }
-        // Perform AJAX login on form submit
-        $('form#login').on('submit', function(e) {
-            $('form#login p.status').show().text(ajax_login_object.loadingmessage);
-            $.ajax({
-                type: 'POST',
-                dataType: 'json',
-                url: zozo_js_vars.zozo_ajax_url,
-                data: {
-                    'action': 'ajaxlogin',
-                    'username': $('form#login #username').val(),
-                    'password': $('form#login #password').val(),
-                    'security': $('form#login #security').val()
-                },
-                success: function(data) {
-                    $('form#login p.status').text(data.message);
-                    if (data.loggedin == true) {
-                        document.location.href = ajax_login_object.redirecturl;
-
-                    }
-                }
-            });
-            e.preventDefault();
+        });
+        $('button#edit-profile').on('click', function () {
+            $('div#edit-btn').text('');
+            $('div#profile-contents textarea,input').prop('disabled', false);
+            changeButton();
         });
     });
+
+    function changeButton() {
+        $.ajax({
+            url: zozo_js_vars.zozo_ajax_url,
+            data: { 'action': 'change_button' },
+            type: 'post',
+            success: function (result) {
+                var html = $.parseHTML(result.btnChange);
+                $('div#edit-btn').append(html);
+                $('button#update-profile').on('click', function () {
+                    updateProfile();
+                });
+            },
+            errors: function (reulst) { }
+        });
+    }
+    function updateProfile() {
+        $.ajax({
+            url: zozo_js_vars.zozo_ajax_url,
+            data: { 'action': 'update_profile' },
+            type: 'post',
+            success: function (result) {
+                $('div.verify-input').text(result.message);
+                window.location.reload();
+            },
+            errors: function (reulst) { }
+        });
+    }
+
+    function dataLink() {
+        $.ajax({
+            url: zozo_js_vars.zozo_ajax_url,
+            data: { 'action': 'data_over_view' },
+            type: 'post',
+            success: function (result) {
+                var html = $.parseHTML(result.view);
+                $('#profile-contents').append(html);
+                $('button#edit-profile').on('click', function () {
+                    $('div#edit-btn').text('');
+                    $('div#profile-contents textarea,input').prop('disabled', false);
+                    changeButton();
+                });
+            },
+            errors: function (reulst) { }
+
+
+        });
+    }
+
+
+
+
+
+
+
+
+
+    function toggleMenu(self) {
+        $(self).toggleClass('active');
+        $(self).find('.sub-menu-items').stop().slideToggle(700);
+        $(self).siblings().find('.sub-menu-items').slideUp(700);
+        $(self).siblings().removeClass('active');
+    }
 })
+

@@ -7,129 +7,188 @@ Template: metal
 Tags: two-columns, three-columns, left-sidebar, right-sidebar, fixed-layout, responsive-layout, custom-header, custom-menu, editor-style, featured-images, flexible-header, full-width-template, post-formats, sticky-post, theme-options
 Text Domain: zozothemes
 */
-@media (min-width: 1200px){
-.container-content {
+
+@media (min-width: 1200px) {
+  .container-content {
     width: 1170px !important;
+  }
 }
+
+.container-content {
+  margin: 0 auto;
 }
-.container-content{
-    margin: 0 auto;
+
+.container-content hr {
+  margin-top: 0px;
 }
-.container-content hr{
-    margin-top: 0px;
+
+.login-form {
+  display: table;
+  margin: 0 auto;
+  margin-top: 100px;
 }
-.login-form{
-    display: table;
-    margin: 0 auto;
-    margin-top: 100px;    
-}
-.login-form button{
-    margin: 0px 50px;
+
+.login-form button {
+  margin: 0px 50px;
 }
 
 body {
-    background: #F1F3FA;
-  }
-  
-  /* Profile container */
-  .profile {
-    margin: 20px 0;
-  }
-  
-  /* Profile sidebar */
-  .profile-sidebar {
-    padding: 20px 0 10px 0;
-    background: #fff;
-  }
-  
-  .profile-userpic img {
-    display: block;
-    margin: 0 auto;
-    width: 50%;
-    -webkit-border-radius: 50% !important;
-    -moz-border-radius: 50% !important;
-    border-radius: 50% !important;
-  }
-  
-  .profile-usertitle {
-    text-align: center;
-    margin-top: 20px;
-  }
-  
-  .profile-usertitle-name {
-    color: #5a7391;
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 7px;
-  }
-  
-  .profile-usertitle-job {
-    text-transform: uppercase;
-    color: #5b9bd1;
-    font-size: 12px;
-    font-weight: 600;
-    margin-bottom: 15px;
-  }
-  
-  .profile-userbuttons {
-    text-align: center;
-    margin-top: 10px;
-  }
-  
-  .profile-userbuttons .btn {
-    text-transform: uppercase;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 6px 15px;
-    margin-right: 5px;
-  }
-  
-  .profile-userbuttons .btn:last-child {
-    margin-right: 0px;
-  }
-      
-  .profile-usermenu {
-    margin-top: 30px;
-  }
-  
-  .profile-usermenu ul li {
-    border-bottom: 1px solid #f0f4f7;
-  }
-  
-  .profile-usermenu ul li:last-child {
-    border-bottom: none;
-  }
-  
-  .profile-usermenu ul li a {
-    color: #93a3b5;
-    font-size: 14px;
-    font-weight: 400;
-  }
-  
-  .profile-usermenu ul li a i {
-    margin-right: 8px;
-    font-size: 14px;
-  }
-  
-  .profile-usermenu ul li a:hover {
-    background-color: #fafcfd;
-    color: #5b9bd1;
-  }
-  
-  .profile-usermenu ul li.active {
-    border-bottom: none;
-  }
-  
-  .profile-usermenu ul li.active a {
-    color: #5b9bd1;
-    background-color: #f6f9fb;
-    border-left: 2px solid #5b9bd1;
-    margin-left: -2px;
-  }
-  
-  /* Profile Content */
-  .profile-content {
-    padding: 20px;
-    background: #fff;
-    min-height: 460px;
-  }
+  background: #F1F3FA;
+}
+
+/* Profile container */
+
+.profile {
+  margin: 50px 0;
+}
+
+/* Profile sidebar */
+
+.profile-sidebar {
+  min-height: 470px;
+  padding: 20px 0 10px 0;
+  background: #fff;
+}
+
+.profile-userpic img {
+  display: block;
+  margin: 0 auto;
+  width: 50%;
+  -webkit-border-radius: 50% !important;
+  -moz-border-radius: 50% !important;
+  border-radius: 50% !important;
+}
+
+.profile-usertitle {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.profile-usertitle-name {
+  color: #5a7391;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+
+.profile-usertitle-job {
+  text-transform: uppercase;
+  color: #5b9bd1;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.profile-userbuttons {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.profile-userbuttons .btn {
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 15px;
+  margin-right: 5px;
+}
+
+.profile-userbuttons .btn:last-child {
+  margin-right: 0px;
+}
+
+.sub-menu-items {
+  display: none;
+  margin-left: 30px;
+}
+
+.profile-usermenu {
+  margin-top: 30px;
+}
+
+.menu-items {
+  border-bottom: 1px solid #CFCFCF;
+  padding: 5px 20px;
+}
+
+.menu-items:hover {
+  cursor: pointer;
+}
+
+.profile-usermenu .menu-items:last-child {
+  border-bottom: none;
+}
+
+.profile-usermenu .menu-items a {
+  color: #4F4F4F;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.profile-usermenu .menu-items i {
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.profile-usermenu .menu-items a:hover {
+  background-color: #fafcfd;
+  color: #5b9bd1;
+}
+
+.profile-usermenu .active {
+  border-bottom: none;
+  background-color: #f6f9fb;
+  border-left: 1px solid #5b9bd1;
+  border-top: none;
+}
+
+.profile-usermenu>.menu-items.active>a {
+  color: #5b9bd1;
+  background-color: #f6f9fb;
+  margin-left: -2px;
+}
+
+/* Profile Content */
+
+.profile-content {
+  overflow: hidden;
+  padding: 0px 20px 20px 20px;
+  background: #fff;
+  height: 650px;
+}
+
+.profile-content>div div.col-lg-6 {
+  margin-top: 30px;
+}
+
+.profile-content .form-group label {
+  width: 20%;
+}
+
+.profile-content input {
+  width: 100%;
+}
+
+div.verify-input, div#edit-btn {
+  margin-top: 20px;
+}
+
+div#edit-btn {
+  text-align: center;
+}
+
+#edit-btn button {
+  margin-right: 20px;
+}
+
+.profile-content .form-group, .description {
+  margin-right: 10px;
+}
+
+.profile-content textarea {
+  resize: none;
+}
+
+label[for="address"] {
+  vertical-align: top;
+  margin-top: 10px;
+}

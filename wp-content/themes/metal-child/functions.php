@@ -19,8 +19,6 @@ function zozo_enqueue_child_theme_styles()
     wp_enqueue_script('custom-js');
 
 }
-add_action('info', 'userInformation');
-add_action('editProfile', 'switchModeProfile');
 
 add_action('init', 'my_session', 1);
 function my_session()
@@ -41,7 +39,7 @@ function userLogIn()
         } else {
             $gender = $_SESSION['gender'];
             $user_name = $_SESSION['givenName'] . ' ' . $_SESSION['familyName'];
-            registerNewUser($email, $user_name, $gender);
+            registerNewUser($email, $user_name, $gender, $account);
         }
     }
 }
@@ -66,9 +64,7 @@ function endSession()
 {
     unset($_SESSION['access_token']);
     session_destroy();
-    $home_url = home_url();
 }
-
 
 add_action('verifyLogin', 'userLoggedIn');
 function userLoggedIn()
@@ -78,3 +74,35 @@ function userLoggedIn()
         exit;
     }
 }
+
+add_action('wp_ajax_nopriv_data_over_view', 'data_over_view');
+add_action('wp_ajax_data_over_view', 'data_over_view');
+
+function data_over_view()
+{
+    echo wp_send_json(['view' => overView()]);
+    die();
+}
+
+add_action('wp_ajax_nopriv_change_button', 'change_button');
+add_action('wp_ajax_change_button', 'change_button');
+function change_button(){
+    echo wp_send_json(['btnChange' => btnChangeEdit() ]);
+    die();
+}
+add_action('wp_ajax_nopriv_update_profile', 'update_profile');
+add_action('wp_ajax_update_profile', 'update_profile');
+function update_profile(){
+    echo wp_send_json(['message' => 'update success.' ]);
+    die();
+}
+
+
+
+function add_query_vars_filter( $vars )
+{
+$vars[] = "action";
+return $vars;
+}
+add_filter( 'query_vars', 'add_query_vars_filter' );
+

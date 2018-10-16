@@ -26,5 +26,6 @@ $_SESSION['email'] = $userData['email'];
 $_SESSION['gender'] = $userData['gender'];
 $_SESSION['familyName'] = $userData['familyName'];
 $_SESSION['givenName'] = $userData['givenName'];
-wp_redirect(home_url());
+
+wp_redirect(home_url());    
 exit;

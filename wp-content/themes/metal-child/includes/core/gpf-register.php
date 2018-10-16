@@ -1,22 +1,19 @@
 <?php 
-function registerNewUser($email, $user_name, $gender)
+function registerNewUser($email, $user_name, $gender,$account)
 {
     global $wpdb;
-    $account = getAccountName($email);
-    if(createUser($account) !== 0){
+    $user_id = createUser($account,$email);
+    if($user_id !== 0){
+        getUserInfo($user_id, $user_name, $gender,$account,$email);
         userLoggedIn($account);
-        getUserInfo(createUser($account), $user_name, $gender,$account);
-        wp_redirect(home_url('profile'));
-        exit();
     }
     
 }
-
-function createUser($account){
+function createUser($account,$email){
     $user_id = username_exists( $account);
     if ( !$user_id and email_exists($email) == false ) {
         $random_password = wp_generate_password( $length=12, $include_standard_special_chars=false );
-        $user_id = wp_create_user( $account, $random_password, $user_email );
+        $user_id = wp_create_user( $account, $random_password, $email );
     } else {
         $random_password = __('User already exists.  Password inherited.');
     }
@@ -24,7 +21,7 @@ function createUser($account){
 }
 
 
-function getUserInfo($user_id, $user_name, $gender,$account)
+function getUserInfo($user_id, $user_name, $gender,$account,$email)
 {
     global $wpdb;
     $set_user_name = $wpdb->insert(
@@ -70,6 +67,33 @@ function getUserInfo($user_id, $user_name, $gender,$account)
             "user_id" => $user_id,
             "meta_key" => "role",
             "meta_value" => $get_role
+
+        ]
+    );
+    $set_user_major = $wpdb->insert(
+        "{$wpdb->prefix}usermetaData",
+        [
+            "user_id" => $user_id,
+            "meta_key" => "major",
+            "meta_value" => ''
+
+        ]
+    );
+    $set_user_email = $wpdb->insert(
+        "{$wpdb->prefix}usermetaData",
+        [
+            "user_id" => $user_id,
+            "meta_key" => "email",
+            "meta_value" => $email
+
+        ]
+    );
+    $set_user_biography = $wpdb->insert(
+        "{$wpdb->prefix}usermetaData",
+        [
+            "user_id" => $user_id,
+            "meta_key" => "biography",
+            "meta_value" => ''
 
         ]
     );
