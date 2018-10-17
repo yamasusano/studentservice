@@ -5,6 +5,7 @@
  * @package Zozothemes
  */
 get_header();
+validate();
 ?>
 <div class="container">
 	<div id="main-wrapper" class="zozo-row row">
@@ -70,3 +71,4 @@ if (is_user_logged_in()) {?>
 	</div><!-- #main-wrapper -->
 </div><!-- .container -->
 <?php get_footer();?>
+<?php validate();?>
