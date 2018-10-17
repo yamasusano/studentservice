@@ -215,7 +215,7 @@ label[for="address"] {
   margin-top: 20px;
 }
 
-#group-contents .title-form, #group-contents .description-form, #group-contents .member-avaiable-form, #group-contents .skill-form, #group-contents .supervisor-form, #group-contents .close-date-form {
+#group-contents .title-form, #group-contents .description-form, #group-contents .member-avaiable-form, #group-contents .skill-form, #group-contents .close-date-form {
   margin-top: 20px;
   overflow: hidden;
 }
@@ -315,11 +315,59 @@ label[for="address"] {
   margin-bottom: 10px;
 }
 
-.supervisor-form {
+div.supervisor-form {
   position: relative;
   bottom: 80px;
 }
 
 #footer-widgets-container {
   display: none;
+}
+
+div.description-form div.col-lg-9 {
+  height: 81px;
+}
+
+div.finder-form {
+  height: 650px;
+}
+
+div.finder-form>div.row {
+  height: 540px;
+}
+
+div.prefix-element {
+  overflow: hidden;
+  position: relative;
+  top: -100px;
+  height: 210px;
+}
+
+div.prefix-element>div {
+  overflow: hidden;
+  width: 100%;
+  position: absolute;
+  margin-top: 20px;
+}
+
+div.prefix-element div.supervisor-form {
+  top: 40px;
+}
+
+div.prefix-element div.contact-form {
+  top: 130px;
+}
+
+div.prefix-element div.form-group {
+  margin-right: 0px;
+}
+
+div#group-message {
+  position: relative;
+  bottom: 15px;
+  height: 30px;
+}
+
+div.finder-form div.form-btn {
+  text-align: center;
 }

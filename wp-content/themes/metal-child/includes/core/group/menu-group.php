@@ -45,7 +45,7 @@ function finderForm()
                     <label for="title">title</label>
                 </div>
                 <div class="col-lg-9">
-                    <input type="text" name="title">
+                    <input type="text" id="title">
                 </div>
             </div>
             <div class="description-form">
@@ -71,7 +71,7 @@ function finderForm()
                 <div class="col-lg-9">
                     <dl class="dropdown">
                         <dt>
-                            <a>
+                            <a id="skill">
                             <span class="hida">Select skill</span>
                             <p class="multiSel"></p>
                             </a>
@@ -89,23 +89,41 @@ function finderForm()
                     </dl>
                 </div>
             </div>
-            <div class="supervisor-form">
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        <label for="title">Supervisor</label>
+            <div class="prefix-element">
+                <div class="skill-other">
+                    <div class="col-lg-3">
+                        <label for="title">other</label>
+                    </div>
+                    <div class="col-lg-9">
+                        <input type="text" id="skill-other">
                     </div>
                 </div>
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        <label for="title">Close date</label>
-                        <input type="date" name="close-date" value="' . date() . '">
+                <div class="supervisor-form">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="title">Supervisor</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="title">Close date</label>
+                            <input type="date"  id="close-date" value="' . date() . '">
+                        </div>
                     </div>
                 </div>
+                <div class="contact-form">
+                <div class="col-lg-3">
+                    <label for="title">Contact</label>
+                </div>
+            <div class="col-lg-9">
+                <input type="text" id="contact-form">
             </div>
+                </div>
+             </div>
         </div>
         <div id="group-message">
         </div>
-        <div id="edit-btn">
+        <div class="col-lg-12  form-btn">
             <button type="submit" id="post-form" class="btn btn-info">post</button>
             <a href="' . home_url('profile') . '" class="btn btn-danger">cancel</a>
         </div>

@@ -124,15 +124,16 @@ add_action('wp_ajax_nopriv_post_finder_form', 'post_finder_form');
 add_action('wp_ajax_post_finder_form', 'post_finder_form');
 function post_finder_form()
 {
+    global $wpdb;
     //crreate value
     $message = '';
     $check = false;
     $title = $_POST['title'];
-    // $description = $_POST['description'];
-    // $members = $_POST['members'];
-    // $skill = $_POST['skill'];
-    // $supervisor = $_POST['supervisor'];
-    // $close_date = $_POST['close_date'];
+    $description = $_POST['description'];
+    $members = $_POST['members'];
+    $skill = $_POST['skill'];
+    $supervisor = $_POST['supervisor'];
+    $close_date = $_POST['close_date'];
     //end create
 
     //validate form
@@ -146,7 +147,20 @@ function post_finder_form()
         $check = true;
     }
 
-    echo wp_send_json(['check' => $check, 'message' => $message]);
+    $get_finder_form = $wpdb->insert(
+        "{$wpdb->prefix}finder_form",
+        [
+        
+        ]
+    );
+
+        $user_id = get_current_user_id();
+        $group_type = info('role');
+        $form  = array('user-id'=>$user_id,'title' => $title,'description' =>$description,'group_type' =>$group_type,
+        'members' =>$members,'skill' =>$skill,'suppervisor' =>$supervisor ,'closed' =>$close_date);
+
+
+    echo wp_send_json(['check' => $check, 'message' => $form]);
     die();
 
 }
