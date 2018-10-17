@@ -3,10 +3,13 @@
  * Enqueues parent theme stylesheet
  * ========================================= */
 
-include 'includes/core/gpf-register.php';
-include 'includes/core/gpf-profile.php';
+include 'includes/core/profile/gpf-register.php';
+include 'includes/core/profile/gpf-profile.php';
+include 'includes/core/group/menu-group.php';
 include 'includes/core/entity.php';
 include 'logout.php';
+include 'validate.php';
+
 add_action('wp_enqueue_scripts', 'zozo_enqueue_child_theme_styles');
 function zozo_enqueue_child_theme_styles()
 {
@@ -86,23 +89,71 @@ function data_over_view()
 
 add_action('wp_ajax_nopriv_change_button', 'change_button');
 add_action('wp_ajax_change_button', 'change_button');
-function change_button(){
-    echo wp_send_json(['btnChange' => btnChangeEdit() ]);
+function change_button()
+{
+    echo wp_send_json(['btnChange' => btnChangeEdit()]);
     die();
 }
 add_action('wp_ajax_nopriv_update_profile', 'update_profile');
 add_action('wp_ajax_update_profile', 'update_profile');
-function update_profile(){
-    echo wp_send_json(['message' => 'update success.' ]);
+
+function update_profile()
+{
+    echo wp_send_json(['message' => 'update success.']);
     die();
 }
 
-
-
-function add_query_vars_filter( $vars )
+add_action('wp_ajax_nopriv_menu_group', 'menu_group');
+add_action('wp_ajax_menu_group', 'menu_group');
+function menu_group()
 {
-$vars[] = "action";
-return $vars;
+    echo wp_send_json(['menu' => groupMenu()]);
+    die();
 }
-add_filter( 'query_vars', 'add_query_vars_filter' );
 
+add_action('wp_ajax_nopriv_finder_form', 'finder_form');
+add_action('wp_ajax_finder_form', 'finder_form');
+function finder_form()
+{
+    echo wp_send_json(['form' => finderForm()]);
+    die();
+
+}
+
+add_action('wp_ajax_nopriv_post_finder_form', 'post_finder_form');
+add_action('wp_ajax_post_finder_form', 'post_finder_form');
+function post_finder_form()
+{
+    //crreate value
+    $message = '';
+    $check = false;
+    $title = $_POST['title'];
+    // $description = $_POST['description'];
+    // $members = $_POST['members'];
+    // $skill = $_POST['skill'];
+    // $supervisor = $_POST['supervisor'];
+    // $close_date = $_POST['close_date'];
+    //end create
+
+    //validate form
+    $title_check = titleCheck($title);
+
+    //end validate
+    if (!$title_check['result']) {
+        $message = 'Title'.$title_check['message'];
+        $check = false;
+    } else {
+        $check = true;
+    }
+
+    echo wp_send_json(['check' => $check, 'message' => $message]);
+    die();
+
+}
+
+function add_query_vars_filter($vars)
+{
+    $vars[] = "action";
+    return $vars;
+}
+add_filter('query_vars', 'add_query_vars_filter');

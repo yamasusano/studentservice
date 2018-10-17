@@ -10,7 +10,7 @@ Text Domain: zozothemes
 
 @media (min-width: 1200px) {
   .container-content {
-    width: 1170px !important;
+    width: 1400px !important;
   }
 }
 
@@ -151,9 +151,9 @@ body {
 
 .profile-content {
   overflow: hidden;
-  padding: 0px 20px 20px 20px;
-  background: #fff;
-  height: 650px;
+  padding: 15px;
+  height: auto;
+  background: #FFF;
 }
 
 .profile-content>div div.col-lg-6 {
@@ -191,4 +191,135 @@ div#edit-btn {
 label[for="address"] {
   vertical-align: top;
   margin-top: 10px;
+}
+
+.menu-lists {
+  display: flex;
+  justify-content: space-between;
+}
+
+.invite-members input {
+  width: 300px;
+}
+
+#group-contents {
+  overflow: hidden;
+  min-height: 560px;
+  background: #F5F5F5;
+  -webkit-box-shadow: 0 10px 6px -6px #777;
+  -moz-box-shadow: 0 10px 6px -6px #777;
+  box-shadow: 0 10px 6px -6px #777;
+}
+
+#group-contents .title-form {
+  margin-top: 20px;
+}
+
+#group-contents .title-form, #group-contents .description-form, #group-contents .member-avaiable-form, #group-contents .skill-form, #group-contents .supervisor-form, #group-contents .close-date-form {
+  margin-top: 20px;
+  overflow: hidden;
+}
+
+#group-contents .form-group input {
+  width: 79%;
+}
+
+.finder-form {
+  padding: 0px 70px 50px 70px;
+}
+
+#group-contents h3 {
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* 
+  select check-box css
+*/
+
+.dropdown dd, .dropdown dt {
+  margin: 0px;
+  padding: 0px;
+}
+
+.dropdown ul {
+  margin: -1px 0 0 0;
+}
+
+.dropdown dd {
+  position: relative;
+}
+
+.dropdown a, .dropdown a:visited {
+  color: #fff;
+  text-decoration: none;
+  outline: none;
+  font-size: 12px;
+}
+
+.dropdown dt a {
+  background-color: #4F6877;
+  display: block;
+  padding: 8px 20px 5px 10px;
+  min-height: 25px;
+  line-height: 24px;
+  overflow: hidden;
+  border: 0;
+  width: 100%;
+}
+
+.dropdown dt a span, .multiSel span {
+  cursor: pointer;
+  display: inline-block;
+  padding: 0 3px 2px 0;
+}
+
+.dropdown dd ul {
+  background-color: #4F6877;
+  border: 0;
+  color: #fff;
+  display: none;
+  left: 0px;
+  padding: 2px 15px 2px 5px;
+  position: absolute;
+  top: 2px;
+  width: 100%;
+  list-style: none;
+  height: 100px;
+  overflow: auto;
+  z-index: 999;
+}
+
+.dropdown span.value {
+  display: none;
+}
+
+.dropdown dd ul li a {
+  padding: 5px;
+  display: block;
+}
+
+.dropdown dd ul li a:hover {
+  background-color: #fff;
+}
+
+.skill-form dl {
+  margin-bottom: 100px;
+}
+
+.mutliSelect>ul>li input {
+  width: 20px;
+}
+
+.mutliSelect>ul>li input:last-child {
+  margin-bottom: 10px;
+}
+
+.supervisor-form {
+  position: relative;
+  bottom: 80px;
+}
+
+#footer-widgets-container {
+  display: none;
 }

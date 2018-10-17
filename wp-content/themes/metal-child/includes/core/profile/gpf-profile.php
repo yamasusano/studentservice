@@ -14,6 +14,31 @@ function defineRole()
     }
 }
 
+function current_user_major_id(){
+
+    global $wpdb;
+    $major_id = $wpdb->get_var("
+    SELECT ID
+    FROM {$wpdb->prefix}major
+    WHERE name = '" . info('major') . "'
+    ");
+    
+    return $major_id[0];
+}
+
+function major_skill(){
+    global $wpdb;
+    $skills = $wpdb->get_results("
+    SELECT CONCAT(name,' - ',subject_code) as total
+    FROM {$wpdb->prefix}skill_major
+    WHERE major_id = '".current_user_major_id()."'
+    ");
+
+    return $skills;
+
+}
+
+
 function info($meta_key)
 {
     global $wpdb;
@@ -60,15 +85,6 @@ function info($meta_key)
             return $user_info;
     }
 
-}
-
-function switchModeProfile()
-{
-    if (isset($_POST['user-id'])) {
-        $mode = 'edit';
-        $user_name = $_POST['user-id'];
-        echo $user_name . '---' . $mode;
-    }
 }
 
 function overView()

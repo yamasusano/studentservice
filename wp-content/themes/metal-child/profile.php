@@ -64,7 +64,7 @@ get_header();?>
                                                     <i class="glyphicon glyphicon-globe"></i>
                                                     <a>Notification</a>
                                                 </div>
-                                                <?php if (info('roe') == 'Student') {?>
+                                                <?php if (info('role') == 'Student') {?>
                                                 <div id="average mark" class="sub-menu-items">
                                                     <i class="glyphicon glyphicon-hand-right"></i>
                                                     <a>average mark</a>
@@ -73,6 +73,9 @@ get_header();?>
                                             </div>
                                         </div>
                                         <!-- END MENU -->
+                                        <?php
+
+?>
                                     </div>
                                 </div>
                                 <div class="col-md-9">
