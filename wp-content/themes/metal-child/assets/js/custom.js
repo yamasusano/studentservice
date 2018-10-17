@@ -87,18 +87,15 @@ jQuery(function ($) {
             type: 'post',
             success: function (result) {
                 var html = $.parseHTML(result.form);
-                var title = $('div.title-form input[name=title]').val();
-                var description = $('div.description-form textarea#description').val();
-                // var members = $('div.title-form input').val();
-                var members = '';
-                var skill = $('div.skill-form dropdown a').val();
-                // var supervisor = $('div.supervisor-form input').val();
-                var supervisor = '';
-                var close_date = $('div.supervisor-form form-group input').val();
                 $('#group-contents').html(html);
                 dropdownSelectMenu($(".dropdown dt a"), $(".dropdown dd ul li a"));
                 $('#post-form').on('click', function () {
-
+                    var title = $('#title').val();
+                    var description = $('#description').val();
+                    var members = '';
+                    var skill = $('.multiSel span').text();
+                    var supervisor = '';
+                    var close_date = $('#close-date').val();
                     postForm(title, description, members, skill, supervisor, close_date);
                 });
             },
@@ -113,7 +110,8 @@ jQuery(function ($) {
             data: { 'action': 'post_finder_form', 'title': title, 'description': description, 'members': members, 'skill': skill, 'supervisor': supervisor, 'close_date': close_date },
             type: 'post',
             success: function (result) {
-                $('div#group-message').text(result.message);
+                // $('div#group-message').text(result.message);
+                console.log(result.message);
             },
             errors: function (reulst) { }
 
