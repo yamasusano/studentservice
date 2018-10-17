@@ -193,9 +193,10 @@ label[for="address"] {
   margin-top: 10px;
 }
 
-.menu-lists {
+div.menu-lists {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 5px;
 }
 
 .invite-members input {

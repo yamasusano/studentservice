@@ -150,7 +150,12 @@ function post_finder_form()
     $get_finder_form = $wpdb->insert(
         "{$wpdb->prefix}finder_form",
         [
-        
+        'user_id'        => get_current_user_id(),
+        'title'          => $title,
+        'description'    => $description,
+        'other_skill'    => '', 
+        'expiry_date'    => $skil,
+        'status'         => 1
         ]
     );
 
