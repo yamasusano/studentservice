@@ -1,8 +1,9 @@
 <?php
-define("MAX_LENGTH_TITLE",200);
-define("MAX_LENGTH_DESCRIPTION",200);
+define("MAX_LENGTH_TITLE",3);
+define("MAX_LENGTH_DESCRIPTION",400);
 function titleCheck($title)
 {
+    $title = formatText($title);
     $is_empty = validEmptyField($title);
     $is_over_length = validCloseDate($title, constant("MAX_LENGTH_TITLE"));
     if (!$is_empty['result']) {
@@ -11,6 +12,11 @@ function titleCheck($title)
         return array('result' => false, 'message' => $is_over_length['message']);
     }
     return array('result' => true);
+}
+
+function formatText($value)
+{
+    return trim($value);
 }
 
 function descriptionCheck($description)
