@@ -23,13 +23,13 @@
 define('DB_NAME', 'capstone_project');
 
 /** MySQL database username */
-define('DB_USER', 'root');
+define('DB_USER', 'admin');
 
 /** MySQL database password */
 define('DB_PASSWORD', '');
 
 /** MySQL hostname */
-define('DB_HOST', '150.95.113.196');
+define('DB_HOST', 'localhost');
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8mb4');
