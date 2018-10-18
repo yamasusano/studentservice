@@ -81,7 +81,7 @@ function finderForm()
                                 <ul>';
     foreach ($skills as $skill) {
         $renderHTML .= ' <li>
-                                        <input type="checkbox" value="' . $skill->total . '"/>' . $skill->total . '</li>';
+                                        <input type="checkbox" value="' . $skill->name . '"/>' . $skill->name . '</li>';
     }
     $renderHTML .= '</ul>
                             </div>
@@ -98,6 +98,14 @@ function finderForm()
                         <input type="text" id="skill-other">
                     </div>
                 </div>
+                <div class="contact-form">
+                    <div class="col-lg-3">
+                        <label for="title">Contact</label>
+                    </div>
+                    <div class="col-lg-9">
+                        <input type="text" id="contact-form">
+                    </div>
+                </div>
                 <div class="supervisor-form">
                     <div class="col-lg-6">
                         <div class="form-group">
@@ -110,14 +118,6 @@ function finderForm()
                             <input type="date"  id="close-date" value="' . date() . '">
                         </div>
                     </div>
-                </div>
-                <div class="contact-form">
-                <div class="col-lg-3">
-                    <label for="title">Contact</label>
-                </div>
-            <div class="col-lg-9">
-                <input type="text" id="contact-form">
-            </div>
                 </div>
              </div>
         </div>

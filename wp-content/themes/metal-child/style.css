@@ -8,20 +8,6 @@ Tags: two-columns, three-columns, left-sidebar, right-sidebar, fixed-layout, res
 Text Domain: zozothemes
 */
 
-@media (min-width: 1200px) {
-  .container-content {
-    width: 1400px !important;
-  }
-}
-
-.container-content {
-  margin: 0 auto;
-}
-
-.container-content hr {
-  margin-top: 0px;
-}
-
 .login-form {
   display: table;
   margin: 0 auto;
@@ -225,8 +211,8 @@ div.menu-lists {
   width: 79%;
 }
 
-.finder-form {
-  padding: 0px 70px 50px 70px;
+div.finder-form {
+  padding: 0px 70px 20px 70px;
 }
 
 #group-contents h3 {
@@ -316,11 +302,6 @@ div.menu-lists {
   margin-bottom: 10px;
 }
 
-div.supervisor-form {
-  position: relative;
-  bottom: 80px;
-}
-
 #footer-widgets-container {
   display: none;
 }
@@ -352,11 +333,11 @@ div.prefix-element>div {
 }
 
 div.prefix-element div.supervisor-form {
-  top: 40px;
+  top: 120px;
 }
 
 div.prefix-element div.contact-form {
-  top: 130px;
+  top: 60px;
 }
 
 div.prefix-element div.form-group {
@@ -371,4 +352,8 @@ div#group-message {
 
 div.finder-form div.form-btn {
   text-align: center;
+}
+
+div.supervisor-form>div.col-lg-6 {
+  margin-top: 0;
 }

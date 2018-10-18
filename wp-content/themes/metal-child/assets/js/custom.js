@@ -94,9 +94,11 @@ jQuery(function ($) {
                     var description = $('#description').val();
                     var members = '';
                     var skill = $('.multiSel span').text();
+                    var otherSkill = $('#skill-other').val();
                     var supervisor = '';
                     var close_date = $('#close-date').val();
-                    postForm(title, description, members, skill, supervisor, close_date);
+                    var contact = $('#contact-form').val();
+                    postForm(title, description, members, skill, otherSkill, supervisor, close_date, contact);
                 });
             },
             errors: function (reulst) { }
@@ -104,10 +106,10 @@ jQuery(function ($) {
         });
     }
 
-    function postForm(title, description, members, skill, supervisor, close_date) {
+    function postForm(title, description, members, skill, otherSkill, supervisor, close_date, contact) {
         $.ajax({
             url: zozo_js_vars.zozo_ajax_url,
-            data: { 'action': 'post_finder_form', 'title': title, 'description': description, 'members': members, 'skill': skill, 'supervisor': supervisor, 'close_date': close_date },
+            data: { 'action': 'post_finder_form', 'title': title, 'description': description, 'members': members, 'skill': skill, 'supervisor': supervisor, 'close_date': close_date, 'contact': contact, 'other': otherSkill },
             type: 'post',
             success: function (result) {
                 // $('div#group-message').text(result.message);
