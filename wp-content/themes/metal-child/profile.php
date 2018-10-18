@@ -1,17 +1,16 @@
 <?php
 /**
- * Template Name: Profile Template
- * @package Zozothemes
+ * Template Name: Profile Template.
  */
-do_action('verifyLogin');
-get_header();?>
+require 'includes/core/is-user-login.php';
+get_header(); ?>
 <div class="container">
     <div id="main-wrapper" class="zozo-row row">
-        <div id="single-sidebar-container" class="single-sidebar-container <?php zozo_content_sidebar_classes();?>">
+        <div id="single-sidebar-container" class="single-sidebar-container <?php zozo_content_sidebar_classes(); ?>">
             <div class="zozo-row row">
-                <div id="primary" class="content-area <?php zozo_primary_content_classes();?>">
+                <div id="primary" class="content-area <?php zozo_primary_content_classes(); ?>">
                     <div id="content" class="site-content">
-                        <div class="container-content"><h3><?php echo info('role') ?> Profile</h3>
+                        <div class="container"><h3><?php echo info('role'); ?> Profile</h3>
                             <div class="row profile">
                                 <div class="col-md-3">
                                     <div class="profile-sidebar">
@@ -64,12 +63,14 @@ get_header();?>
                                                     <i class="glyphicon glyphicon-globe"></i>
                                                     <a>Notification</a>
                                                 </div>
-                                                <?php if (info('role') == 'Student') {?>
+                                                <?php if (info('role') == 'Student') {
+    ?>
                                                 <div id="average mark" class="sub-menu-items">
                                                     <i class="glyphicon glyphicon-hand-right"></i>
                                                     <a>average mark</a>
                                                 </div>
-                                                <?php }?>
+                                                <?php
+}?>
                                             </div>
                                         </div>
                                         <!-- END MENU -->
@@ -93,13 +94,13 @@ get_header();?>
                     <!-- #content -->
                 </div>
                 <!-- #primary -->
-                <?php get_sidebar();?>
+                <?php get_sidebar(); ?>
             </div>
         </div>
         <!-- #single-sidebar-container -->
-        <?php get_sidebar('second');?>
+        <?php get_sidebar('second'); ?>
     </div>
     <!-- #main-wrapper -->
 </div>
 <!-- .container -->
-<?php get_footer();?>
+<?php get_footer(); ?>

@@ -29,7 +29,7 @@ function current_user_major_id(){
 function major_skill(){
     global $wpdb;
     $skills = $wpdb->get_results("
-    SELECT CONCAT(name,' - ',subject_code) as total
+    SELECT name
     FROM {$wpdb->prefix}skill_major
     WHERE major_id = '".current_user_major_id()."'
     ");
