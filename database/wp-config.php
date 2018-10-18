@@ -26,7 +26,7 @@ define('DB_NAME', 'capstone_project');
 define('DB_USER', 'admin');
 
 /** MySQL database password */
-define('DB_PASSWORD', '');
+define('DB_PASSWORD', 'Hoalac@123');
 
 /** MySQL hostname */
 define('DB_HOST', 'localhost');
