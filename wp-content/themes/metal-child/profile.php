@@ -10,7 +10,7 @@ get_header(); ?>
             <div class="zozo-row row">
                 <div id="primary" class="content-area <?php zozo_primary_content_classes(); ?>">
                     <div id="content" class="site-content">
-                        <div class="container"><h3><?php echo info('role'); ?> Profile</h3>
+                        <div class="container"><h3><?php echo info('role'); ?> Profile</h3><b><?php echo getSemester(); ?></b>
                             <div class="row profile">
                                 <div class="col-md-3">
                                     <div class="profile-sidebar">

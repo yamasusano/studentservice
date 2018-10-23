@@ -1,4 +1,5 @@
 <?php
+
 function defineRole()
 {
     global $wpdb;
@@ -9,24 +10,25 @@ function defineRole()
         SELECT meta_value
         FROM {$wpdb->prefix}usermetaData
         WHERE meta_key = 'role'
-        AND user_id = '" . $user_id . "'
+        AND user_id = '".$user_id."'
         ");
     }
 }
 
-function current_user_major_id(){
-
+function current_user_major_id()
+{
     global $wpdb;
     $major_id = $wpdb->get_var("
     SELECT ID
     FROM {$wpdb->prefix}major
-    WHERE name = '" . info('major') . "'
+    WHERE name = '".info('major')."'
     ");
-    
+
     return $major_id[0];
 }
 
-function major_skill(){
+function major_skill()
+{
     global $wpdb;
     $skills = $wpdb->get_results("
     SELECT name
@@ -35,9 +37,7 @@ function major_skill(){
     ");
 
     return $skills;
-
 }
-
 
 function info($meta_key)
 {
@@ -46,7 +46,7 @@ function info($meta_key)
     $user_info = $wpdb->get_results("
     SELECT *
     FROM {$wpdb->prefix}usermetaData
-    WHERE user_id = '" . $user_id . "'
+    WHERE user_id = '".$user_id."'
     ");
     switch ($meta_key) {
         case 'username':
@@ -84,14 +84,13 @@ function info($meta_key)
         default:
             return $user_info;
     }
-
 }
 
 function overView()
 {
     $disabled = 'disabled';
     $renderHTML = '';
-    $renderHTML .='
+    $renderHTML .= '
     <input type="hidden" name="user-id" value="'.get_current_user_id().'">
         <div class="col-lg-12 desciption">
         <div class="row">
@@ -109,7 +108,7 @@ function overView()
                     </div>
                      <div class="col-lg-10">    
                         <div class="name">
-                            <input type="text" name="user-name" id="user-name" value="' . info('username') . '" '.$disabled.' >
+                            <input type="text" name="user-name" id="user-name" value="'.info('username').'" '.$disabled.' >
                         </div>     
                     </div>
                 </div>
@@ -121,7 +120,7 @@ function overView()
                 </div>
                  <div class="col-lg-10">    
                     <div class="gender">
-                        <input type="text" name="gender" id="gender" value="' . info('gender') . '" '.$disabled.' >
+                        <input type="text" name="gender" id="gender" value="'.info('gender').'" '.$disabled.' >
                     </div>     
                 </div>
             </div>
@@ -135,7 +134,7 @@ function overView()
                     <div class="form-group">
                         <label for="email">Email</label>
                         <div class="email">
-                        <a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=' . info('email') . '" target="_blank">' . info('email') . '</a>
+                        <a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to='.info('email').'" target="_blank">'.info('email').'</a>
                         </div>
                     </div>
                 </div>
@@ -147,7 +146,7 @@ function overView()
                 </div>
                  <div class="col-lg-10">    
                     <div class="major">
-                        <input type="text" name="major" id="major" value="' . info('major') . '" '.$disabled.' >
+                        <input type="text" name="major" id="major" value="'.info('major').'" '.$disabled.' >
                     </div>     
                 </div>
             </div>
@@ -163,7 +162,7 @@ function overView()
                     </div>
                     <div class="col-lg-10">    
                         <div class="phone">
-                            <input type="text" name="phone" id="phone" value="' . info('phone') . '" '.$disabled.' >
+                            <input type="text" name="phone" id="phone" value="'.info('phone').'" '.$disabled.' >
                         </div>     
                     </div>
                 </div>
@@ -175,7 +174,7 @@ function overView()
                     </div>
                     <div class="col-lg-10">    
                         <div class="address">
-                            <textarea name="address" id="address" rows="3" style="width: 100%;"  '.$disabled.' >' . info('address') . '</textarea>
+                            <textarea name="address" id="address" rows="3" style="width: 100%;"  '.$disabled.' >'.info('address').'</textarea>
                         </div>     
                     </div>
                 </div>
@@ -193,8 +192,8 @@ function overView()
     </div>
 
 ';
-    return $renderHTML;
 
+    return $renderHTML;
 }
 
 function btnChangeEdit()
@@ -203,10 +202,32 @@ function btnChangeEdit()
             <button type="submit" id="update-profile" name="update-profile" class="btn btn-info btn-sm">Save</button>
             <a href="'.home_url('profile').'" class="btn btn-danger btn-sm">Cancel</a>
             ';
+
     return $renderHTML;
 }
-?>
 
+function has_form_id()
+{
+    global $wpdb;
 
+    $form_id = $wpdb->get_var("
+    SELECT form_id 
+    FROM {$wpdb->prefix}members 
+    WHERE member_id = '".get_current_user_id()."' 
+    ");
 
+    return $form_id;
+}
+//HUYLV
+//Missing appear current semester
+function getSemester()
+{
+    global $wpdb;
+    $semester = $wpdb->get_var("
+    SELECT name 
+    FROM {$wpdb->prefix}semester 
+    where status = 1
+    ");
 
+    return $semester;
+}

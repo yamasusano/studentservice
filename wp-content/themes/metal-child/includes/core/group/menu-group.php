@@ -32,6 +32,7 @@ function groupMenu()
     <button name="leave-group" class="btn btn-info">Leave</button>
 </div>
 ';
+
     return $renderHTML;
 }
 function finderForm()
@@ -81,7 +82,7 @@ function finderForm()
                                 <ul>';
     foreach ($skills as $skill) {
         $renderHTML .= ' <li>
-                                        <input type="checkbox" value="' . $skill->name . '"/>' . $skill->name . '</li>';
+                                        <input type="checkbox" value="'.$skill->name.'"/>'.$skill->name.'</li>';
     }
     $renderHTML .= '</ul>
                             </div>
@@ -115,7 +116,7 @@ function finderForm()
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label for="title">Close date</label>
-                            <input type="date"  id="close-date" value="' . date() . '">
+                            <input type="date"  id="close-date" value="'.date('d/m/y').'">
                         </div>
                     </div>
                 </div>
@@ -123,12 +124,29 @@ function finderForm()
         </div>
         <div id="group-message">
         </div>
-        <div class="col-lg-12  form-btn">
-            <button type="submit" id="post-form" class="btn btn-info">post</button>
-            <a href="' . home_url('profile') . '" class="btn btn-danger">cancel</a>
-        </div>
-    </div>
-    ';
+        <div class="col-lg-12  form-btn">';
+    $renderHTML .= is_form_exist();
+    $renderHTML .= ' </div></div>';
+
+    return $renderHTML;
+}
+function is_form_exist()
+{
+    global $wpdb;
+
+    $finder_form = $wpdb->get_var("
+    SELECT COUNT(*)
+    FROM {$wpdb->prefix}finder_form
+    WHERE user_id = '".get_current_user_id()."'
+    ");
+
+    $renderHTML .= '';
+    if ($finder_form == 1) {
+        $renderHTML .= '<button id="edit-form" class="btn btn-info">Edit</button>';
+    } else {
+        $renderHTML .= '<button id="post-form" class="btn btn-info">Post</button>';
+        $renderHTML .= '<a href="'.home_url('profile').'" class="btn btn-danger">cancel</a>';
+    }
 
     return $renderHTML;
 }

@@ -6,6 +6,7 @@
 include 'includes/core/profile/gpf-register.php';
 include 'includes/core/profile/gpf-profile.php';
 include 'includes/core/group/menu-group.php';
+include 'includes/core/group/finder-form-action.php';
 include 'includes/core/group/finder-form-insert.php';
 include 'includes/core/entity.php';
 
@@ -31,7 +32,6 @@ function my_session()
     }
 }
 
-add_filter('login_redirect', 'dashboard_redirect');
 add_action('after_setup_theme', 'remove_admin_bar');
 //remove admin bar via user.
 function remove_admin_bar()
@@ -96,14 +96,6 @@ function endSession()
     session_destroy();
 }
 
-// add_action('verifyLogin', 'userLoggedIn');
-function userLoggedIn()
-{
-    if (!is_user_logged_in()) {
-        wp_redirect(home_url());
-        exit;
-    }
-}
 //get basic user information.
 add_action('wp_ajax_nopriv_data_over_view', 'data_over_view');
 add_action('wp_ajax_data_over_view', 'data_over_view');
@@ -153,7 +145,7 @@ function post_finder_form()
     global $wpdb;
     //crreate value
     $message = '';
-    $check = false;
+    $type = 0;
     $title = $_POST['title'];
     $description = $_POST['description'];
     $members = $_POST['members'];
@@ -166,31 +158,69 @@ function post_finder_form()
     $user_id = get_current_user_id();
     //end create
 
-    //validate form
-    $title_check = titleCheck($title);
+    $form_validate = validFormFinder($title, $description, $close_date);
+    if (!isset($form_validate)) {
+        $insert_finder_table = insert_finder_form($title, $description, $close_date, $other, $contact, $user_id);
+        $suppervisor_id = get_user_by('login', $supervisor)->ID;
+        if ($insert_finder_table) {
+            $form_id = finder_form_id($title);
+            $insert_member_table = insert_member_leader($form_id, $user_id);
+            $insert_group_table = insert_group($form_id, $group_type, $suppervisor_id);
+            $insert_skill_table = insert_skill($form_id, $skill);
 
-    //end validate
-    if (!$title_check['result']) {
-        $message = 'Title'.$title_check['message'];
-        $check = false;
+            $message = 'Post success';
+            $type = 1;
+        } else {
+            $message = 'Post failed';
+        }
     } else {
-        $check = true;
-    }
-    $insert_finder_table = insert_finder_form($title, $description, $close_date, $other, $contact, $user_id);
-    $suppervisor_id = get_user_by('login', $supervisor)->ID;
-    if ($insert_finder_table) {
-        $form_id = finder_form_id($title);
-        $insert_member_table = insert_member_leader($form_id, $user_id);
-        $insert_group_table = insert_group($form_id, $group_type, $suppervisor_id);
-        $insert_skill_table = insert_skill($form_id, $skill);
-
-        $message = 'Post form success';
-    } else {
-        $message = 'failed';
+        $message = $form_validate;
     }
 
-    $form_test = array('title' => $title, 'desciprtion' => $description, 'member' => $members, 'skill' => $skill, 'other' => $other, 'suppervisor' => $supervisor, 'close-date' => $close_date, 'contact' => $contact, 'group_type' => $group_type, 'user_id' => $user_id);
+    // $form_test = array('title' => $title, 'desciprtion' => $description, 'member' => $members, 'skill' => $skill, 'other' => $other, 'suppervisor' => $supervisor, 'close-date' => $close_date, 'contact' => $contact, 'group_type' => $group_type, 'user_id' => $user_id);
 
-    echo wp_send_json(['check' => $check, 'message' => $form_test]);
+    echo wp_send_json(['check' => $check, 'message' => $message, 'type' => $type]);
+    die();
+}
+add_action('join_action', 'joinFormaAction');
+function joinFormaAction()
+{
+    if (!is_user_logged_in()) {
+        echo 'error!!! login first';
+    } else {
+        if (isset($_POST['form-id'])) {
+            $form_id = $_POST['form-id'];
+            echo sendRequest($form_id);
+        }
+    }
+}
+
+add_action('wp_ajax_nopriv_magage_request', 'magage_request');
+add_action('wp_ajax_magage_request', 'magage_request');
+function magage_request()
+{
+    echo wp_send_json(['notification' => manageRequest()]);
+    die();
+}
+
+add_action('wp_ajax_nopriv_accept_request', 'accept_request');
+add_action('wp_ajax_accept_request', 'accept_request');
+function accept_request()
+{
+    if (isset($_POST['request-user'])) {
+        $user_name = $_POST['request-user'];
+        $user_id = get_userdatabylogin($user_name)->ID;
+        $action = accessRequest($user_id);
+        $message = '';
+        $result;
+        if ($action['result']) {
+            $message = $action['message'];
+            $result = $action['result'];
+        } else {
+            $message = $action['message'];
+            $result = $action['result'];
+        }
+    }
+    echo wp_send_json(['results' => $result, 'message' => $message]);
     die();
 }

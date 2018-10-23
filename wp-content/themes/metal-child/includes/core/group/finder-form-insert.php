@@ -1,4 +1,5 @@
 <?php
+
 function insert_finder_form($title, $description, $close_date, $other, $contact, $user_id)
 {
     global $wpdb;
@@ -19,7 +20,6 @@ function insert_finder_form($title, $description, $close_date, $other, $contact,
     } else {
         return false;
     }
-
 }
 function insert_member_leader($form_id, $user_id)
 {
@@ -30,6 +30,7 @@ function insert_member_leader($form_id, $user_id)
             'form_id' => $form_id,
             'member_id' => $user_id,
             'member_role' => 0,
+           'status' => 0,
         ]
     );
     if ($get_member_first) {
@@ -81,10 +82,10 @@ function finder_form_id($title)
     $form_id = $wpdb->get_var("
         SELECT ID
         FROM {$wpdb->prefix}finder_form
-        WHERE title = '" . $title . "'
+        WHERE title = '".$title."'
         ");
-    return $form_id;
 
+    return $form_id;
 }
 
 function get_skill_id($skill)
@@ -93,8 +94,28 @@ function get_skill_id($skill)
     $skill_id = $wpdb->get_var("
     SELECT ID
     FROM {$wpdb->prefix}skill_major
-    WHERE name = '" . $skill . "'
+    WHERE name = '".$skill."'
     ");
 
     return $skill_id;
+}
+
+function sendRequest($form_id)
+{
+    global $wpdb;
+    $message = '';
+    $insert_members_watting = $wpdb->insert(
+        "{$wpdb->prefix}members",
+        [
+            'form_id' => $form_id,
+            'member_id' => get_current_user_id(),
+            'member_role' => 1,
+            'status' => 1,
+        ]
+    );
+    if ($insert_members_watting) {
+        $message = 'Waitting leader acxept';
+    }
+
+    return $message;
 }

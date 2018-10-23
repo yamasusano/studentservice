@@ -354,6 +354,21 @@ div.finder-form div.form-btn {
   text-align: center;
 }
 
+div.finder-form div.form-btn button {
+  margin-right: 10px;
+}
+
 div.supervisor-form>div.col-lg-6 {
   margin-top: 0;
+}
+
+div.request-items {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid grey;
+  padding-bottom: 10px;
+}
+
+div.button-request button {
+  margin-right: 10px;
 }
