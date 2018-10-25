@@ -1,5 +1,7 @@
 <?php
 
+include 'includes/core/profile/gpf-profile.php';
+include 'includes/core/group/finder-form-action.php';
 function get_list_form()
 {
     global $wpdb;

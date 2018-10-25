@@ -177,8 +177,6 @@ function post_finder_form()
         $message = $form_validate;
     }
 
-    // $form_test = array('title' => $title, 'desciprtion' => $description, 'member' => $members, 'skill' => $skill, 'other' => $other, 'suppervisor' => $supervisor, 'close-date' => $close_date, 'contact' => $contact, 'group_type' => $group_type, 'user_id' => $user_id);
-
     echo wp_send_json(['check' => $check, 'message' => $message, 'type' => $type]);
     die();
 }
@@ -222,5 +220,13 @@ function accept_request()
         }
     }
     echo wp_send_json(['results' => $result, 'message' => $message]);
+    die();
+}
+
+add_action('wp_ajax_nopriv_members_list', 'members_list');
+add_action('wp_ajax_members_list', 'members_list');
+function members_list()
+{
+    echo wp_send_json(['members' => get_member_list()]);
     die();
 }
