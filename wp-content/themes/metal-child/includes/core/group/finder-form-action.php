@@ -184,11 +184,12 @@ function set_new_leader($member_id)
         ],
         [
             "form_id" => $form_id,
-            "member_id" => $$leader_id 
+            "member_id" => $leader_id 
         ]
     );
-    if($set_leader && $remove_leader) return true;
-    else return false;
+    $member_name_leader = get_userdata($member_id)->user_login;
+    if($set_leader && $remove_leader) return $member_name_leader.' become new leader in your group';
+    else return 'Set new leader false!';
 }
 
 function get_leader_id($form_id){
@@ -213,6 +214,7 @@ function remove_member($member_id)
     WHERE form_id = '".$form_id."' 
     AND member_id = '".$member_id."'
     ");
-    if(remove_member) return true;
-    else return false;
+    $member_name_remove = get_userdata($member_id)->user_login;
+    if($remove_member) return 'Removed '.$member_name_remove.' successful!';
+    else return 'Removed false!';
 }
