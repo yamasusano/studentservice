@@ -107,15 +107,11 @@ function closeDateCheck($close_date)
 
 function checkCloseDate($close_date, $deadline)
 {
-    $date_format = "%H:%M:%S %d/%B/%Y";
-    $date_format_result = "%d-%B-%Y";
-    $deadline_result = strftime($date_format_result, $deadline);
-    $today = strftime($date_format);
-    $close_date = strftime($date_format, $close_date);
-    $deadline = strftime($date_format, $deadline);
+    $date_format = 'Y-m-d H:i:s';
+    $today = date($date_format);
     if (strtotime($close_date) <= strtotime($deadline) &&
         strtotime($close_date) - strtotime($today) >= 48*60*60) {
         return array('result' => true);
     }
-    return array('result' => false, 'message' => ' is before '.$deadline_result.' and after 48h from when the form opens');
+    return array('result' => false, 'message' => ' is before '.$deadline.' and after 48h from when the form opens');
 }
