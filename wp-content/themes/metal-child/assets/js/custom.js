@@ -18,7 +18,6 @@ jQuery(function ($) {
             updateProfile();
         });
 
-
         $('div#notification').bind('click', function () {
             manageRequest();
         });
@@ -35,6 +34,9 @@ jQuery(function ($) {
                 $('#profile-contents').html(html);
                 $('button#finder-form').bind('click', function () {
                     FinderForm();
+                });
+                $('button#member-list').bind('click', function () {
+                    generateMember();
                 });
 
             },
@@ -96,6 +98,15 @@ jQuery(function ($) {
                 var html = $.parseHTML(result.form);
                 $('#group-contents').html(html);
                 dropdownSelectMenu($(".dropdown dt a"), $(".dropdown dd ul li a"));
+                $('input#skill-other').bind("enterKey", function (e) {
+                    $(this).val($(this).val() + ' , ');
+
+                });
+                $('input#skill-other').keyup(function (e) {
+                    if (e.keyCode == 13) {
+                        $(this).trigger("enterKey");
+                    }
+                });
                 $('#post-form').bind('click', function () {
                     var title = $('#title').val();
                     var description = $('#description').val();
@@ -147,7 +158,6 @@ jQuery(function ($) {
         });
     }
 
-
     function postForm(title, description, members, skill, otherSkill, supervisor, close_date, contact) {
         $.ajax({
             url: zozo_js_vars.zozo_ajax_url,
@@ -166,6 +176,20 @@ jQuery(function ($) {
         });
 
 
+    }
+
+    function generateMember() {
+        $.ajax({
+            url: zozo_js_vars.zozo_ajax_url,
+            data: { 'action': 'members_list' },
+            type: 'post',
+            success: function (result) {
+                var html = $.parseHTML(result.members);
+                $('#group-contents').html(html);
+            },
+            errors: function (result) { }
+
+        });
     }
 
     function dropdownSelectMenu(el1, el2) {

@@ -205,7 +205,8 @@ function btnChangeEdit()
 
     return $renderHTML;
 }
-
+//HUYLV
+//can't know who current user know belong in form.
 function has_form_id()
 {
     global $wpdb;
@@ -218,6 +219,25 @@ function has_form_id()
 
     return $form_id;
 }
+//HUYLV
+// can't check type of group is student or teacher .
+
+function check_student_form()
+{
+    global $wpdb;
+
+    $form_id = $wpdb->get_var("
+    SELECT m.form_id
+    FROM {$wpdb->prefix}members as m
+    INNER JOIN {$wpdb->prefix}groups as g
+    ON m.form_id = g.form_id
+    WHERE member_id = '".get_current_user_id()."'
+    AND g.type = 'Student'
+    ");
+
+    return $form_id;
+}
+
 //HUYLV
 //Missing appear current semester
 function getSemester()

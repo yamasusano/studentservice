@@ -24,16 +24,11 @@ function manageRequest()
     and status = 1
     ORDER BY joined_date DESC
     ");
-    $is_leader = $wpdb->get_var("
-    SELECT COUNT(*) FROM {$wpdb->prefix}members
-    where form_id = '".$form_id."'
-    and member_id = '".get_current_user_id()."'
-    and member_role = 0
-    ");
+    $is_leader = is_leader($form_id);
     $renderHtml = '';
     $renderHtml .= '<h3>Notification</h3>';
     $renderHtml .= '<div class="noti-message"></div><hr>';
-    if ($is_leader == 1) {
+    if ($is_leader) {
         foreach ($get_request as $request) {
             $user_name = get_user_by('id', $request->member_id)->user_login;
             $renderHtml .= '<div class="request-items">';
@@ -48,6 +43,22 @@ function manageRequest()
     }
 
     return $renderHtml;
+}
+
+function is_leader($form_id)
+{
+    global $wpdb;
+    $is_leader = $wpdb->get_var("
+    SELECT COUNT(*) FROM {$wpdb->prefix}members
+    where form_id = '".$form_id."'
+    and member_id = '".get_current_user_id()."'
+    and member_role = 0
+    ");
+    if ($is_leader == 1) {
+        return true;
+    }
+
+    return false;
 }
 //HUYLV
 // 23/10 leader still access user although user have already joined in other form.
@@ -93,4 +104,58 @@ function checkUserExist($user_id)
     }
 
     return true;
+}
+function get_member_list()
+{
+    global $wpdb;
+    $form_id = check_student_form();
+    $is_leader = is_leader($form_id);
+    $renderHTML = '';
+    $get_member = $wpdb->get_results("
+    SELECT member_id
+    FROM {$wpdb->prefix}members
+    WHERE form_id = '".$form_id."'
+    ");
+    $renderHTML .= '<table><tr><th>Name</th><th>role</th><th>action</th></tr>';
+    foreach ($get_member as $member_id) {
+        $member_name = get_userdata($member_id->member_id)->user_login;
+        $member_role = get_role_form($form_id, $member_id->member_id);
+        $renderHTML .= '<tr class="member-item">';
+        $renderHTML .= '<input type="hidden" name="user-id" id="user-id" value="'.$member_id->member_id.'" />';
+        $renderHTML .= '<td><a href="#">'.$member_name.'</a></td>';
+        $renderHTML .= '<td>'.$member_role.'</td>';
+        $renderHTML .= '<td class="method-action">';
+        if ($is_leader) {
+            if ($member_role != 'Leader') {
+                $renderHTML .= '<button id="change-admin">set to leader</button>';
+                $renderHTML .= '<button id="kick-out" >remove from group</button>';
+            }
+        } else {
+            $renderHTML .= '<button id="infor-view" >View</button>';
+        }
+        $renderHTML .= '</td>';
+        $renderHTML .= '</tr>';
+    }
+
+    $renderHTML .= '</table>';
+
+    return $renderHTML;
+}
+
+function get_role_form($form_id, $member_id)
+{
+    global $wpdb;
+    $member_role = $wpdb->get_var("
+    SELECT member_role 
+    FROM {$wpdb->prefix}members 
+    WHERE form_id = '".$form_id."' 
+    AND member_id = '".$member_id."'
+    ");
+    if ($member_role == 0) {
+        return 'Leader';
+    } elseif ($member_role == 1) {
+        return 'Member';
+    } elseif ($member_role == 2) {
+        return 'Supervisor';
+    }
 }

@@ -11,7 +11,7 @@ function groupMenu()
             <div class="group-menu-item">
                 <button id="finder-form" class="btn btn-info">Finder Form</button>
                 <button id="group-chat" class="btn btn-info">Chating</button>
-                <button id="member-list" class="btn btn-info">Members()</button>
+                <button id="member-list" class="btn btn-info">Members</button>
 
                 </div>
             <div class="invite-members">
