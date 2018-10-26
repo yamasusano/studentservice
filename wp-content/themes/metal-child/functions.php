@@ -142,7 +142,6 @@ add_action('wp_ajax_nopriv_post_finder_form', 'post_finder_form');
 add_action('wp_ajax_post_finder_form', 'post_finder_form');
 function post_finder_form()
 {
-    global $wpdb;
     //crreate value
     $message = '';
     $type = 0;
@@ -229,4 +228,81 @@ function members_list()
 {
     echo wp_send_json(['members' => get_member_list()]);
     die();
+}
+
+add_action('wp_ajax_nopriv_set_new_leader_in_group', 'set_new_leader_in_group');
+add_action('wp_ajax_set_new_leader_in_group', 'set_new_leader_in_group');
+function set_new_leader_in_group()
+{
+    if (isset($_POST['user'])) {
+        $user_id = $_POST['user'];
+        $message = set_new_leader($user_id);
+    }
+    echo wp_send_json(['message' => $message]);
+    die();
+}
+
+add_action('wp_ajax_nopriv_remove_member_in_group', 'remove_member_in_group');
+add_action('wp_ajax_remove_member_in_group', 'remove_member_in_group');
+function remove_member_in_group()
+{
+    if (isset($_POST['user'])) {
+        $user_id = $_POST['user'];
+        $message = remove_member($user_id);
+    }
+
+    echo wp_send_json(['message' => $message]);
+    die();
+}
+add_action('wp_ajax_nopriv_get_action_form', 'get_action_form');
+add_action('wp_ajax_get_action_form', 'get_action_form');
+
+function get_action_form()
+{
+    echo wp_send_json(['get_action' => actionEditForm()]);
+    die();
+}
+add_action('wp_ajax_nopriv_update_form_finder', 'update_form_finder');
+add_action('wp_ajax_update_form_finder', 'update_form_finder');
+function update_form_finder()
+{
+    if (isset($_POST['title'])) {
+        $title = $_POST['title'];
+        $description = $_POST['description'];
+        $other = $_POST['otherSkill'];
+        $contact = $_POST['contact'];
+        $close_date = $_POST['close'];
+        $form_validate = validFormFinder($title, $description, $close_date);
+        if (!isset($form_validate)) {
+            $message = updateFinderForm();
+        } else {
+            $message = $form_validate;
+        }
+
+        echo wp_send_json(['message' => $message]);
+        die();
+    }
+}
+function updateFinderForm()
+{
+    global $wpdb;
+    $form_id = has_form_id();
+    $update_form_finder = update(
+        "{$wpdb->prefix}finder_form",
+        [
+            'title' => $title,
+            'description' => $description,
+            'other_skill' => $other,
+            'contact' => $contact,
+            'expiry_date' => $close_date,
+        ],
+        [
+            'ID' => $form_id,
+        ]
+    );
+    if ($update_form_finder) {
+        return 'Update Finder form success!';
+    } else {
+        return 'update fail';
+    }
 }

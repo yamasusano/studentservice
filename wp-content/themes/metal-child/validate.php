@@ -30,10 +30,10 @@ function descriptionCheck($description)
 }
 function closeDateCheck($close_date)
 {
-    $deadline = getDeadLine(); //20118-12-30.
+    $deadline = getDeadLine();
     $is_validated_time = checkCloseDate($close_date, $deadline);
     if (!$is_validated_time['result']) {
-        return array('result' => false, 'message' => 'Date to close form '.$is_validated_time['message']);
+        return array('result' => false, 'message' => 'Time to close form '.$is_validated_time['message']);
     }
 
     return array('result' => true);
@@ -64,7 +64,7 @@ function checkCloseDate($close_date, $deadline)
         return array('result' => true);
     }
 
-    return array('result' => false, 'message' => ' is before '.$deadline.' and after 48h from when the form opens');
+    return array('result' => false, 'message' => ' is before '.$deadline.' and after 48h from when the form opens.');
 }
 
 function validEmptyField($value)
@@ -119,5 +119,5 @@ function getDeadLine()
     WHERE status = 1
     ");
 
-    return $dead_line;
+    return $deadline;
 }

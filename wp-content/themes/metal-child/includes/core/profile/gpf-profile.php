@@ -213,7 +213,7 @@ function has_form_id()
 
     $form_id = $wpdb->get_var("
     SELECT form_id 
-    FROM {$wpdb->prefix}members 
+    FROM {$wpdb->prefix}finder_form 
     WHERE member_id = '".get_current_user_id()."' 
     ");
 

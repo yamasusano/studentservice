@@ -118,6 +118,43 @@ jQuery(function ($) {
                     var contact = $('#contact-form').val();
                     postForm(title, description, members, skill, otherSkill, supervisor, close_date, contact);
                 });
+                $('button#edit-form-finder').bind('click', function () {
+                    optionSelectFinder();
+                });
+            },
+            errors: function (result) { }
+
+        });
+    }
+    function optionSelectFinder() {
+        $.ajax({
+            url: zozo_js_vars.zozo_ajax_url,
+            data: { 'action': 'get_action_form' },
+            type: 'post',
+            success: function (result) {
+                $('div.form-btn').html(result.get_action);
+                $('button#save-form-finder').on('click', function () {
+                    var title = $('#title').val();
+                    var description = $('#description').val();
+                    var skill = $('.multiSel span').text();
+                    var otherSkill = $('#skill-other').val();
+                    var close_date = $('#close-date').val();
+                    var contact = $('#contact-form').val();
+                    updateFinderForm(title, description, otherSkill, contact, close_date);
+                });
+            },
+            errors: function (result) { }
+
+        });
+    }
+    function updateFinderForm(title, description, otherSkill, contact, close_date) {
+
+        $.ajax({
+            url: zozo_js_vars.zozo_ajax_url,
+            data: { 'action': 'update_form_finder', 'title': title, 'description': description, 'otherSkill': otherSkill, 'contact': contact, 'close': close_date },
+            type: 'post',
+            success: function (result) {
+                $('div#group-message').html(result.message);
             },
             errors: function (result) { }
 
@@ -186,12 +223,50 @@ jQuery(function ($) {
             success: function (result) {
                 var html = $.parseHTML(result.members);
                 $('#group-contents').html(html);
+                $('button#change-admin').on('click', function () {
+                    setNewLeader($(this));
+
+                });
+                $('button#kick-out').on('click', function () {
+                    kickOutMember($(this));
+
+                });
             },
             errors: function (result) { }
 
         });
     }
+    function kickOutMember(button) {
+        var parents = button.parents().eq(1);
+        var user_id = parents.find('input#user-id').val();
+        $.ajax({
+            url: zozo_js_vars.zozo_ajax_url,
+            data: { 'action': 'remove_member_in_group', 'user': user_id },
+            type: 'post',
+            success: function (result) {
+                $('div.member-message').html(result.message);
+                window.location.reload();
+            },
+            errors: function (result) { }
 
+        });
+    }
+    function setNewLeader(button) {
+        var parents = button.parents().eq(1);
+        var user_id = parents.find('input#user-id').val();
+        $.ajax({
+            url: zozo_js_vars.zozo_ajax_url,
+            data: { 'action': 'set_new_leader_in_group', 'user': user_id },
+            type: 'post',
+            success: function (result) {
+                $('div.member-message').html(result.message);
+                window.location.reload();
+            },
+            errors: function (result) { }
+
+        });
+
+    }
     function dropdownSelectMenu(el1, el2) {
         el1.on('click', function () {
             $(".dropdown dd ul").slideToggle('fast');

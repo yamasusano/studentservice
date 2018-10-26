@@ -91,7 +91,8 @@ function get_members($form_id)
     $members_id = $wpdb->get_results("
     SELECT member_id FROM {$wpdb->prefix}members 
     WHERE form_id = '".$form_id."'
-    AND member_role = 1
+    AND member_role = 1 
+    AND status = 0
     ");
     foreach ($members_id as $member_id) {
         $renderHTML .= get_userdata($view->user_id)->user_login.'<br>';

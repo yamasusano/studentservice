@@ -369,6 +369,10 @@ div.request-items {
   padding-bottom: 10px;
 }
 
-div.button-request button {
+td.method-action button, div.button-request button {
   margin-right: 10px;
+}
+
+button#finder-form {
+  margin-right: 5px;
 }

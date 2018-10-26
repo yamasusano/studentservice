@@ -111,11 +111,8 @@ function get_member_list()
     $form_id = check_student_form();
     $is_leader = is_leader($form_id);
     $renderHTML = '';
-    $get_member = $wpdb->get_results("
-    SELECT member_id
-    FROM {$wpdb->prefix}members
-    WHERE form_id = '".$form_id."'
-    ");
+    $get_member = get_all_member($form_id);
+    $renderHTML .= '<div class="member-message"></div>';
     $renderHTML .= '<table><tr><th>Name</th><th>role</th><th>action</th></tr>';
     foreach ($get_member as $member_id) {
         $member_name = get_userdata($member_id->member_id)->user_login;
@@ -127,8 +124,8 @@ function get_member_list()
         $renderHTML .= '<td class="method-action">';
         if ($is_leader) {
             if ($member_role != 'Leader') {
-                $renderHTML .= '<button id="change-admin">set to leader</button>';
-                $renderHTML .= '<button id="kick-out" >remove from group</button>';
+                $renderHTML .= '<button id="change-admin" class="btn btn-info btn-sm" >set to leader</button>';
+                $renderHTML .= '<button id="kick-out" class="btn btn-danger btn-sm" >remove from group</button>';
             }
         } else {
             $renderHTML .= '<button id="infor-view" >View</button>';
@@ -141,16 +138,28 @@ function get_member_list()
 
     return $renderHTML;
 }
+function get_all_member($form_id)
+{
+    global $wpdb;
+    $get_member = $wpdb->get_results("
+    SELECT member_id
+    FROM {$wpdb->prefix}members
+    WHERE form_id = '".$form_id."' 
+    AND status = 0
+    ");
 
+    return $get_member;
+}
 function get_role_form($form_id, $member_id)
 {
     global $wpdb;
+
     $member_role = $wpdb->get_var("
-    SELECT member_role 
-    FROM {$wpdb->prefix}members 
-    WHERE form_id = '".$form_id."' 
-    AND member_id = '".$member_id."'
-    ");
+        SELECT member_role 
+        FROM {$wpdb->prefix}members 
+        WHERE form_id = '".$form_id."' 
+        AND member_id = '".$member_id."' 
+        ");
     if ($member_role == 0) {
         return 'Leader';
     } elseif ($member_role == 1) {
@@ -161,60 +170,88 @@ function get_role_form($form_id, $member_id)
 }
 
 //LONGTT
-//Change leader of group 
+//Change leader of group
 function set_new_leader($member_id)
 {
     global $wpdb;
     $form_id = check_student_form();
     $leader_id = get_leader_id($form_id);
-    $set_leader = $wpdb->update(
-        "{$wpdb->prefix}item_by_day",
-        [
-            "member_role" => 1
-        ],
-        [
-            "form_id" => $form_id,
-            "member_id" => $member_id
-        ]
-    );
     $remove_leader = $wpdb->update(
-        "{$wpdb->prefix}item_by_day",
+        "{$wpdb->prefix}members",
         [
-            "member_role" => 0
+            'member_role' => 1,
         ],
         [
-            "form_id" => $form_id,
-            "member_id" => $leader_id 
+            'form_id' => $form_id,
+            'member_id' => $leader_id,
         ]
     );
+    $set_leader = $wpdb->update(
+            "{$wpdb->prefix}members",
+            [
+                'member_role' => 0,
+            ],
+            [
+                'form_id' => $form_id,
+                'member_id' => $member_id,
+            ]
+        );
     $member_name_leader = get_userdata($member_id)->user_login;
-    if($set_leader && $remove_leader) return $member_name_leader.' become new leader in your group';
-    else return 'Set new leader false!';
+    if ($set_leader && $remove_leader) {
+        return $member_name_leader.' become new leader in your group';
+    } else {
+        return 'Set new leader false!';
+    }
 }
 
-function get_leader_id($form_id){
+function get_leader_id($form_id)
+{
     global $wpdb;
     $leader_id = $wpdb->get_var("
-    SELECT member_id 
-    FROM {$wpdb->prefix}members 
-    WHERE form_id = '".$form_id."' 
-    AND member_role = 1
+    SELECT member_id
+    FROM {$wpdb->prefix}members
+    WHERE form_id = '".$form_id."'
+    AND member_role = 0
     ");
+
     return $leader_id;
 }
 
 //LONGTT
-//Remove member in group
+// Remove member in group
 function remove_member($member_id)
 {
     global $wpdb;
     $form_id = check_student_form();
     $remove_member = $wpdb->query("
-    DELETE FROM {$wpdb->prefix}members 
-    WHERE form_id = '".$form_id."' 
+    DELETE FROM {$wpdb->prefix}members
+    WHERE form_id = '".$form_id."'
     AND member_id = '".$member_id."'
     ");
     $member_name_remove = get_userdata($member_id)->user_login;
-    if($remove_member) return 'Removed '.$member_name_remove.' successful!';
-    else return 'Removed false!';
+    if ($remove_member) {
+        return 'Removed '.$member_name_remove.' successful!';
+    } else {
+        return 'Removed false!';
+    }
+}
+
+//valid limit member in finder form
+function is_max_member($form_id)
+{
+    global $wpdb;
+
+    $count_mem = $wpdb->get_var("
+    SELECT COUNT(*) 
+    FROM {$wpdb->prefix}members 
+    WHERE form_id = '".$form_id."' 
+    AND member_role = 1 
+    AND status = 0
+    ");
+
+    if ($count_mem >= 5) {
+        return false;
+    }
+
+    return true;
 }
