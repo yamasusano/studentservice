@@ -36,8 +36,8 @@ function get_list_form()
         $renderHTML .= '<input type="hidden" id="form-id" name="form-id" value="'.$view->ID.'" />';
         $renderHTML .= '<input type="hidden" id="user-id" name="user-id" value="'.$view->user_id.'" />';
         $renderHTML .= '<tr>';
-        $renderHTML .= '<td class="col-lg-1"><p>'.get_userdata($view->user_id)->user_login.'</p></td>';
-        $renderHTML .= '<td class="col-lg-4"><b>'.$view->title.'</b><div class="col-lg-12">'.$view->description.'</div></td>';
+        $renderHTML .= '<td class="col-lg-1"><p><a href="'.home_url('user').'?user-id='.$view->user_id.'"> '.get_userdata($view->user_id)->user_login.'</a></p></td>';
+        $renderHTML .= '<td class="col-lg-4"><a href="'.home_url('form-detail').'?form-id='.$view->ID.'" >'.$view->title.'</a><div class="col-lg-12">'.$view->description.'</div></td>';
         $renderHTML .= '<td class="col-lg-1"><p>'.get_members($view->ID).'</p></td>';
         $renderHTML .= '<td class="col-lg-2">'.get_list_skill($view->ID, $view->other_skill).'</td>';
         $renderHTML .= '<td class="col-lg-2"><p>'.$view->contact.'</p></td>';
@@ -94,8 +94,8 @@ function get_members($form_id)
     AND member_role = 1 
     AND status = 0
     ");
-    foreach ($members_id as $member_id) {
-        $renderHTML .= get_userdata($view->user_id)->user_login.'<br>';
+    foreach ($members_id as $members) {
+        $renderHTML .= '<a href="'.home_url('user').'?user-id='.$members->member_id.'" >'.get_userdata($members->member_id)->user_login.'</a><br>';
     }
 
     return $renderHTML;

@@ -131,11 +131,11 @@ function overView()
         <div class="row">
             <div class="col-lg-6">
                 <div class="row">
-                    <div class="form-group">
+                    <div class="col-lg-2" style="padding:0">
                         <label for="email">Email</label>
-                        <div class="email">
+                    </div>
+                    <div class="col-lg-10 email">
                         <a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to='.info('email').'" target="_blank">'.info('email').'</a>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -198,10 +198,29 @@ function overView()
 
 function btnChangeEdit()
 {
-    $renderHTML .= '
-            <button type="submit" id="update-profile" name="update-profile" class="btn btn-info btn-sm">Save</button>
+    $renderHTML .= '<button type="submit" id="update-profile" name="update-profile" class="btn btn-info btn-sm">Save</button>
             <a href="'.home_url('profile').'" class="btn btn-danger btn-sm">Cancel</a>
             ';
+
+    return $renderHTML;
+}
+function selectGender()
+{
+    $gender = info('gender');
+    $renderHTML .= '<select name="gender" id="gender">';
+    if (!empty($gender)) {
+        $renderHTML .= '<option value="'.$gender.'" selected="selected" >'.$gender.'</option>';
+        if ($gender == 'male') {
+            $renderHTML .= '<option value="female">Female</option>';
+        } else {
+            $renderHTML .= '<option value="male">Male</option>';
+        }
+    } else {
+        $renderHTML .=
+        '<option value="Male">Male</option>
+        <option value="Female">Female</option>';
+    }
+    $renderHTML .= '</select>';
 
     return $renderHTML;
 }
@@ -250,4 +269,31 @@ function getSemester()
     ");
 
     return $semester;
+}
+
+function updateUserProfile($username, $gender, $address, $phone, $biography)
+{
+    updateFieldProfile('username', $username);
+    updateFieldProfile('gender', $gender);
+    updateFieldProfile('address', $address);
+    updateFieldProfile('phone', $phone);
+    updateFieldProfile('biography', $biography);
+
+    return 'update information success!!';
+}
+
+function updateFieldProfile($key, $value)
+{
+    global $wpdb;
+    $user_id = get_current_user_id();
+    $update = $wpdb->update(
+    "{$wpdb->prefix}usermetaData",
+    [
+        'meta_value' => $value,
+    ],
+    [
+        'meta_key' => $key,
+        'user_id' => $user_id,
+    ]
+);
 }

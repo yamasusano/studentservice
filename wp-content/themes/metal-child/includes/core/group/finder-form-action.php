@@ -255,3 +255,32 @@ function is_max_member($form_id)
 
     return true;
 }
+
+function closeForm()
+{
+    global $wpdb;
+    $form_id = check_student_form();
+    $close = $wpdb->update(
+    "{$wpdb->prefix}finder_form",
+    [
+        'status' => 0,
+    ],
+    [
+        'ID' => $form_id,
+    ]
+);
+}
+function reopenFinderForm()
+{
+    global $wpdb;
+    $form_id = check_student_form();
+    $close = $wpdb->update(
+    "{$wpdb->prefix}finder_form",
+    [
+        'status' => 1,
+    ],
+    [
+        'ID' => $form_id,
+    ]
+);
+}

@@ -74,9 +74,6 @@ get_header(); ?>
                                             </div>
                                         </div>
                                         <!-- END MENU -->
-                                        <?php
-
-?>
                                     </div>
                                 </div>
                                 <div class="col-md-9">

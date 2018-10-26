@@ -38,7 +38,6 @@ jQuery(function ($) {
                 $('button#member-list').bind('click', function () {
                     generateMember();
                 });
-
             },
             errors: function (result) { }
 
@@ -52,15 +51,23 @@ jQuery(function ($) {
             success: function (result) {
                 var html = $.parseHTML(result.btnChange);
                 $('div#edit-btn').html(html);
-
+                $('div.gender').html(result.gender);
+                $('button#update-profile').on('click', function () {
+                    var gender = $('select#gender').val();
+                    var name = $('input#user-name').val();
+                    var biograph = $('textarea#user-description').val();
+                    var phone = $('input#phone').val();
+                    var address = $('textarea#address').val();
+                    updateProfile(name, gender, biograph, phone, address);
+                });
             },
             errors: function (result) { }
         });
     }
-    function updateProfile() {
+    function updateProfile(name, gender, biograph, phone, address) {
         $.ajax({
             url: zozo_js_vars.zozo_ajax_url,
-            data: { 'action': 'update_profile' },
+            data: { 'action': 'update_profile', 'name': name, 'gender': gender, 'bio': biograph, 'phone': phone, 'address': address },
             type: 'post',
             success: function (result) {
                 $('div.verify-input').text(result.message);
@@ -121,11 +128,44 @@ jQuery(function ($) {
                 $('button#edit-form-finder').bind('click', function () {
                     optionSelectFinder();
                 });
+                $('button#close-form-finder').bind('click', function () {
+                    closeFormFinder();
+                });
+                $('button#reopen-form-finder').bind('click', function () {
+                    reopenFormFinder();
+                });
             },
             errors: function (result) { }
 
         });
     }
+    function reopenFormFinder() {
+        $.ajax({
+            url: zozo_js_vars.zozo_ajax_url,
+            data: { 'action': 'reopen_form_finder' },
+            type: 'post',
+            success: function (result) {
+                $('div#group-message').html(result.message);
+                window.location.reload();
+            },
+            errors: function (result) { }
+
+        });
+    }
+    function closeFormFinder() {
+        $.ajax({
+            url: zozo_js_vars.zozo_ajax_url,
+            data: { 'action': 'close_form_finder' },
+            type: 'post',
+            success: function (result) {
+                $('div#group-message').html(result.message);
+                window.location.reload();
+            },
+            errors: function (result) { }
+
+        });
+    }
+
     function optionSelectFinder() {
         $.ajax({
             url: zozo_js_vars.zozo_ajax_url,

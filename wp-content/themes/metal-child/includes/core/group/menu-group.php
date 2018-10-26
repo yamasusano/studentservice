@@ -136,9 +136,20 @@ function is_form_exist()
     global $wpdb;
 
     $finder_form = check_student_form();
+
     $renderHTML .= '';
     if ($finder_form) {
-        $renderHTML .= '<button id="edit-form-finder" class="btn btn-info">Edit</button>';
+        $check_status = $wpdb->get_var("
+        SELECT status 
+        FROM {$wpdb->prefix}finder_form 
+        WHERE ID = '".$finder_form."'
+        ");
+        if ($check_status == 1) {
+            $renderHTML .= '<button id="edit-form-finder" class="btn btn-info">Edit</button>';
+            $renderHTML .= '<button id="close-form-finder" class="btn btn-danger">Close</button>';
+        } else {
+            $renderHTML .= '<button id="reopen-form-finder" class="btn btn-info">Re-Open</button>';
+        }
     } else {
         $renderHTML .= '<button id="post-form" class="btn btn-info">Post</button>';
         $renderHTML .= '<a href="'.home_url('profile').'" class="btn btn-danger">cancel</a>';

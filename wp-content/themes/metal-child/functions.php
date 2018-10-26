@@ -110,7 +110,7 @@ add_action('wp_ajax_nopriv_change_button', 'change_button');
 add_action('wp_ajax_change_button', 'change_button');
 function change_button()
 {
-    echo wp_send_json(['btnChange' => btnChangeEdit()]);
+    echo wp_send_json(['btnChange' => btnChangeEdit(), 'gender' => selectGender()]);
     die();
 }
 add_action('wp_ajax_nopriv_update_profile', 'update_profile');
@@ -118,7 +118,15 @@ add_action('wp_ajax_update_profile', 'update_profile');
 //update -edit information,update infor in database.
 function update_profile()
 {
-    echo wp_send_json(['message' => 'update success.']);
+    if (isset($_POST['name'])) {
+        $name = $_POST['name'];
+        $gender = $_POST['gender'];
+        $biography = $_POST['bio'];
+        $phone = $_POST['phone'];
+        $address = $_POST['address'];
+        $message = updateUserProfile($name, $gender, $address, $phone, $biography);
+    }
+    echo wp_send_json(['message' => $message]);
     die();
 }
 //get menu list in user profile
@@ -177,6 +185,25 @@ function post_finder_form()
     }
 
     echo wp_send_json(['check' => $check, 'message' => $message, 'type' => $type]);
+    die();
+}
+
+add_action('wp_ajax_nopriv_close_form_finder', 'close_form_finder');
+add_action('wp_ajax_close_form_finder', 'close_form_finder');
+function close_form_finder()
+{
+    closeForm();
+    $message = 'Form closed ';
+    echo wp_send_json(['message' => $message]);
+    die();
+}
+add_action('wp_ajax_nopriv_reopen_form_finder', 'reopen_form_finder');
+add_action('wp_ajax_reopen_form_finder', 'reopen_form_finder');
+function reopen_form_finder()
+{
+    reopenFinderForm();
+    $message = 'Form re-open. ';
+    echo wp_send_json(['message' => $message]);
     die();
 }
 add_action('join_action', 'joinFormaAction');
