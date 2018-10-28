@@ -224,6 +224,35 @@ function selectGender()
 
     return $renderHTML;
 }
+function selectMajor()
+{
+    global $wpdb;
+    $majors = $wpdb->get_results("
+    SELECT * 
+    FROM {$wpdb->prefix}major
+    "
+    );
+    $is_major = info('major');
+    $renderHTML = '';
+    $renderHTML .= '<select name="major" id="major" required>';
+    if (!empty($is_major)) {
+        $renderHTML .= '<option value="'.$is_major.'" selected="selected" >'.$is_major.'</option>';
+        foreach ($majors as $major) {
+            if ($major->name != $is_major) {
+                $renderHTML .= '<option value="'.$major->name.'">'.$major->name.'</option>';
+            }
+        }
+    } else {
+        $renderHTML .= '<option value="" disabled selected>Select a major</option>';
+        foreach ($majors as $major) {
+            $renderHTML .= '<option value="'.$major->name.'">'.$major->name.'</option>';
+        }
+    }
+    $renderHTML .= '</select>';
+
+    return $renderHTML;
+}
+
 //HUYLV
 //can't know who current user know belong in form.
 function has_form_id()
@@ -232,7 +261,7 @@ function has_form_id()
 
     $form_id = $wpdb->get_var("
     SELECT form_id 
-    FROM {$wpdb->prefix}finder_form 
+    FROM {$wpdb->prefix}members 
     WHERE member_id = '".get_current_user_id()."' 
     ");
 
@@ -271,10 +300,11 @@ function getSemester()
     return $semester;
 }
 
-function updateUserProfile($username, $gender, $address, $phone, $biography)
+function updateUserProfile($username, $gender, $address, $phone, $biography, $major)
 {
     updateFieldProfile('username', $username);
     updateFieldProfile('gender', $gender);
+    updateFieldProfile('major', $major);
     updateFieldProfile('address', $address);
     updateFieldProfile('phone', $phone);
     updateFieldProfile('biography', $biography);

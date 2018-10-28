@@ -19,10 +19,10 @@ function manageRequest()
     global $wpdb;
     $form_id = has_form_id();
     $get_request = $wpdb->get_results("
-    SELECT * FROM {$wpdb->prefix}members
-    where form_id = '".$form_id."'
-    and status = 1
-    ORDER BY joined_date DESC
+    SELECT * 
+    FROM {$wpdb->prefix}request 
+    where form_id = '".$form_id."' 
+    ORDER BY time_request DESC
     ");
     $is_leader = is_leader($form_id);
     $renderHtml = '';
@@ -69,41 +69,73 @@ function accessRequest($user_id)
     $message = '';
     $form_id = has_form_id();
     $user_name = get_userdata($user_id)->user_login;
-    if (!checkUserExist($user_id)) {
-        return array('result' => false, 'message' => $user_name.' have joined in other form.Can\'t access this member to group.');
-    } else {
-        $approve_member = $wpdb->update(
-            "{$wpdb->prefix}members",
-            [
-                'status' => 0,
-            ],
-            [
-                'form_id' => $form_id,
-                'member_id' => $user_id,
-            ]
-        );
-        if ($approve_member) {
-            return array('result' => true, 'message' => 'Graduation !!! you have a new member.');
+    $remove_request = removeRequest($form_id, $user_id);
+    $form_exist = isFormExist($user_id);
+    if ($remove_request) {
+        if ($form_exist) {
+            return array('result' => false, 'message' => $user_name.' have already team.Reject request!!');
         } else {
-            return array('result' => false, 'message' => 'insert failed.');
+            $approve_member = $wpdb->insert(
+                    "{$wpdb->prefix}members",
+                    [
+                        'form_id' => $form_id,
+                        'member_id' => $user_id,
+                        'member_role' => 1,
+                    ]
+                );
+            if ($approve_member) {
+                return array('result' => true, 'message' => 'Graduation !!! you have a new member.');
+            } else {
+                return array('result' => false, 'message' => 'insert failed.');
+            }
         }
     }
 }
 
-function checkUserExist($user_id)
+function rejectRequest($user_id)
+{
+    $form_id = has_form_id();
+    removeRequest($form_id, $user_id);
+    if (removeRequest($form_id, $user_id)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function isFormExist($user_id)
+{
+    global $wpdb;
+    $form_id = $wpdb->get_var("
+    SELECT m.form_id
+    FROM {$wpdb->prefix}members as m
+    INNER JOIN {$wpdb->prefix}groups as g
+    ON m.form_id = g.form_id
+    WHERE member_id = '".$user_id."'
+    AND g.type = 'Student'
+    ");
+
+    if ($form_id) {
+        return true;
+    }
+
+    return false;
+}
+
+function removeRequest($form_id, $user_id)
 {
     global $wpdb;
 
-    $record = $wpdb->get_var("
-    SELECT COUNT(*) 
-    FROM {$wpdb->prefix}finder_form 
-    WHERE user_id = '".$user_id."'
+    $remove_request = $wpdb->query("
+    DELETE FROM {$wpdb->prefix}request 
+    WHERE form_id = '".$form_id."' 
+    AND member_id = '".$user_id."'
     ");
-    if ($record == 1) {
-        return false;
+    if ($remove_request) {
+        return true;
     }
 
-    return true;
+    return false;
 }
 function get_member_list()
 {
@@ -145,7 +177,6 @@ function get_all_member($form_id)
     SELECT member_id
     FROM {$wpdb->prefix}members
     WHERE form_id = '".$form_id."' 
-    AND status = 0
     ");
 
     return $get_member;
@@ -246,7 +277,6 @@ function is_max_member($form_id)
     FROM {$wpdb->prefix}members 
     WHERE form_id = '".$form_id."' 
     AND member_role = 1 
-    AND status = 0
     ");
 
     if ($count_mem >= 5) {
@@ -283,4 +313,28 @@ function reopenFinderForm()
         'ID' => $form_id,
     ]
 );
+}
+
+function updateFinderForm()
+{
+    global $wpdb;
+    $form_id = has_form_id();
+    $update_form_finder = update(
+        "{$wpdb->prefix}finder_form",
+        [
+            'title' => $title,
+            'description' => $description,
+            'other_skill' => $other,
+            'contact' => $contact,
+            'expiry_date' => $close_date,
+        ],
+        [
+            'ID' => $form_id,
+        ]
+    );
+    if ($update_form_finder) {
+        return 'Update Finder form success!';
+    } else {
+        return 'update fail';
+    }
 }

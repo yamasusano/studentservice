@@ -36,6 +36,37 @@ body {
   background: #fff;
 }
 
+.user-profile div {
+  margin: 0 auto;
+}
+
+.user-profile .profile-userpic {
+  width: 300px;
+  height: auto;
+}
+
+.user-profile .user-name, .user-profile .user-major {
+  text-align: center;
+}
+
+.table-info {
+  width: 70%;
+  margin: 0 auto;
+}
+
+.table-info tr>th {
+  width: 30%;
+}
+
+.table-info tr>td {
+  text-align: left;
+}
+
+.user-profile .user-name {
+  font-size: 20px;
+  font-weight: 600;
+}
+
 .profile-userpic img {
   display: block;
   margin: 0 auto;
@@ -375,4 +406,57 @@ td.method-action button, div.button-request button {
 
 button#finder-form {
   margin-right: 5px;
+}
+
+.form-detail h3 {
+  text-align: center;
+}
+
+.form-detail table {
+  margin: 0 auto;
+  width: 60%;
+}
+
+div.group-menu-item {
+  width: 50%;
+}
+
+div.group-menu-item input {
+  margin-top: 5px;
+}
+
+div.group-menu-item .add-title input {
+  width: 75%;
+  margin-right: 15px;
+}
+
+div.group-menu-item .add-title button#create-title {
+  margin-right: 5px;
+}
+
+.jconfirm.jconfirm-my-theme {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-top: -9em;
+  background-color: #CDAF95;
+  border-radius: 5px;
+}
+
+.jconfirm.jconfirm-my-theme .jconfirm-box-container {
+  width: 100%;
+  margin-left: 0;
+}
+
+.jconfirm.jconfirm-my-theme .jconfirm-buttons {
+  text-align: center;
+  padding: 20px 20px;
+}
+
+.jconfirm.jconfirm-my-theme .jconfirm-buttons button:first-child {
+  margin-right: 10px;
+}
+
+.jconfirm.jconfirm-my-theme .jconfirm-box:focus {
+  outline: none;
 }

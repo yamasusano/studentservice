@@ -1,17 +1,36 @@
 <?php
 
 include 'includes/core/profile/gpf-profile.php';
+function teacherGroupMenu()
+{
+    $renderHTML = '';
+    $renderHTML .= '<div class="col-lg-12"><div class="row"><div class="menu-lists">';
+    $renderHTML .= '<div class="group-menu-item"><button id="create-new-group" class="btn btn-info">Create</button></div>';
+    $renderHTML .= '<div class="invite-members">
+                <input type="text" name="user-name" placeholder="search student here...">
+                <button class="btn btn-info" name="search-user">Search</button>
+                </div></div>';
+    $renderHTML .= '<div id="group-contents"></div></div></div>';
+
+    return $renderHTML;
+}
+
 function groupMenu()
 {
     $renderHTML = '';
+    $form = has_form_id();
     $is_leader = is_leader(check_student_form());
     $renderHTML .= '
 <div class="col-lg-12">
     <div class="row">
         <div class="menu-lists">
             <div class="group-menu-item">';
-    if ($is_leader) {
+    if (!$form) {
         $renderHTML .= '<button id="finder-form" class="btn btn-info">Finder Form</button>';
+    } else {
+        if ($is_leader) {
+            $renderHTML .= '<button id="finder-form" class="btn btn-info">Finder Form</button>';
+        }
     }
     $renderHTML .= '<button id="group-chat" class="btn btn-info">Chating</button>
                 <button id="member-list" class="btn btn-info">Members</button>
@@ -21,7 +40,6 @@ function groupMenu()
                 <input type="text" name="user-name" placeholder="search student,suppervisor here...">
                 <button class="btn btn-info" name="search-user">Search</button>
             </div>
-
          </div>
 	</div>
 </div>
@@ -31,10 +49,8 @@ function groupMenu()
         </div>
     </div>
 </div>
-<div class="col-lg-12" style="text-align:right;margin-top:20px;">
-    <button name="leave-group" class="btn btn-info">Leave</button>
-</div>
 ';
+    $renderHTML .= leaveGroup();
 
     return $renderHTML;
 }
@@ -196,8 +212,91 @@ function get_members_to_form($form_id)
     FROM {$wpdb->prefix}members
     WHERE form_id = '".$form_id."' 
     AND member_role = 1
-    AND status = 0
     ");
 
     return $get_member;
+}
+function leaveGroup()
+{
+    global $wpdb;
+
+    $renderHTML = '';
+    $user_id = get_current_user_id();
+    if (isFormExist($user_id)) {
+        $renderHTML .= '<div class="col-lg-12" style="text-align:right;margin-top:20px;">
+        <button name="leave-group" id="leave-group" class="btn btn-info">Leave</button>
+    </div>';
+    }
+
+    return $renderHTML;
+}
+// check có phải là leader k
+//
+function actionLeaveGroup()
+{
+    $form_id = check_student_form();
+    $is_leader = is_leader($form_id);
+
+    if ($is_leader) {
+        if (has_member_in_group($form_id)) {
+            return array('result' => false, 'message' => 'Before leave group, you must asign leader for other members in group.');
+        } else {
+            return array('result' => true, 'message' => 'Do you want to do this ? Data group will be deleted');
+        }
+    } else {
+        return array('result' => true, 'message' => 'Do you want to leave group ?');
+    }
+}
+
+function studentLeaveGroup($form_id, $user_id)
+{
+    global $wpdb;
+    $delete_request = $wpdb->query("
+        DELETE * 
+        FROM {$wpdb->prefix}request 
+        WHERE form_id = '".$form_id."' 
+        AND member_id = '".$user_id."'
+        ");
+    $delete_members = $wpdb->query("
+        DELETE * 
+        FROM {$wpdb->prefix}members 
+        WHERE form_id = '".$form_id."'
+        AND member_id = '".$user_id."'
+        ");
+    $delete_groups = $wpdb->query("
+        DELETE * 
+        FROM {$wpdb->prefix}groups 
+        WHERE form_id = '".$form_id."' 
+        AND member_id = '".$user_id."'
+        ");
+    $delete_skill = $wpdb->query("
+        DELETE * 
+        FROM {$wpdb->prefix}form_skill 
+        WHERE form_id = '".$form_id."' 
+        AND member_id = '".$user_id."'
+        ");
+    if ($delete_request && $delete_groups && $delete_members && $delete_skill) {
+        $delete_form = $wpdb->query("
+            DELETE * 
+            FROM {$wpdb->prefix}form_skill 
+            WHERE form_id = '".$form_id."' 
+            AND member_id = '".$user_id."'
+            ");
+    }
+}
+
+function has_member_in_group($form_id)
+{
+    global $wpdb;
+    $count = $wpdb->get_var("
+    SELECT COUNT(*) 
+    FROM {$wpdb->prefix}members 
+    WHERE form_id = '".$form_id."' 
+    AND member_role = 1
+    ");
+    if ($count >= 1) {
+        return true;
+    }
+
+    return false;
 }

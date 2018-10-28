@@ -23,6 +23,9 @@ get_header();
                                         if (isset($_POST['btn-join'])) {
                                             do_action('join_action');
                                         }
+                                        if (isset($_POST['reject-action-join'])) {
+                                            do_action('reject_request');
+                                        }
                                         echo get_list_form();
                                         ?>
 									</div>

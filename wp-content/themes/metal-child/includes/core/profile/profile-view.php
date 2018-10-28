@@ -45,101 +45,51 @@ function userInfo($meta_key, $user_id)
             return $user_info;
     }
 }
-
 function viewDetail($user_id)
 {
     $disabled = 'disabled';
     $renderHTML = '';
+    $renderHTML .= '<div class="col-lg-12">
+                 <div class="user-profile">';
+    $renderHTML .= '<div class="profile-userpic">'.get_avatar($user_id->user_email).'</div>';
+    $renderHTML .= '<div class="user-name">'.userInfo('username', $user_id).'</div>';
+    $renderHTML .= '<div class="user-major">';
+    if (empty(userInfo('major', $user_id))) {
+        $renderHTML .= 'have not major';
+    } else {
+        $renderHTML .= userInfo('major', $user_id);
+    }
     $renderHTML .= '
-            <div class="col-lg-12 desciption">
-            <div class="row">
-                <div class="biography">
-                    <textarea name="user-description" id="user-description" rows="10" style="width:99%" placeholder="" '.$disabled.' >'.userInfo('biography', $user_id).'</textarea>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-12">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="row">
-                        <div class="col-lg-2" style="padding:0">
-                            <label for="name">Full Name</label>
-                        </div>
-                         <div class="col-lg-10">
-                            <div class="name">
-                                <input type="text" name="user-name" id="user-name" value="'.userInfo('username', $user_id).'" '.$disabled.' >
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                <div class="row">
-                    <div class="col-lg-2" style="padding:0">
-                        <label for="gender">Gender</label>
-                    </div>
-                     <div class="col-lg-10">
-                        <div class="gender">
-                            <input type="text" name="gender" id="gender" value="'.userInfo('gender', $user_id).'" '.$disabled.' >
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </div>
-        <div class="col-lg-12">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="row">
-                        <div class="col-lg-2" style="padding:0">
-                            <label for="email">Email</label>
-                        </div>
-                        <div class="col-lg-10 email">
-                            <a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to='.info('email').'" target="_blank">'.userInfo('email', $user_id).'</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                <div class="row">
-                    <div class="col-lg-2" style="padding:0">
-                        <label for="name">Major</label>
-                    </div>
-                     <div class="col-lg-10">
-                        <div class="major">
-                            <input type="text" name="major" id="major" value="'.userInfo('major', $user_id).'" '.$disabled.' >
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </div>
-        <div class="col-lg-12">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="row">
-                        <div class="col-lg-2" style="padding:0">
-                            <label for="phone">Phone</label>
-                        </div>
-                        <div class="col-lg-10">
-                            <div class="phone">
-                                <input type="text" name="phone" id="phone" value="'.userInfo('phone', $user_id).'" '.$disabled.' >
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="row">
-                        <div class="col-lg-2" style="padding:0">
-                            <label for="name">Address</label>
-                        </div>
-                        <div class="col-lg-10">
-                            <div class="address">
-                                <textarea name="address" id="address" rows="3" style="width: 100%;"  '.$disabled.' >'.userInfo('address', $user_id).'</textarea>
-                            </div>
-                        </div>
-                    </div>
-                 </div>
-            </div>
-        </div>
+    <table class="table-info">
+    <tr>
+        <th>Biograph</th>
+        <td>'.userInfo('biography', $user_id).'</td>
+    </tr>
+    <tr>
+        <th>Account</th>
+        <td>'.get_userdata($user_id)->user_login.'</td>
+    </tr>
+    <tr>
+        <th>Birth date</th>
+        <td></td>
+    </tr>
+    <tr>
+        <th>Gender</th>
+        <td>'.userInfo('gender', $user_id).'</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td><a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to='.info('email').'" target="_blank">'.userInfo('email', $user_id).'</a></td>
+    </tr>
+    <tr>
+        <th>Phone number</th>
+        <td>'.userInfo('phone', $user_id).'</td>
+    </tr>
+    <tr>
+        <th>Address</th>
+        <td>'.userInfo('address', $user_id).'</td>
+    </tr>
+</table>
     ';
 
     return $renderHTML;

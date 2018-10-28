@@ -2,6 +2,7 @@
 /**
  * Template Name: Form Detail Template.
  */
+include 'includes/core/group/form-view.php';
 get_header();
 $form_id = $_GET['form-id'];
 ?>
@@ -13,8 +14,7 @@ $form_id = $_GET['form-id'];
 					<div id="content" class="site-content">
 						<div class="container">
                             <div class="row">
-                                
-                                    
+								<?php echo formView($form_id); ?>
                             </div>
                         </div>
 					</div><!-- #content -->

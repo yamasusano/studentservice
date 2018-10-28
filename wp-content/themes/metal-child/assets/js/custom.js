@@ -14,16 +14,61 @@ jQuery(function ($) {
         $('div#my-group').bind('click', function () {
             setMenuGroup();
         });
-        $('button#update-profile').bind('click', function () {
-            updateProfile();
+        $('div#my-groups').bind('click', function () {
+            menuTeacherGroup();
         });
-
         $('div#notification').bind('click', function () {
             manageRequest();
         });
 
-
     });
+    function menuTeacherGroup() {
+        $.ajax({
+            url: zozo_js_vars.zozo_ajax_url,
+            data: { 'action': 'teacher_menu_group' },
+            type: 'post',
+            success: function (result) {
+                var html = $.parseHTML(result.create_menu);
+                $('#profile-contents').html(html);
+                var parent = $('div.group-menu-item');
+                $('button#create-new-group').bind('click', function () {
+                    var $check = parent.find('input#title-form');
+                    if ($check.length) {
+                        $check.focus();
+                    } else {
+                        parent.append('<div class="add-title"><input type="text" name="title-form" id="title-form" required><button type="submit" name="create-title" id ="create-title" class= "btn btn-sm btn-info">ADD</button><button type="submit" name="cancel-create-title" id ="cancel-create-title" class= "btn btn-sm btn-danger">CANCEL</button></div>');
+                    }
+                    $('button#cancel-create-title').bind('click', function () {
+                        $('input#title-form').remove();
+                        $('button#create-title').remove();
+                        $(this).remove();
+                    });
+                    $('button#create-title').bind('click', function () {
+                        if ($('input#title-form').empty()) {
+                            $('input#title-form').focus();
+                        } else {
+                            createNewForm();
+                        }
+                    });
+                });
+            },
+            errors: function (result) { }
+
+        });
+    }
+    function createNewForm() {
+        $.ajax({
+            url: zozo_js_vars.zozo_ajax_url,
+            data: { 'action': 'create_new_form' },
+            type: 'post',
+            success: function (result) {
+                var html = $.parseHTML(result);
+
+            },
+            errors: function (result) { }
+
+        });
+    }
     function setMenuGroup() {
         $.ajax({
             url: zozo_js_vars.zozo_ajax_url,
@@ -38,9 +83,57 @@ jQuery(function ($) {
                 $('button#member-list').bind('click', function () {
                     generateMember();
                 });
+                $('button#leave-group').bind('click', function () {
+                    studentLeaveGroup();
+                });
             },
             errors: function (result) { }
 
+        });
+    }
+    function studentLeaveGroup() {
+        $.ajax({
+            url: zozo_js_vars.zozo_ajax_url,
+            data: { 'action': 'student_leave_group' },
+            type: 'post',
+            success: function (result) {
+                var html = $.parseHTML(result);
+                if (result.type == 1) {
+                    $.confirm({
+                        title: result.message,
+                        content: '',
+                        buttons: {
+                            confirm: function () {
+                                actionStudentLeaveGroup();
+                            },
+                            cancel: function () {
+                            }
+                        },
+                        theme: 'my-theme',
+                        animation: 'none'
+                    });
+                } else {
+                    $.alert({
+                        title: result.message,
+                        content: '',
+                        theme: 'my-theme',
+                        animation: 'none'
+                    });
+                }
+
+            },
+            errors: function (result) { }
+        });
+    }
+    function actionStudentLeaveGroup() {
+        $.ajax({
+            url: zozo_js_vars.zozo_ajax_url,
+            data: { 'action': 'action_student_leave_group' },
+            type: 'post',
+            success: function (result) {
+                window.location.reload();
+            },
+            errors: function (result) { }
         });
     }
     function changeButton() {
@@ -52,22 +145,24 @@ jQuery(function ($) {
                 var html = $.parseHTML(result.btnChange);
                 $('div#edit-btn').html(html);
                 $('div.gender').html(result.gender);
-                $('button#update-profile').on('click', function () {
+                $('div.major').html(result.major);
+                $('button#update-profile').bind('click', function () {
                     var gender = $('select#gender').val();
+                    var major = $('select#major').val();
                     var name = $('input#user-name').val();
                     var biograph = $('textarea#user-description').val();
                     var phone = $('input#phone').val();
                     var address = $('textarea#address').val();
-                    updateProfile(name, gender, biograph, phone, address);
+                    updateProfile(name, gender, biograph, phone, address, major);
                 });
             },
             errors: function (result) { }
         });
     }
-    function updateProfile(name, gender, biograph, phone, address) {
+    function updateProfile(name, gender, biograph, phone, address, major) {
         $.ajax({
             url: zozo_js_vars.zozo_ajax_url,
-            data: { 'action': 'update_profile', 'name': name, 'gender': gender, 'bio': biograph, 'phone': phone, 'address': address },
+            data: { 'action': 'update_profile', 'name': name, 'gender': gender, 'bio': biograph, 'phone': phone, 'address': address, 'major': major },
             type: 'post',
             success: function (result) {
                 $('div.verify-input').text(result.message);
@@ -85,7 +180,7 @@ jQuery(function ($) {
             success: function (result) {
                 var html = $.parseHTML(result.view);
                 $('#profile-contents').html(html);
-                $('button#edit-profile').on('click', function () {
+                $('button#edit-profile').bind('click', function () {
                     $('div#profile-contents textarea,input').prop('disabled', false);
                     changeButton();
                 });
@@ -211,6 +306,28 @@ jQuery(function ($) {
                 $('#acxept-user').bind('click', function () {
                     requestHandle($(this));
                 });
+                $('button#deny-user').bind('click', function () {
+                    rejectRequest($(this));
+                });
+            },
+            errors: function (result) { }
+
+        });
+    }
+    function rejectRequest(button) {
+        var parents = button.parents().eq(1);
+        var user = parents.find('div.content-request>p>a').text();
+        $.ajax({
+            url: zozo_js_vars.zozo_ajax_url,
+            data: { 'action': 'reject_user_request', 'request-user': user },
+            type: 'post',
+            success: function (result) {
+                if (result.results == true) {
+                    parents.slideUp('slow', function () { parents.remove(); });
+                } else {
+                    parents.slideUp('slow', function () { parents.remove(); });
+                }
+
             },
             errors: function (result) { }
 
@@ -227,6 +344,9 @@ jQuery(function ($) {
                 if (result.results == true) {
                     $('div.noti-message').html(result.message);
                     parents.slideUp('slow', function () { parents.remove(); });
+                } else {
+                    $('div.noti-message').html(result.message);
+                    parents.slideUp('slow', function () { parents.remove(); });
                 }
 
             },
@@ -241,7 +361,7 @@ jQuery(function ($) {
             data: { 'action': 'post_finder_form', 'title': title, 'description': description, 'members': members, 'skill': skill, 'supervisor': supervisor, 'close_date': close_date, 'contact': contact, 'other': otherSkill },
             type: 'post',
             success: function (result) {
-                if (result.type == 0) {
+                if (result.type == 1) {
                     $('div#group-message').text(result.message);
                 } else {
                     window.location.reload();

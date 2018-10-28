@@ -3,6 +3,8 @@
  * Template Name: Profile Template.
  */
 require 'includes/core/is-user-login.php';
+include 'includes/core/profile/gpf-teacher-profile.php';
+include 'includes/core/profile/gpf-student-profile.php';
 get_header(); ?>
 <div class="container">
     <div id="main-wrapper" class="zozo-row row">
@@ -43,14 +45,7 @@ get_header(); ?>
                                                 <a>
                                                     <i class="glyphicon glyphicon-user"></i> Group
                                                 </a>
-                                                <div id="my-group" class="sub-menu-items">
-                                                    <i class="glyphicon glyphicon-hand-right"></i>
-                                                    <a>My Group</a>
-                                                </div>
-                                                <div id="other-group" class="sub-menu-items">
-                                                    <i class="glyphicon glyphicon-hand-right"></i>
-                                                    <a>Other</a>
-                                                </div>
+                                                <?php echo get_teacher_group(); ?>
                                             </div>
                                             <div id="pivacy" class="menu-items">
                                                 <a>
@@ -63,14 +58,7 @@ get_header(); ?>
                                                     <i class="glyphicon glyphicon-globe"></i>
                                                     <a>Notification</a>
                                                 </div>
-                                                <?php if (info('role') == 'Student') {
-    ?>
-                                                <div id="average mark" class="sub-menu-items">
-                                                    <i class="glyphicon glyphicon-hand-right"></i>
-                                                    <a>average mark</a>
-                                                </div>
-                                                <?php
-}?>
+                                            <?php echo get_average_mark_menu(); ?>
                                             </div>
                                         </div>
                                         <!-- END MENU -->

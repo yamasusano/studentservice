@@ -89,10 +89,10 @@ function get_members($form_id)
     global $wpdb;
     $renderHTML = '';
     $members_id = $wpdb->get_results("
-    SELECT member_id FROM {$wpdb->prefix}members 
+    SELECT member_id 
+    FROM {$wpdb->prefix}members 
     WHERE form_id = '".$form_id."'
     AND member_role = 1 
-    AND status = 0
     ");
     foreach ($members_id as $members) {
         $renderHTML .= '<a href="'.home_url('user').'?user-id='.$members->member_id.'" >'.get_userdata($members->member_id)->user_login.'</a><br>';
@@ -125,27 +125,26 @@ function currentUserPost($form_id)
     if (is_user_logged_in()) {
         $current_user = get_current_user_id();
         $is_student = info('role');
-        $check_user_exist = $wpdb->get_var("
-            SELECT COUNT(*)
-            FROM {$wpdb->prefix}members
-            WHERE form_id = '".$form_id."'
-            AND member_id = '".$current_user."'
-            ");
-        $check_user_status = $wpdb->get_var("
-    SELECT status
-    FROM {$wpdb->prefix}members
-    WHERE form_id = '".$form_id."'
-    AND member_id = '".$current_user."'
-    ");
+        $has_form = check_student_form();
+        $is_request = $wpdb->get_var("
+        SELECT COUNT(*) 
+        FROM {$wpdb->prefix}request 
+        WHERE form_id = '".$form_id."' 
+        AND member_id = '".$current_user."'
+        ");
 
         if ($is_student == 'Student') {
-            if ($check_user_exist == 0) {
-                $renderHTML .= '<button type="submit" id="btn-join" name="btn-join" class="btn btn-info" >Join</button>';
-            } elseif ($check_user_status == 1) {
-                $renderHTML .= 'Pending';
+            if (isset($has_form)) {
+                $renderHTML .= '<a href="'.home_url('form-detail').'?form-id='.$form_id.'" class="btn btn-info">View</a>';
+            } else {
+                if ($is_request >= 1) {
+                    $renderHTML .= '<button type="submit" id="reject-action-join" name="reject-action-join" class="btn btn-danger" >Cancel request</button>';
+                } else {
+                    $renderHTML .= '<button type="submit" id="btn-join" name="btn-join" class="btn btn-info" >Join</button>';
+                }
             }
         } else {
-            $renderHTML .= 'Opening';
+            $renderHTML .= '<a href="'.home_url('form-detail').'?form-id='.$form_id.'" class="btn btn-info">View</a>';
         }
     } else {
         $renderHTML .= '<button type="submit" id="btn-join" name="btn-join" class="btn btn-info" >Join</button>';
