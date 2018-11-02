@@ -20,7 +20,7 @@ function formView($form_id)
         </tr>
         <tr>
             <th>Skill requice</th>
-            <td>'.get_skill_set($form_id).'</td>
+            <td>'.get_skills($form_id).'</td>
         </tr>
         <tr>
             <th>Other</th>
@@ -91,7 +91,7 @@ function get_supervisor($form_id)
     return $renderHTML;
 }
 
-function get_skill_set($form_id)
+function get_skills($form_id)
 {
     global $wpdb;
     $renderHTML = '';

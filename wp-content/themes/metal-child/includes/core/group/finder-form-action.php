@@ -338,3 +338,129 @@ function updateFinderForm()
         return 'update fail';
     }
 }
+function major($user_id)
+{
+    global $wpdb;
+    $name = userInformation('major', $user_id);
+    $major_id = $wpdb->get_var("
+    SELECT ID 
+    FROM {$wpdb->prefix}major 
+    WHERE name = '".$name."'
+    ");
+
+    return $major_id;
+}
+function searchUsers($keyword)
+{
+    global $wpdb;
+    $renderHTML = '';
+
+    $results = $wpdb->get_results("
+    SELECT ID 
+    FROM {$wpdb->prefix}users 
+    WHERE user_login LIKE '%".$keyword."%' 
+    AND ID != '".get_current_user_id()."'
+    AND ID != 1 
+    ");
+    $major =
+    $renderHTML .= '<div class="result-search">';
+    if (empty($results)) {
+        $renderHTML .= '<b>'.$keyword.'</b> not found!!!';
+    } else {
+        $renderHTML .= '<table>';
+        $renderHTML .= '<tr><th>Role</th><th>User name</th><th>Major</th><th>Action</th></tr>';
+
+        foreach ($results as $result) {
+            $user_role = userInformation('role', $result->ID);
+            $user_major = userInformation('major', $result->ID);
+            $renderHTML .= '<tr><td>'.$user_role.'</td><td>'.get_userdata($result->ID)->user_login.'</td><td>'.$user_major.'</td>';
+            if ($user_role == 'Teacher') {
+                $renderHTML .= '<td></td>';
+            } else {
+                if ($user_major == '' || major(get_current_user_id()) != major($result->ID)) {
+                    $renderHTML .= '<td><a href="'.home_url('user').'?user-id='.$result->ID.' " class="btn" ></a>View</td>';
+                } else {
+                }
+            }
+            $renderHTML .= '</tr>';
+        }
+        $renderHTML .= '</table>';
+    }
+    $renderHTML .= '</div>';
+
+    return $renderHTML;
+}
+// check các trường hợp :
+// th1: user đã tồn tại trong nhóm
+// th2: user chưa tồn tại trong nhóm
+// th2-1: user là student
+// th2-2: user là teacher
+
+function actionInSearch($user_id)
+{
+    global $wpdb;
+    $renderHTML = '';
+    $form_id = has_form_id();
+    $members_role = $wpdb->get_var("
+    SELECT *
+    FROM {$wpdb->prefix}members 
+    WHERE form_id = '".$form_id."'
+    AND member_id = '".$user_id."' 
+    ");
+    $user_role = userInformation('role', $user_id);
+    if ($members_role) {
+        $renderHTML .= '<a href="'.home_url('user').'?>user-id='.$user_id.' class="btn btn-info">View</a>';
+    } else {
+        if ($user_role == 'Student') {
+            $renderHTML .= '<button type="submit" id="action-invite-student" class="btn btn-primary">Invite student</button>';
+        } else {
+            $renderHTML .= '<button type="submit" id="action-invite-student" class="btn btn-primary">Invite supervisor</button>';
+        }
+    }
+}
+
+function userInformation($meta_key, $user_id)
+{
+    global $wpdb;
+    $user_info = $wpdb->get_results("
+SELECT *
+FROM {$wpdb->prefix}usermetaData
+WHERE user_id = '".$user_id."'
+");
+    switch ($meta_key) {
+case 'username':
+    return $user_info[0]->meta_value;
+    break;
+case 'gender':
+    return $user_info[1]->meta_value;
+    break;
+case 'address':
+    return $user_info[2]->meta_value;
+    break;
+case 'phone':
+    return $user_info[3]->meta_value;
+    break;
+case 'role':
+    $role = $user_info[4]->meta_value;
+    switch ($role) {
+        case 1:
+            return 'Student';
+            break;
+        case 2:
+            return 'Teacher';
+            break;
+    }
+    break;
+case 'major':
+    return $user_info[5]->meta_value;
+    break;
+case 'email':
+    return $user_info[6]->meta_value;
+    break;
+case 'biography':
+    return $user_info[7]->meta_value;
+    break;
+default:
+    return $user_info;
+}
+}

@@ -2,6 +2,7 @@
 
 include 'includes/core/profile/gpf-profile.php';
 include 'includes/core/group/finder-form-action.php';
+require_once 'entity/form.php';
 function get_list_form()
 {
     global $wpdb;
@@ -152,3 +153,70 @@ function currentUserPost($form_id)
 
     return $renderHTML;
 }
+
+function current_semster_form()
+{
+    $renderHTML = '';
+    $forms = get_form_current_semester();
+    $renderHTML .= '<section id="current-semster-view">
+    <h3>Finder form in '.get_current_semester().'</h3>				
+    <div class="slick-codepen">
+            <div>
+            <img src="https://media.laodong.vn/storage/newsportal/2017/12/5/579811/May-Bay-Nga.Jpg2.jpg?w=888&h=592&crop=auto&scale=both" />
+            1
+        </div>
+
+        <div>
+            <img src="https://media.laodong.vn/storage/newsportal/2017/12/5/579811/May-Bay-Nga.Jpg2.jpg?w=888&h=592&crop=auto&scale=both" />
+            2
+        </div>
+
+        <div>
+            <img src="https://media.laodong.vn/storage/newsportal/2017/12/5/579811/May-Bay-Nga.Jpg2.jpg?w=888&h=592&crop=auto&scale=both" />
+            3
+        </div>
+
+        <div>
+            <img src="https://media.laodong.vn/storage/newsportal/2017/12/5/579811/May-Bay-Nga.Jpg2.jpg?w=888&h=592&crop=auto&scale=both" />
+            4
+        </div>
+
+        <div class="slick-slide">
+            <img src="https://media.laodong.vn/storage/newsportal/2017/12/5/579811/May-Bay-Nga.Jpg2.jpg?w=888&h=592&crop=auto&scale=both" />
+            5
+        </div>
+    </div>
+    </section>';
+
+    return $renderHTML;
+}
+
+function get_form_current_semester()
+{
+    global $wpdb;
+    $get_list_form = array();
+    $forms = new formInfo();
+    $get_forms = $wpdb->get_results("
+    select *
+    FROM {$wpdb->prefix}finder_form 
+    WHERE semester = '".get_current_semester()."' 
+    ");
+    foreach ($get_forms as $form) {
+        array_push($get_list_form, $forms->getFormInfo($form->ID, $form->user_id, $form->title, $form->description, $form->other_skil, $form->expiry_date, $form->contact, $form->contact, $form->status, $form->semester));
+    }
+
+    return $get_list_form;
+}
+    function get_current_semester()
+    {
+        global $wpdb;
+        $get_current_semester = $wpdb->get_var("
+        SELECT name from {$wpdb->prefix}semester 
+        where status = 1
+        ");
+
+        return $get_current_semester;
+    }
+
+?>
+

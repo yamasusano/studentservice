@@ -2,8 +2,8 @@
 /**
  * Template Name: Form Detail Template.
  */
-include 'includes/core/group/form-view.php';
 get_header();
+require 'includes/core/group/form-view.php';
 $form_id = $_GET['form-id'];
 ?>
 <div class="container">

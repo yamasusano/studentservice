@@ -9,13 +9,14 @@ function has_major()
 
     return array('result' => true);
 }
-function insert_finder_form($title, $description, $close_date, $other, $contact, $user_id)
+function insert_finder_form($semester, $title, $description, $close_date, $other, $contact, $user_id)
 {
     global $wpdb;
     $get_finder_form = $wpdb->insert(
         "{$wpdb->prefix}finder_form",
         [
             'user_id' => get_current_user_id(),
+            'semester' => $semester,
             'title' => $title,
             'description' => $description,
             'other_skill' => $other,

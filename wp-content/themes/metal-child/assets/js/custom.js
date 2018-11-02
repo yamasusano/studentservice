@@ -1,9 +1,9 @@
 jQuery(function ($) {
     jQuery(document).ready(function () {
-
         $('.menu-items').on('click', function () {
             toggleMenu(this);
         });
+
         $('div#home-view').bind('click', function () {
             dataLink();
         });
@@ -86,6 +86,23 @@ jQuery(function ($) {
                 $('button#leave-group').bind('click', function () {
                     studentLeaveGroup();
                 });
+                $('button#search-users').bind('click', function () {
+                    var keyword = $('input#user-names').val();
+                    resultSearch(keyword);
+                });
+            },
+            errors: function (result) { }
+
+        });
+    }
+    function resultSearch(keyword) {
+        $.ajax({
+            url: zozo_js_vars.zozo_ajax_url,
+            data: { 'action': 'result_search_user', 'keyword': keyword },
+            type: 'post',
+            success: function (result) {
+                var html = $.parseHTML(result.render);
+                $('div#group-contents').html(html);
             },
             errors: function (result) { }
 
@@ -210,6 +227,7 @@ jQuery(function ($) {
                     }
                 });
                 $('#post-form').bind('click', function () {
+                    var semester = $('select#semester').val();
                     var title = $('#title').val();
                     var description = $('#description').val();
                     var members = '';
@@ -218,7 +236,7 @@ jQuery(function ($) {
                     var supervisor = '';
                     var close_date = $('#close-date').val();
                     var contact = $('#contact-form').val();
-                    postForm(title, description, members, skill, otherSkill, supervisor, close_date, contact);
+                    postForm(semester, title, description, members, skill, otherSkill, supervisor, close_date, contact);
                 });
                 $('button#edit-form-finder').bind('click', function () {
                     optionSelectFinder();
@@ -355,15 +373,16 @@ jQuery(function ($) {
         });
     }
 
-    function postForm(title, description, members, skill, otherSkill, supervisor, close_date, contact) {
+    function postForm(semester, title, description, members, skill, otherSkill, supervisor, close_date, contact) {
         $.ajax({
             url: zozo_js_vars.zozo_ajax_url,
-            data: { 'action': 'post_finder_form', 'title': title, 'description': description, 'members': members, 'skill': skill, 'supervisor': supervisor, 'close_date': close_date, 'contact': contact, 'other': otherSkill },
+            data: { 'action': 'post_finder_form', 'semester': semester, 'title': title, 'description': description, 'members': members, 'skill': skill, 'supervisor': supervisor, 'close_date': close_date, 'contact': contact, 'other': otherSkill },
             type: 'post',
             success: function (result) {
-                if (result.type == 1) {
+                if (result.type == 0) {
                     $('div#group-message').text(result.message);
                 } else {
+                    $('div#group-message').text(result.message);
                     window.location.reload();
                 }
 

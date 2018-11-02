@@ -43,6 +43,15 @@ function getUserInfo($user_id, $user_name, $gender, $account, $email)
                 'meta_value' => $gender,
             ]
         );
+    } else {
+        $set_user_gender = $wpdb->insert(
+            "{$wpdb->prefix}usermetaData",
+            [
+                'user_id' => $user_id,
+                'meta_key' => 'gender',
+                'meta_value' => $gender,
+            ]
+        );
     }
     $set_user_address = $wpdb->insert(
         "{$wpdb->prefix}usermetaData",

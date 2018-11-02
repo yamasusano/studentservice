@@ -1,20 +1,5 @@
 <?php
 
-function defineRole()
-{
-    global $wpdb;
-    $user_id = get_current_user_id();
-    $user_role = 0;
-    if ($user_id !== 0) {
-        $user_role = $wpdb->get_results("
-        SELECT meta_value
-        FROM {$wpdb->prefix}usermetaData
-        WHERE meta_key = 'role'
-        AND user_id = '".$user_id."'
-        ");
-    }
-}
-
 function current_user_major_id()
 {
     global $wpdb;
@@ -91,7 +76,6 @@ function overView()
     $disabled = 'disabled';
     $renderHTML = '';
     $renderHTML .= '
-    <input type="hidden" name="user-id" value="'.get_current_user_id().'">
         <div class="col-lg-12 desciption">
         <div class="row">
             <div class="biography">

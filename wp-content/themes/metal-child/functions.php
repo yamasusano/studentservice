@@ -20,6 +20,10 @@ function zozo_enqueue_child_theme_styles()
     wp_enqueue_style('zozo-child-theme-style', get_stylesheet_uri().'/assets/css/jquery-confirm.min.css', array(), null);
     //js
     wp_enqueue_script('jquery', get_stylesheet_directory_uri().'/assets/js/jquery-1.12.4.js', array('jquery'), null, true);
+    wp_register_script('front-end-js', get_stylesheet_directory_uri().'/assets/js/front-end.js', array('jquery'), null, true);
+    wp_enqueue_script('front-end-js');
+    wp_register_script('slick-js', get_stylesheet_directory_uri().'/assets/js/slick.min.js', array('jquery'), null, true);
+    wp_enqueue_script('slick-js');
     wp_register_script('custom-js', get_stylesheet_directory_uri().'/assets/js/custom.js', array('jquery'), null, true);
     wp_enqueue_script('custom-js');
     wp_register_script('confirm-js', get_stylesheet_directory_uri().'/assets/js/jquery-confirm.min.js', array('jquery'), null, true);
@@ -43,20 +47,42 @@ function remove_admin_bar()
     }
 }
 //ADD button login and logout on menu.
+function menu_bar_profile()
+{
+    $renderHTML = '';
+    $user_id = get_current_user_id();
+    $user_name = explode(' ', info('username'));
+    $last_name = end($user_name);
+    $renderHTML .= '<a href="#" class="prefix-icon"><i class="fa fa-bell" aria-hidden="true"></i></a>';
+    $renderHTML .= '<a href="#" class="prefix-icon"><i class="fa fa-lg fa-comments-o" aria-hidden="true"></i></a>';
+    $renderHTML .= '<div class="dropdown-profile-bar">
+    <div class="dropbtn" id="profile-bar"><a href="'.home_url('profile').'" >hi,'.$last_name.'</a></div>
+      <div class="dropdown-content">
+        <a href="'.home_url('profile').'" ><i class="fa fa-user" aria-hidden="true"></i> &nbsp;Profile</a>
+        <a href="#"><i class="fa fa-users" aria-hidden="true"></i> &nbsp;Groups</a>
+        <a href="'.wp_logout_url($_SERVER['REQUEST_URI'], false).'"><i class="fa fa-sign-out" aria-hidden="true"></i> &nbsp;Log Out</a>
+      </div>
+    </div>';
+
+    return $renderHTML;
+}
 add_filter('wp_nav_menu_items', 'add_login_logout_link', 10, 2);
 function add_login_logout_link($items)
 {
     ob_start();
     if (is_user_logged_in()) {
-        $loginoutlink = '<a href="'.wp_logout_url($_SERVER['REQUEST_URI'], false).'" class="btn btn-danger" >Log Out</a>';
+        $loginoutlink = menu_bar_profile();
     } else {
-        $loginoutlink = '<a href="'.home_url('login').'" class="btn btn-info" >Log In</a>';
+        $loginoutlink = '<a href="'.home_url('login').'" style="margin-right: 30px;" >
+        <i class="fa fa-fw fa-lg fa-sign-in"></i>
+        Log In</a>';
     }
     ob_end_clean();
-    $items .= '<li>'.$loginoutlink.'</li>';
+    $items .= '<ul class="navbar-right">'.$loginoutlink.'</ul>';
 
     return $items;
 }
+
 //Check token via Google api to login or register new user.
 add_action('init', 'userLogIn', 2);
 function userLogIn()
@@ -156,6 +182,7 @@ function post_finder_form()
     //crreate value
     $message = '';
     $type = 0;
+    $semester = $_POST['semester'];
     $title = $_POST['title'];
     $description = $_POST['description'];
     $members = $_POST['members'];
@@ -171,7 +198,7 @@ function post_finder_form()
     if ($is_major['result']) {
         $form_validate = validFormFinder($title, $description, $close_date);
         if (isset($form_validate)) {
-            $insert_finder_table = insert_finder_form($title, $description, $close_date, $other, $contact, $user_id);
+            $insert_finder_table = insert_finder_form($semester, $title, $description, $close_date, $other, $contact, $user_id);
             $suppervisor_id = get_user_by('login', $supervisor)->ID;
             if ($insert_finder_table) {
                 $form_id = finder_form_id($title);
@@ -383,5 +410,13 @@ function action_student_leave_group()
     $form_id = check_student_form();
     studentLeaveGroup($form_id, $user_id);
     echo wp_send_json(['message' => $message]);
+    die();
+}
+add_action('wp_ajax_nopriv_result_search_user', 'result_search_user');
+add_action('wp_ajax_result_search_user', 'result_search_user');
+function result_search_user()
+{
+    $keyword = $_POST['keyword'];
+    echo wp_send_json(['render' => searchUsers($keyword)]);
     die();
 }

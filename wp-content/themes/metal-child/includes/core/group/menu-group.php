@@ -7,8 +7,8 @@ function teacherGroupMenu()
     $renderHTML .= '<div class="col-lg-12"><div class="row"><div class="menu-lists">';
     $renderHTML .= '<div class="group-menu-item"><button id="create-new-group" class="btn btn-info">Create</button></div>';
     $renderHTML .= '<div class="invite-members">
-                <input type="text" name="user-name" placeholder="search student here...">
-                <button class="btn btn-info" name="search-user">Search</button>
+                <input type="text" name="student-name" id="student-name"  placeholder="search student here...">
+                <button class="btn btn-info" name="search-students" id="search-students" >Search</button>
                 </div></div>';
     $renderHTML .= '<div id="group-contents"></div></div></div>';
 
@@ -34,23 +34,89 @@ function groupMenu()
     }
     $renderHTML .= '<button id="group-chat" class="btn btn-info">Chating</button>
                 <button id="member-list" class="btn btn-info">Members</button>
-
                 </div>
             <div class="invite-members">
-                <input type="text" name="user-name" placeholder="search student,suppervisor here...">
-                <button class="btn btn-info" name="search-user">Search</button>
+                <input type="text" name="user-name" id="user-names" placeholder="search student,suppervisor here...">
+                <button class="btn btn-info" name="search-users" id="search-users" >Search</button>
             </div>
          </div>
 	</div>
 </div>
 <div class="col-lg-12">
     <div class="row">
-        <div id="group-contents">
-        </div>
+        <div id="group-contents">';
+    $renderHTML .= finderFormView();
+    $renderHTML .= '</div>
     </div>
 </div>
 ';
     $renderHTML .= leaveGroup();
+
+    return $renderHTML;
+}
+
+function semesterSelect()
+{
+    global $wpdb;
+    $semsters = $wpdb->get_results("
+    SELECT name 
+    FROM {$wpdb->prefix}semester 
+    ORDER BY start ASC
+    ");
+    $renderHTML = '';
+    foreach ($semsters as $semster) {
+        $renderHTML .= '<option value= "'.$semster->name.'">'.$semster->name.'</option>';
+    }
+
+    return $renderHTML;
+}
+function get_skill_set()
+{
+    global $wpdb;
+    $finder_form = check_student_form();
+    $skill_names = $wpdb->get_results("
+    SELECT s.name 
+    FROM {$wpdb->prefix}skill_major as s
+    INNER JOIN {$wpdb->prefix}form_skill as fs
+    ON fs.skill_id = s.ID 
+    WHERE fs.form_id = '".$finder_form."'
+    ");
+    $renderHTML = '';
+    foreach ($skill_names as $name) {
+        $renderHTML .= '<button name="skill" class="btn btn-primary ">'.$name->name.'</button>';
+    }
+
+    return $renderHTML;
+}
+function get_supervior()
+{
+    global $wpdb;
+    $finder_form = check_student_form();
+    $supervior_id = $wpdb->get_var("
+    SELECT suppervisor_id 
+    FROM {$wpdb->prefix}groups 
+    WHERE type = 'Student' AND form_id = '".$finder_form."'
+    ");
+
+    return get_userdata($supervior_id->suppervisor_id)->user_login;
+}
+function finderFormView()
+{
+    $renderHTML = '';
+    $finder_form = check_student_form();
+    $members = set_member_to_form($finder_form);
+    if ($finder_form) {
+        $renderHTML .= '<div class="form-view">';
+        $renderHTML .= '<h3>'.form_data('title').'</h3>';
+        $renderHTML .= 'Semester - <b>'.form_data('semester').'</b>';
+        $renderHTML .= '<div class="desc-view"><div class="col-lg-3">Description</div><div class="col-lg-9">'.form_data('description').'</div></div>';
+        $renderHTML .= '<div class="members"><div class="col-lg-3">Members</div><div class="col-lg-9">'.$members.'</div></div>';
+        $renderHTML .= '<div class="skill-set"><div class="col-lg-3">Skill set</div><div class="col-lg-9">'.get_skill_set().'</div></div>';
+        $renderHTML .= '<div class="Others"><div class="col-lg-3">Others</div><div class="col-lg-9">'.form_data('other_skill').'</div></div>';
+        $renderHTML .= '<div class="Supervisor"><div class="col-lg-3">Supervisor</div><div class="col-lg-9">'.get_supervior().'</div></div>';
+        $renderHTML .= '<div class="closed_date"><div class="col-lg-3">Closed</div><div class="col-lg-9">'.form_data('expiry_date').'</div></div>';
+        $renderHTML .= '</div>';
+    }
 
     return $renderHTML;
 }
@@ -60,9 +126,19 @@ function finderForm()
     $finder_form = check_student_form();
     $renderHTML = '<h3>Finder Form</h3><div class="finder-form">
         <div class="row">
+            <div class="project-semester">
+            <div class="col-lg-3">
+                    <label for="title">Semester</label>
+                </div>
+                <div class="col-lg-9">
+                    <select id="semester">
+                        '.semesterSelect().'
+                    </select>
+                </div>
+            </div>
             <div class="title-form">
                 <div class="col-lg-3">
-                    <label for="title">title</label>
+                    <label for="title">Title</label>
                 </div>
                 <div class="col-lg-9">
                     <input type="text" id="title" value="'.($finder_form ? form_data('title') : '').'" >
@@ -78,13 +154,13 @@ function finderForm()
             </div>
             <div class="member-avaiable-form">
                 <div class="col-lg-3">
-                    <label for="title">member</label>
+                    <label for="title">Members</label>
                 </div>
                 <div class="col-lg-9">'.($finder_form ? set_member_to_form($finder_form) : '').'</div>
             </div>
             <div class="skill-form">
                 <div class="col-lg-3">
-                    <label for="title">skill</label>
+                    <label for="title">Skill set</label>
                 </div>
                 <div class="col-lg-9">
                     <dl class="dropdown">
@@ -110,7 +186,7 @@ function finderForm()
             <div class="prefix-element">
                 <div class="skill-other">
                     <div class="col-lg-3">
-                        <label for="title">other</label>
+                        <label for="title">Other</label>
                     </div>
                     <div class="col-lg-9">
                         <input type="text" id="skill-other" value="'.($finder_form ? form_data('other_skill') : '').'">
@@ -199,7 +275,7 @@ function set_member_to_form($form_id)
     $members = get_members_to_form($form_id);
     foreach ($members as $member) {
         $member_name = get_userdata($member->member_id)->user_login;
-        $renderHTML .= '<a href="#" class="btn btn-sm btn-info" >'.$member_name.'</a>';
+        $renderHTML .= '<a href="'.home_url('user').'?user-id='.$member->member_id.'" class="btn btn-sm btn-info" >'.$member_name.'</a>';
     }
 
     return $renderHTML;
@@ -252,35 +328,32 @@ function studentLeaveGroup($form_id, $user_id)
 {
     global $wpdb;
     $delete_request = $wpdb->query("
-        DELETE * 
+        DELETE 
         FROM {$wpdb->prefix}request 
         WHERE form_id = '".$form_id."' 
-        AND member_id = '".$user_id."'
         ");
     $delete_members = $wpdb->query("
-        DELETE * 
+        DELETE 
         FROM {$wpdb->prefix}members 
         WHERE form_id = '".$form_id."'
         AND member_id = '".$user_id."'
         ");
     $delete_groups = $wpdb->query("
-        DELETE * 
+        DELETE 
         FROM {$wpdb->prefix}groups 
         WHERE form_id = '".$form_id."' 
-        AND member_id = '".$user_id."'
         ");
     $delete_skill = $wpdb->query("
-        DELETE * 
+        DELETE 
         FROM {$wpdb->prefix}form_skill 
         WHERE form_id = '".$form_id."' 
-        AND member_id = '".$user_id."'
         ");
-    if ($delete_request && $delete_groups && $delete_members && $delete_skill) {
+    if ($delete_groups && $delete_members && $delete_skill) {
         $delete_form = $wpdb->query("
-            DELETE * 
+            DELETE 
             FROM {$wpdb->prefix}form_skill 
             WHERE form_id = '".$form_id."' 
-            AND member_id = '".$user_id."'
+            AND user_id = '".$user_id."'
             ");
     }
 }
