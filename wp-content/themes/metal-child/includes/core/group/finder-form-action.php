@@ -326,7 +326,7 @@ function updateFinderForm()
             'description' => $description,
             'other_skill' => $other,
             'contact' => $contact,
-            'expiry_date' => $close_date,
+            'due_date' => $close_date,
         ],
         [
             'ID' => $form_id,
@@ -365,7 +365,7 @@ function searchUsers($keyword)
     $major =
     $renderHTML .= '<div class="result-search">';
     if (empty($results)) {
-        $renderHTML .= '<b>'.$keyword.'</b> not found!!!';
+        $renderHTML .= '<p>User <b>'.$keyword.'</b> doesn\'t exist !!!</p>';
     } else {
         $renderHTML .= '<table>';
         $renderHTML .= '<tr><th>Role</th><th>User name</th><th>Major</th><th>Action</th></tr>';
@@ -378,7 +378,7 @@ function searchUsers($keyword)
                 $renderHTML .= '<td></td>';
             } else {
                 if ($user_major == '' || major(get_current_user_id()) != major($result->ID)) {
-                    $renderHTML .= '<td><a href="'.home_url('user').'?user-id='.$result->ID.' " class="btn" ></a>View</td>';
+                    $renderHTML .= '<td><a href="'.home_url('user').'?user-id='.$result->ID.' " class="btn btn-sm btn-warning" >View</a></td>';
                 } else {
                 }
             }
@@ -390,11 +390,6 @@ function searchUsers($keyword)
 
     return $renderHTML;
 }
-// check các trường hợp :
-// th1: user đã tồn tại trong nhóm
-// th2: user chưa tồn tại trong nhóm
-// th2-1: user là student
-// th2-2: user là teacher
 
 function actionInSearch($user_id)
 {

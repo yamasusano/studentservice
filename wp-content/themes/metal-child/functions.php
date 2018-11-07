@@ -8,6 +8,7 @@ include 'includes/core/profile/gpf-profile.php';
 include 'includes/core/group/menu-group.php';
 include 'includes/core/group/finder-form-action.php';
 include 'includes/core/group/finder-form-insert.php';
+
 include 'includes/core/entity.php';
 include 'validate.php';
 
@@ -17,17 +18,14 @@ function zozo_enqueue_child_theme_styles()
     //css
     wp_enqueue_style('zozo-child-theme-style', get_stylesheet_uri(), array(), null);
     wp_enqueue_style('zozo-child-theme-style', get_stylesheet_uri().'style.css', array(), null);
-    wp_enqueue_style('zozo-child-theme-style', get_stylesheet_uri().'/assets/css/jquery-confirm.min.css', array(), null);
+    wp_enqueue_style('jquery-confirm', get_stylesheet_directory_uri().'/assets/css/jquery-confirm.min.css');
+    wp_enqueue_style('form', get_stylesheet_directory_uri().'/assets/css/form.css');
     //js
-    wp_enqueue_script('jquery', get_stylesheet_directory_uri().'/assets/js/jquery-1.12.4.js', array('jquery'), null, true);
-    wp_register_script('front-end-js', get_stylesheet_directory_uri().'/assets/js/front-end.js', array('jquery'), null, true);
-    wp_enqueue_script('front-end-js');
-    wp_register_script('slick-js', get_stylesheet_directory_uri().'/assets/js/slick.min.js', array('jquery'), null, true);
-    wp_enqueue_script('slick-js');
-    wp_register_script('custom-js', get_stylesheet_directory_uri().'/assets/js/custom.js', array('jquery'), null, true);
-    wp_enqueue_script('custom-js');
-    wp_register_script('confirm-js', get_stylesheet_directory_uri().'/assets/js/jquery-confirm.min.js', array('jquery'), null, true);
-    wp_enqueue_script('confirm-js');
+    wp_enqueue_script('jquery-v2.2.4.min', get_stylesheet_directory_uri().'/assets/js/jquery.min.js', array('jquery'), null, true);
+    wp_enqueue_script('mark.min', get_stylesheet_directory_uri().'/assets/js/mark.min.js', array('jquery'), null, true);
+    wp_enqueue_script('front-end-js', get_stylesheet_directory_uri().'/assets/js/front-end.js', array('jquery'), null, true);
+    wp_enqueue_script('custom-js', get_stylesheet_directory_uri().'/assets/js/custom.js', array('jquery'), null, true);
+    wp_enqueue_script('confirm-js', get_stylesheet_directory_uri().'/assets/js/jquery-confirm.min.js', array('jquery'), null, true);
 }
 //start session to login.
 add_action('init', 'my_session', 1);
@@ -70,15 +68,16 @@ add_filter('wp_nav_menu_items', 'add_login_logout_link', 10, 2);
 function add_login_logout_link($items)
 {
     ob_start();
+    $loginoutlink = '<a href="'.home_url('search-form').'" class="prefix-icon"><i class="fa fa-search" aria-hidden="true"></i></a>';
     if (is_user_logged_in()) {
-        $loginoutlink = menu_bar_profile();
+        $loginoutlink .= menu_bar_profile();
     } else {
-        $loginoutlink = '<a href="'.home_url('login').'" style="margin-right: 30px;" >
+        $loginoutlink .= '<a href="'.home_url('login').'" style="margin-right: 30px;" >
         <i class="fa fa-fw fa-lg fa-sign-in"></i>
         Log In</a>';
     }
     ob_end_clean();
-    $items .= '<ul class="navbar-right">'.$loginoutlink.'</ul>';
+    $items .= '<ul class="navbar-right my-menu-right">'.$loginoutlink.'</ul>';
 
     return $items;
 }
@@ -419,4 +418,54 @@ function result_search_user()
     $keyword = $_POST['keyword'];
     echo wp_send_json(['render' => searchUsers($keyword)]);
     die();
+}
+
+add_action('filter_section', 'filter_form_page');
+function filter_form_page()
+{
+    $post_type = $_GET['type-value'];
+    $semester = $_GET['semester-value'];
+    $major = $_GET['major-value'];
+    $poster = $_GET['poster'];
+    echo filterPage($post_type, $semester, $major, $poster);
+}
+add_action('result_searchs', 'result_search_box', 10, 1);
+function result_search_box($type)
+{
+    $post_type = $_GET['type-value'];
+    $semester = $_GET['semester-value'];
+    $major = $_GET['major-value'];
+    $poster = $_GET['poster'];
+    $count = count(result_search($post_type, $semester, $major, $poster));
+    if (isset($_GET['poster'])) {
+        switch ($type) {
+            case 'count':
+            echo result_search_message($count, $post_type, $semester, $major, $poster);
+            break;
+            case 'result':
+            echo result_form_content($post_type, $semester, $major, $poster);
+            break;
+            case 'pagination':
+            pagination_result_search($count, $post_type, $semester, $major, $poster);
+            break;
+        }
+    } else {
+        switch ($type) {
+            case 'count':
+            echo result_search_message($count, $post_type, $semester, $major, $poster);
+            break;
+            case 'result':
+            echo result_form_content($post_type, $semester, $major, $poster);
+            break;
+            case 'pagination':
+            pagination_result_search($count, $post_type, $semester, $major, $poster);
+            break;
+    }
+    }
+}
+add_action('new-feed', 'support_student_ideas');
+
+function support_student_ideas()
+{
+    echo get_ideas_form();
 }

@@ -1,0 +1,51 @@
+.form-detail {
+    position: relative;
+    background: #f5f5f5;
+    border: 10px;
+    margin-top: 50px;
+    padding: 0px 20px 20px;
+}
+
+.form-detail .form-detail-semester {
+    border-bottom: 1px solid;
+}
+
+.form-detail h3 {
+    text-transform: uppercase;
+    text-align: center;
+    padding-top: 20px;
+    margin-bottom: 0;
+}
+
+table#form-view-detail {
+    padding: 20px;
+}
+
+.search-found {
+    text-decoration: underline;
+}
+
+mark {
+    padding: unset !important;
+    background: unset !important;
+    color: red !important;
+}
+
+table#form-view-detail tr>th {
+    width: 10%;
+}
+
+.form-detail .btn-edit-content {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+}
+
+table#form-view-detail .btn-close {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+}
+
+table#form-view-detail tr:first-child {
+    border-top: unset;
+}

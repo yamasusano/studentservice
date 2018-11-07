@@ -20,7 +20,7 @@ function insert_finder_form($semester, $title, $description, $close_date, $other
             'title' => $title,
             'description' => $description,
             'other_skill' => $other,
-            'expiry_date' => $close_date,
+            'due_date' => $close_date,
             'contact' => $contact,
             'status' => 1,
         ]
@@ -119,6 +119,7 @@ function form_info($field, $form_id)
 
     return $value;
 }
+
 function sendRequest($form_id, $leader_id)
 {
     global $wpdb;
@@ -211,45 +212,12 @@ WHERE ID = '".$form_id."'
 function user_metadata($meta_key, $user_id)
 {
     global $wpdb;
-    $user_info = $wpdb->get_results("
-    SELECT *
+    $user_info = $wpdb->get_var("
+    SELECT meta_value
     FROM {$wpdb->prefix}usermetaData
     WHERE user_id = '".$user_id."'
+    AND meta_key = '".$meta_key."'
     ");
-    switch ($meta_key) {
-        case 'username':
-            return $user_info[0]->meta_value;
-            break;
-        case 'gender':
-            return $user_info[1]->meta_value;
-            break;
-        case 'address':
-            return $user_info[2]->meta_value;
-            break;
-        case 'phone':
-            return $user_info[3]->meta_value;
-            break;
-        case 'role':
-            $role = $user_info[4]->meta_value;
-            switch ($role) {
-                case 1:
-                    return 'Student';
-                    break;
-                case 2:
-                    return 'Teacher';
-                    break;
-            }
-            break;
-        case 'major':
-            return $user_info[5]->meta_value;
-            break;
-        case 'email':
-            return $user_info[6]->meta_value;
-            break;
-        case 'biography':
-            return $user_info[7]->meta_value;
-            break;
-        default:
-            return $user_info;
-    }
+
+    return $user_info;
 }

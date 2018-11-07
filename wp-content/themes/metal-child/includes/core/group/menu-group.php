@@ -83,7 +83,7 @@ function get_skill_set()
     ");
     $renderHTML = '';
     foreach ($skill_names as $name) {
-        $renderHTML .= '<button name="skill" class="btn btn-primary ">'.$name->name.'</button>';
+        $renderHTML .= '<button name="skill" class="btn btn-primary btn-xs ">'.$name->name.'</button>';
     }
 
     return $renderHTML;
@@ -107,15 +107,17 @@ function finderFormView()
     $members = set_member_to_form($finder_form);
     if ($finder_form) {
         $renderHTML .= '<div class="form-view">';
-        $renderHTML .= '<h3>'.form_data('title').'</h3>';
-        $renderHTML .= 'Semester - <b>'.form_data('semester').'</b>';
-        $renderHTML .= '<div class="desc-view"><div class="col-lg-3">Description</div><div class="col-lg-9">'.form_data('description').'</div></div>';
-        $renderHTML .= '<div class="members"><div class="col-lg-3">Members</div><div class="col-lg-9">'.$members.'</div></div>';
+        $renderHTML .= '<h3 style="text-transform: uppercase;">'.form_data('title').'</h3>';
+        $renderHTML .= '<h5 style="padding-left: 40px;">Semester  <b>'.form_data('semester').'</b></h5>';
+        $renderHTML .= '<hr class="style-four">';
+        $renderHTML .= '<div class="form-view-detail">';
+        $renderHTML .= '<div class="desc-view"><div class="col-lg-3 col">Description</div><div class="col-lg-9 col">'.form_data('description').'</div></div>';
+        $renderHTML .= '<div class="members"><div class="col-lg-3 col">Members</div><div class="col-lg-9 col">'.$members.'</div></div>';
         $renderHTML .= '<div class="skill-set"><div class="col-lg-3">Skill set</div><div class="col-lg-9">'.get_skill_set().'</div></div>';
         $renderHTML .= '<div class="Others"><div class="col-lg-3">Others</div><div class="col-lg-9">'.form_data('other_skill').'</div></div>';
         $renderHTML .= '<div class="Supervisor"><div class="col-lg-3">Supervisor</div><div class="col-lg-9">'.get_supervior().'</div></div>';
-        $renderHTML .= '<div class="closed_date"><div class="col-lg-3">Closed</div><div class="col-lg-9">'.form_data('expiry_date').'</div></div>';
-        $renderHTML .= '</div>';
+        $renderHTML .= '<div class="closed_date"><div class="col-lg-3">Closed</div><div class="col-lg-9">'.form_data('due_date').'</div></div>';
+        $renderHTML .= '</div></div>';
     }
 
     return $renderHTML;
@@ -123,17 +125,26 @@ function finderFormView()
 function finderForm()
 {
     $skills = major_skill();
+    $major = info('major');
     $finder_form = check_student_form();
     $renderHTML = '<h3>Finder Form</h3><div class="finder-form">
         <div class="row">
             <div class="project-semester">
-            <div class="col-lg-3">
+                <div class="col-lg-3">
                     <label for="title">Semester</label>
                 </div>
                 <div class="col-lg-9">
                     <select id="semester">
                         '.semesterSelect().'
                     </select>
+                </div>
+            </div>
+            <div class="leader-major">
+                <div class="col-lg-3">
+                    <label for="title">Major</label>
+                </div>
+                <div class="col-lg-9">
+                 '.(isset($major) ? $major : 'unset').'
                 </div>
             </div>
             <div class="title-form">
@@ -160,13 +171,13 @@ function finderForm()
             </div>
             <div class="skill-form">
                 <div class="col-lg-3">
-                    <label for="title">Skill set</label>
+                    <label for="title">Skill Set</label>
                 </div>
                 <div class="col-lg-9">
                     <dl class="dropdown">
                         <dt>
                             <a id="skill">
-                            <span class="hida">Select skill</span>
+                            <span class="hida">Select Skill</span>
                             <p class="multiSel"></p>
                             </a>
                         </dt>
@@ -208,8 +219,8 @@ function finderForm()
                     </div>
                     <div class="col-lg-6">
                         <div class="form-group">
-                            <label for="title">Close date</label>
-                            <input type="date"  id="close-date" value="'.($finder_form ? form_data('expiry_date') : date('Y-m-d')).'">
+                            <label for="title">Due Date</label>
+                            <input type="date"  id="close-date" value="'.($finder_form ? form_data('due_date') : date('Y-m-d')).'">
                         </div>
                     </div>
                 </div>
@@ -300,7 +311,7 @@ function leaveGroup()
     $user_id = get_current_user_id();
     if (isFormExist($user_id)) {
         $renderHTML .= '<div class="col-lg-12" style="text-align:right;margin-top:20px;">
-        <button name="leave-group" id="leave-group" class="btn btn-info">Leave</button>
+        <button name="leave-group" id="leave-group" class="btn btn-danger">Leave</button>
     </div>';
     }
 
@@ -348,11 +359,11 @@ function studentLeaveGroup($form_id, $user_id)
         FROM {$wpdb->prefix}form_skill 
         WHERE form_id = '".$form_id."' 
         ");
-    if ($delete_groups && $delete_members && $delete_skill) {
+    if (isset($delete_groups) && isset($delete_members) && isset($delete_skill)) {
         $delete_form = $wpdb->query("
             DELETE 
-            FROM {$wpdb->prefix}form_skill 
-            WHERE form_id = '".$form_id."' 
+            FROM {$wpdb->prefix}finder_form 
+            WHERE ID = '".$form_id."' 
             AND user_id = '".$user_id."'
             ");
     }

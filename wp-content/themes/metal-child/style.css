@@ -8,6 +8,34 @@ Tags: two-columns, three-columns, left-sidebar, right-sidebar, fixed-layout, res
 Text Domain: zozothemes
 */
 
+@media only screen and (-webkit-min-device-pixel-ratio: 0) and (min-device-width: 1025px) {
+  ::-webkit-scrollbar {
+    width: 0px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-button:start:decrement, ::-webkit-scrollbar-button:end:increment {
+    display: block;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-button:vertical:increment {
+    background-color: #fff;
+  }
+  ::-webkit-scrollbar-track-piece {
+    background-color: #eee;
+    -webkit-border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:vertical {
+    height: 50px;
+    background-color: #ccc;
+    -webkit-border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:horizontal {
+    width: 50px;
+    background-color: #ccc;
+    -webkit-border-radius: 3px;
+  }
+}
+
 .my-container {
   padding-right: 15px;
   padding-left: 15px;
@@ -262,11 +290,11 @@ div.menu-lists {
   box-shadow: 0 10px 6px -6px #777;
 }
 
-#group-contents .title-form {
+#group-contents .project-semester {
   margin-top: 20px;
 }
 
-#group-contents .title-form, #group-contents .description-form, #group-contents .member-avaiable-form, #group-contents .skill-form, #group-contents .close-date-form {
+#group-contents .project-semester, #group-contents .leader-major, #group-contents .title-form, #group-contents .description-form, #group-contents .member-avaiable-form, #group-contents .skill-form, #group-contents .close-date-form {
   margin-top: 20px;
   overflow: hidden;
 }
@@ -275,13 +303,14 @@ div.menu-lists {
   width: 79%;
 }
 
-div.finder-form {
-  padding: 0px 70px 20px 70px;
-}
-
 #group-contents h3 {
   text-align: center;
   margin-top: 10px;
+}
+
+#group-contents .result-search {
+  margin: 10px 20px;
+  font-size: 15px;
 }
 
 /* 
@@ -375,11 +404,13 @@ div.description-form div.col-lg-9 {
 }
 
 div.finder-form {
-  height: 650px;
+  height: auto;
+  overflow: hidden;
+  padding: 0px 70px 50px 70px;
 }
 
-div.finder-form>div.row {
-  height: 540px;
+div.finder-form .row {
+  height: 620px;
 }
 
 div.prefix-element {
@@ -441,15 +472,6 @@ button#finder-form {
   margin-right: 5px;
 }
 
-.form-detail h3 {
-  text-align: center;
-}
-
-.form-detail table {
-  margin: 0 auto;
-  width: 60%;
-}
-
 div.group-menu-item {
   width: 50%;
 }
@@ -463,35 +485,16 @@ div.group-menu-item .add-title input {
   margin-right: 15px;
 }
 
+.jconfirm-box.jconfirm-hilight-shake.jconfirm-type-default.jconfirm-type-animated {
+  background: #49cbf5;
+}
+
+.jconfirm-buttons {
+  text-align: center;
+}
+
 div.group-menu-item .add-title button#create-title {
   margin-right: 5px;
-}
-
-.jconfirm.jconfirm-my-theme {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  margin-top: -9em;
-  background-color: #CDAF95;
-  border-radius: 5px;
-}
-
-.jconfirm.jconfirm-my-theme .jconfirm-box-container {
-  width: 100%;
-  margin-left: 0;
-}
-
-.jconfirm.jconfirm-my-theme .jconfirm-buttons {
-  text-align: center;
-  padding: 20px 20px;
-}
-
-.jconfirm.jconfirm-my-theme .jconfirm-buttons button:first-child {
-  margin-right: 10px;
-}
-
-.jconfirm.jconfirm-my-theme .jconfirm-box:focus {
-  outline: none;
 }
 
 div.dropdown-profile-bar {
@@ -565,13 +568,13 @@ div.search-box {
   left: 50%;
 }
 
-/* form#search-post div.text-field {
+form#search-post div.text-field {
   border: 1px solid;
   border-radius: 5px;
   background-color: #fff;
   color: black;
   padding: 5px;
-} */
+}
 
 div.text-field input {
   border: none;
@@ -604,16 +607,40 @@ div#list_major, div#semesters, div#poster-type, div.text-field {
   appearance: none;
 }
 
-div.project-semester {
+div.form-view {
+  margin-top: 10px;
+}
+
+div.form-view, div.form-view>div {
   overflow: hidden;
 }
 
-div.form-view, div.form-view div {
-  overflow: hidden;
+div.form-view>div div {
+  padding: 10px;
 }
 
-div.form-view div {
-  margin: 10px 0px;
+.form-view-detail>div>.col-lg-3 {
+  font-weight: bold;
+  padding-left: 30px;
+}
+
+.form-view-detail>div:nth-child(even) {
+  background: #fff;
+}
+
+.form-view-detail>div {
+  display: flex;
+}
+
+.form-view-detail>div>.col-lg-9 {
+  padding-left: 10px;
+}
+
+div.form-view .style-four {
+  margin: 0;
+  height: 12px;
+  border: 0;
+  box-shadow: inset 0 12px 12px -12px rgba(0, 0, 0, 0.5);
 }
 
 div.form-view div.skill-set button {
@@ -631,8 +658,11 @@ form#search-post>div {
 }
 
 @media (max-width: 991px) {
+  div.home-filter {
+    height: 600px;
+  }
   div.search-box {
-    top: 35% !important;
+    top: 40% !important;
   }
   div#list_major, div#semesters, div#poster-type, div.text-field {
     margin-right: 0 !important;
@@ -642,104 +672,317 @@ form#search-post>div {
   }
 }
 
+div.list-view-items {
+  margin-bottom: 50px;
+}
+
 div.list-view-items, div.list-view-items>div>div {
   overflow: hidden;
 }
 
 section h3 {
   text-align: center;
+  text-transform: uppercase;
+  text-decoration: grey underline;
 }
 
-section {
+.my-container section {
+  margin: 50px 0px 50px 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+section#teacher-form-view {
+  background-color: #f4f4f4;
+  border: 1px solid #f2f2f2;
+}
+
+section#major-form-view {
+  background-color: #fff;
   margin-top: 50px;
-  margin-bottom: 10px;
+}
+
+section#current-semster-view {
+  background-color: #fff;
+  border: 1px solid #f2f2f2;
+}
+
+.major-form-view-content {
+  overflow: scroll;
+}
+
+section#major-form-view .container-inner {
+  width: 3000px;
+  overflow: hidden;
 }
 
 div.tabs-container {
-  border: 1px solid #f2f2f2;
-  padding: 35px 40px 80px;
-  background-color: #f4f4f4;
-  height: 340px;
+  padding: 35px 40px 60px;
   width: 100%;
 }
 
-.slick-initialized .slick-slide {
-  display: block;
-  filter: alpha(opacity=40);
+div.carousel-inner {
+  overflow: hidden;
+  width: 100%;
+  margin-bottom: 50px;
+  min-height: 650px;
+}
+
+div.carousel-inner div {
+  overflow: hidden;
+}
+
+.previous-control {
+  left: 35%;
+}
+
+.next-control {
+  right: 35%;
+}
+
+.previous-control, .next-control {
+  position: absolute;
+  width: 30px;
+  border-radius: 50%;
+  height: 30px;
+  font-size: 20px;
+  background-color: #e4e4e4;
+}
+
+.previous-control span, .next-control span {
+  top: 5px !important;
+  left: 5px !important;
+  color: #fff;
+}
+
+.previous-control:hover, .next-control:hover {
+  color: unset;
+}
+
+ol.carousel-indicators {
+  bottom: -92px !important;
+  z-index: 0 !important;
+}
+
+.carousel-indicators li {
+  background: #c7c7c7 !important;
+  width: 15px;
+  height: 15px;
+}
+
+.carousel-indicators .active {
+  width: 20px !important;
+  height: 20px !important;
+  background: #49cbf5 !important;
+}
+
+.item>div:first-child .form-item {
+  border-top: none !important;
+}
+
+.form-item {
+  padding: 10px 0px;
+  border-top: 1px dotted #fff;
+  display: flex;
+}
+
+.form-item>div {
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.carousel-inner {
+  min-height: 350px;
+}
+
+div.tabs-container a {
+  color: #555;
+  font-weight: bold;
+}
+
+div.tabs-container a:hover {
+  color: #f7941d;
+}
+
+button.btn-show-message {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0px 3px;
+}
+
+button.btn-closed {
+  background-color: grey;
+  color: #fff;
+  width: 68.72px;
+}
+
+button.btn-closed:hover {
+  background-color: grey;
+}
+
+section#major-form-view .form-major-item {
+  position: relative;
+  float: left;
+  margin: 30px 10px;
+  width: 350px;
+  height: 200px;
+}
+
+section#major-form-view .form-major-item img {
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+}
+
+section#major-form-view .form-major-item img:hover {
   opacity: 0.4;
-  transition: all 0.3s ease-out;
 }
 
-.slick-initialized .slick-center {
-  display: block;
-  filter: alpha(opacity=100);
-  opacity: 1;
-  transition: all 0.3s ease-out;
+section#major-form-view .form-major-item .item-content {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
 }
 
-.slick-codepen {
+div.filter-box {
+  overflow: hidden;
+  background: #00b9f2!important;
+  margin-bottom: 30px;
+  padding: 10px 20px;
+}
+
+div.filter-box-search {
+  overflow: hidden;
+  color: #fff;
+}
+
+.message-search-box {
+  height: 72px;
+  background: #fff;
+  margin-bottom: 10px;
+  line-height: 72px;
+  padding-left: 20px;
+}
+
+select#type-value option::first-letter {
+  text-transform: uppercase !important;
+}
+
+.content-result-search {
+  background: #fff;
+  padding: 20px;
+}
+
+.finder-form-list-item {
+  padding: 10px;
+}
+
+.finder-form-items {
+  display: flex;
+  overflow: hidden;
+  margin-bottom: 15px;
+  padding: 20px 10px;
+  border: 1px solid gainsboro;
+}
+
+.finder-form-items>div:first-child {
+  border-right: 1px solid gainsboro;
+}
+
+.btn-view-detail:hover {
+  background-color: #00b9f2!important;
+}
+
+.finder-form-items>div:first-child {
+  padding: 0;
+}
+
+.finder-posted-time {
+  font-weight: bold;
+  font-size: 8pt;
+}
+
+.my-menu-right a:first-child {
+  color: #00b9f2;
+}
+
+.my-menu-right a:first-child :hover {
+  color: #2e6da4 !important;
+}
+
+.my-menu-right a:nth-child(2) {
+  color: #FEB600;
+}
+
+.my-menu-right a:nth-child(2) :hover {
+  color: #2e6da4 !important;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.pagination a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #ddd;
+}
+
+.form-content-title h5 {
+  margin: 0;
+}
+
+.form-content-author {
+  font-size: 12px;
+}
+
+.form-content-author p {
+  margin: 0;
+}
+
+.form-content-description {
+  font-size: 16px;
+}
+
+.finder-post-title h5 {
+  margin: 0;
+}
+
+.center {
+  margin: auto;
+  width: 50%;
+  padding: 10px;
+}
+
+div#footer {
+  position: fixed;
+  bottom: 0;
   width: 100%;
-  height: 340px;
-  background-color: #141414;
 }
 
-.slick-codepen .slick-slide {
-  height: 340px !important;
+.new-feed-contents {
+  padding: 10px;
+  margin-bottom: 10px;
+  background: #fff;
 }
 
-.slick-codepen .slick-slide img {
+.new-feed-contents .content-title {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.new-feed-contents .content-author, .new-feed-contents .content-updated {
+  font-size: 11px;
   margin: 0;
   padding: 0;
-  display: block;
-  height: 100%;
 }
 
-.slick-codepen .slick-prev {
-  left: 0;
-}
-
-.slick-codepen .slick-next {
-  right: 0;
-}
-
-.slick-codepen .slick-prev, .slick-codepen .slick-next {
-  background-color: rgba(0, 0, 0, 0);
-  top: 10px;
-  width: 20%;
-  height: 100%;
-  transition: all 0.3s ease-out 0s;
-}
-
-.slick-codepen .slick-prev:hover, .slick-codepen .slick-next:hover {
-  background-color: rgba(0, 0, 0, 0.25);
-}
-
-.slick-codepen .slick-prev:hover:before, .slick-codepen .slick-next:hover:before {
-  color: rgba(255, 255, 255, 0.65);
-}
-
-.slick-codepen .slick-prev:before, .slick-codepen .slick-next:before {
-  font-size: 38px;
-  color: rgba(0, 0, 0, 0);
-  transition: all 0.3s ease-out;
-}
-
-.slick-codepen .slick-dots {
-  width: 22%;
-  left: 40%;
-  bottom: -68px;
-  border-bottom: 1px solid #3498db;
-  padding: 15px 0;
-}
-
-.slick-codepen .slick-dots li.slick-active button:before {
-  color: #3498db;
-  margin-top: 1px;
-  font-size: 10px;
-}
-
-@media screen and (max-width: 480px) {
-  .slick-codepen, .slick-codepen .slick-slide {
-    height: 220px;
-  }
+.jconfirm .jconfirm-box div.jconfirm-content-pane {
+  display: none !important;
 }

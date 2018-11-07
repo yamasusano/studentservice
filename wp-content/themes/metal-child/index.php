@@ -3,16 +3,8 @@
  * Template Name: Home Template.
  */
 include 'includes/core/group/finder-form-list-view.php';
-include 'includes/core/filter-view.php';
+require_once 'includes/core/filter-view.php';
 get_header();
-
-// if (isset($_POST['btn-join'])) {
-// 	do_action('join_action');
-// }
-// if (isset($_POST['reject-action-join'])) {
-// 	do_action('reject_request');
-// }
-
 ?>
 <div class="container">
 	<input type="hidden" name="current-user-id" id ="current-user-id" value="<?php echo get_current_user_id(); ?>">
@@ -36,8 +28,8 @@ get_header();
 									<div class="col-lg-12">
 										<div class="list-view-items">
 											<div class="row">
+											<?php echo form_by_major(); ?>
 												<div class="my-container">
-													<div class="major-form-view"></div>
 													<?php echo current_semster_form(); ?>
 												</div>
 											</div>		

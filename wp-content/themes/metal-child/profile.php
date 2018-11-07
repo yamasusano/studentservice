@@ -5,7 +5,10 @@
 require 'includes/core/is-user-login.php';
 include 'includes/core/profile/gpf-teacher-profile.php';
 include 'includes/core/profile/gpf-student-profile.php';
-get_header(); ?>
+$mode = $_GET['mode'];
+get_header();
+
+?>
 <div class="container">
     <div id="main-wrapper" class="zozo-row row">
         <div id="single-sidebar-container" class="single-sidebar-container <?php zozo_content_sidebar_classes(); ?>">
@@ -32,7 +35,6 @@ get_header(); ?>
 } else {
     echo info('major');
 }
-
 ?>
                                             </div>
                                         </div>
@@ -51,15 +53,11 @@ get_header(); ?>
                                                 <a>
                                                     <i class="glyphicon glyphicon-eye-close"></i> Pivacy </a>
                                             </div>
-                                            <div class="menu-items">
-                                                <a>
-                                                    <i class="glyphicon glyphicon-cog"></i> Account Settings </a>
-                                                <div id="notification" class="sub-menu-items">
+                                                <!-- <div id="notification" class="sub-menu-items">
                                                     <i class="glyphicon glyphicon-globe"></i>
                                                     <a>Notification</a>
-                                                </div>
-                                            <?php echo get_average_mark_menu(); ?>
-                                            </div>
+                                                </div> -->
+
                                         </div>
                                         <!-- END MENU -->
                                     </div>

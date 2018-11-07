@@ -2,15 +2,16 @@
 
 class formInfo
 {
-    private $ID;
-    private $user_id;
-    private $title;
-    private $description;
-    private $other_skill;
-    private $close_date;
-    private $contact;
-    private $status;
-    private $semester;
+    public $ID;
+    public $user_id;
+    public $title;
+    public $description;
+    public $other_skill;
+    public $close_date;
+    public $contact;
+    public $status;
+    public $semester;
+    public $updated_date;
 
     /**
      * Get the value of ID.
@@ -192,7 +193,27 @@ class formInfo
         return $this;
     }
 
-    public function getFormInfo($ID, $user_id, $title, $description, $other_skill, $close_date, $contact, $status, $semester)
+    /**
+     * Get the value of updated_date.
+     */
+    public function getUpdated_date()
+    {
+        return $this->updated_date;
+    }
+
+    /**
+     * Set the value of updated_date.
+     *
+     * @return self
+     */
+    public function setUpdated_date($updated_date)
+    {
+        $this->updated_date = $updated_date;
+
+        return $this;
+    }
+
+    public function getFormInfo($ID, $user_id, $title, $description, $other_skill, $close_date, $contact, $status, $semester, $updated_date)
     {
         $this->ID = $ID;
         $this->user_id = $user_id;
@@ -203,6 +224,7 @@ class formInfo
         $this->contact = $contact;
         $this->status = $status;
         $this->semester = $semester;
+        $this->updated_date = $updated_date;
 
         return $this;
     }

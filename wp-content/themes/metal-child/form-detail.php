@@ -2,8 +2,8 @@
 /**
  * Template Name: Form Detail Template.
  */
-get_header();
 require 'includes/core/group/form-view.php';
+get_header();
 $form_id = $_GET['form-id'];
 ?>
 <div class="container">
@@ -12,10 +12,16 @@ $form_id = $_GET['form-id'];
 			<div class="zozo-row row">	
 				<div id="primary" class="content-area <?php zozo_primary_content_classes(); ?>">
 					<div id="content" class="site-content">
-						<div class="container">
+						<div class="my-container">
                             <div class="row">
 								<?php echo formView($form_id); ?>
-                            </div>
+								<div class="message">
+									<?php if (isset($_POST['btn-join-form'])) {
+    do_action('join_action');
+}
+                                    ?>
+								</div>
+							</div>
                         </div>
 					</div><!-- #content -->
 				</div><!-- #primary -->

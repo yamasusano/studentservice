@@ -3,6 +3,7 @@
 include 'includes/core/profile/gpf-profile.php';
 include 'includes/core/group/finder-form-action.php';
 require_once 'entity/form.php';
+require_once 'entity/major.php';
 function get_list_form()
 {
     global $wpdb;
@@ -42,7 +43,7 @@ function get_list_form()
         $renderHTML .= '<td class="col-lg-1"><p>'.get_members($view->ID).'</p></td>';
         $renderHTML .= '<td class="col-lg-2">'.get_list_skill($view->ID, $view->other_skill).'</td>';
         $renderHTML .= '<td class="col-lg-2"><p>'.$view->contact.'</p></td>';
-        $renderHTML .= '<td class="col-lg-1"><p>'.$view->expiry_date.'</p></td>';
+        $renderHTML .= '<td class="col-lg-1"><p>'.$view->due_date.'</p></td>';
         $renderHTML .= '<td class="col-lg-1">'.statusForm($view->ID, $view->status).'</td>';
         $renderHTML .= '</tr></table></form>';
     }
@@ -154,39 +155,137 @@ function currentUserPost($form_id)
     return $renderHTML;
 }
 
+function major_list()
+{
+    global $wpdb;
+    $set_major = array();
+    $get_majors = $wpdb->get_results("
+    SELECT * 
+    FROM {$wpdb->prefix}major
+    ");
+    foreach ($get_majors as $major) {
+        $majors = new major();
+        array_push($set_major, $majors->majorInfo($major->ID, $major->code, $major->name));
+    }
+
+    return $set_major;
+}
+function form_by_major()
+{
+    $renderHTML = '';
+    $major_list = major_list();
+    $renderHTML .= '<section id="major-form-view"><h3>Finder Form In Major</h3>
+    <div class="major-form-view-content">
+    <div class="container-inner">';
+    foreach ($major_list as $major) {
+        $renderHTML .= '<div class="form-major-item">';
+        $renderHTML .= '<a href="'.home_url('search-form').'?major-value='.$major->name.'" target="_blank"><img src="'.major_analyst($major->ID).'" alt=""></a>';
+        $renderHTML .= '<div class="item-content"><a href="'.home_url('search-form').'?major-value='.$major->name.'" target="_blank">'.$major->name.' ('.count_form_by_major($major->name).')</a>';
+        $renderHTML .= '</div></div>';
+    }
+    $renderHTML .= '</div></div></section>';
+
+    return $renderHTML;
+}
+function count_form_by_major($majorName)
+{
+    global $wpdb;
+
+    $count = $wpdb->get_var("
+    SELECT COUNT(*) 
+    FROM {$wpdb->prefix}finder_form as f 
+    INNER JOIN {$wpdb->prefix}usermetaData as u 
+    ON u.user_id = f.user_id 
+    WHERE u.meta_key = 'major' 
+    AND u.meta_value = '".$majorName."'
+    ");
+
+    return $count;
+}
+function major_analyst($majorID)
+{
+    $backgroundImg = '';
+    if ($majorID == 1) {
+        $backgroundImg = wp_get_attachment_image_src(56, 'full');
+    } elseif ($majorID == 2) {
+        $backgroundImg = wp_get_attachment_image_src(55, 'full');
+    } elseif ($majorID == 3) {
+        $backgroundImg = wp_get_attachment_image_src(57, 'full');
+    }
+
+    return $backgroundImg[0];
+}
 function current_semster_form()
 {
     $renderHTML = '';
+    $count = 0;
     $forms = get_form_current_semester();
-    $renderHTML .= '<section id="current-semster-view">
-    <h3>Finder form in '.get_current_semester().'</h3>				
-    <div class="slick-codepen">
-            <div>
-            <img src="https://media.laodong.vn/storage/newsportal/2017/12/5/579811/May-Bay-Nga.Jpg2.jpg?w=888&h=592&crop=auto&scale=both" />
-            1
-        </div>
+    $total_page = 0;
+    if ((count($forms) + 1) % 5 === 0) {
+        $total_page = (count($forms) + 1) / 5;
+    } else {
+        $total_page = floor((count($forms) + 1) / 5) + 1;
+    }
+    $renderHTML .= '<section id="current-semster-view"><h3>CALL FOR APPLICATIONS FOR '.get_current_semester().'</h3>';
+    $renderHTML .= '<div class="tabs-container"> <div id="myCarousel" class="carousel slide">';
+    $renderHTML .= '<ol class="carousel-indicators">';
+    for ($x = 0; $x < $total_page; ++$x) {
+        if ($x == 0) {
+            $renderHTML .= '<li data-target="#myCarousel" data-slide-to="'.$x.'" class="active"></li>';
+        } else {
+            $renderHTML .= '<li data-target="#myCarousel" data-slide-to="'.$x.'"></li>';
+        }
+    }
+    $renderHTML .= '</ol>';
+    $renderHTML .= '<div class="carousel-inner">';
+    for ($x = 0; $x < $total_page; ++$x) {
+        if ($x === 0) {
+            $renderHTML .= '<div class="item active">';
+            foreach (array_slice($forms, 0, 5) as $form) {
+                $renderHTML .= list_form_semester($form);
+            }
+            $renderHTML .= '</div>';
+        } else {
+            $renderHTML .= '<div class="item">';
+            $start = ($x * 5) + 1;
+            $end = 5;
+            foreach (array_slice($forms, $start, 5)  as $form) {
+                $renderHTML .= list_form_semester($form);
+            }
+            $renderHTML .= '</div>';
+        }
+    }
+    $renderHTML .= '</div>';
+    $renderHTML .= '<a class="previous-control" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span>
+            <span class="sr-only">Previous</span></a><a class="next-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span>
+            <span class="sr-only">Next</span></a>
+    </div></div></section>';
 
-        <div>
-            <img src="https://media.laodong.vn/storage/newsportal/2017/12/5/579811/May-Bay-Nga.Jpg2.jpg?w=888&h=592&crop=auto&scale=both" />
-            2
-        </div>
+    return $renderHTML;
+}
+function list_form_semester($form)
+{
+    $major = user_metadata('major', $form->user_id);
+    $renderHTML .= '<div class="col-lg-12"><div class="form-item"> ';
+    $renderHTML .= '<div class="col-lg-2">';
+    $renderHTML .= get_avatar(get_the_author_meta($form->user_id), 70).'<br>';
+    $renderHTML .= '<a href="'.home_url('search-form').'?major-value='.$major.'" target="_blank">'.$major.'</a>';
+    $renderHTML .= '</div>';
+    $renderHTML .= '<div class="col-lg-10 form-item-content">';
+    $renderHTML .= '<div class="form-content-title"><h5><a href="'.home_url('form-detail').'?form-id='.$form->ID.'" class="title-form" target="_blank">'.$form->title.'</a></h5></div>';
+    $renderHTML .= '<div class="form-content-author">';
+    $renderHTML .= '<p>By <a href="'.home_url('user').'?user-id='.$form->user_id.'"> '.get_userdata($form->user_id)->user_login.'</a></p>';
+    $renderHTML .= '<p> Updated at '.$form->updated_date.'</p>';
+    $renderHTML .= '</div>';
+    $renderHTML .= '<p class="form-content-description">'.$form->description.'</p>';
+    if ($form->status == 1) {
+        $renderHTML .= '<button class="btn btn-warning btn-show-message">Openning</button>';
+    } else {
+        $renderHTML .= '<button class="btn btn-closed btn-show-message">Closed</button>';
+    }
 
-        <div>
-            <img src="https://media.laodong.vn/storage/newsportal/2017/12/5/579811/May-Bay-Nga.Jpg2.jpg?w=888&h=592&crop=auto&scale=both" />
-            3
-        </div>
-
-        <div>
-            <img src="https://media.laodong.vn/storage/newsportal/2017/12/5/579811/May-Bay-Nga.Jpg2.jpg?w=888&h=592&crop=auto&scale=both" />
-            4
-        </div>
-
-        <div class="slick-slide">
-            <img src="https://media.laodong.vn/storage/newsportal/2017/12/5/579811/May-Bay-Nga.Jpg2.jpg?w=888&h=592&crop=auto&scale=both" />
-            5
-        </div>
-    </div>
-    </section>';
+    $renderHTML .= '</div>';
+    $renderHTML .= '</div></div>';
 
     return $renderHTML;
 }
@@ -195,14 +294,16 @@ function get_form_current_semester()
 {
     global $wpdb;
     $get_list_form = array();
-    $forms = new formInfo();
     $get_forms = $wpdb->get_results("
     select *
     FROM {$wpdb->prefix}finder_form 
     WHERE semester = '".get_current_semester()."' 
+    order by updated_date DESC
+    LIMIT 1,40 
     ");
     foreach ($get_forms as $form) {
-        array_push($get_list_form, $forms->getFormInfo($form->ID, $form->user_id, $form->title, $form->description, $form->other_skil, $form->expiry_date, $form->contact, $form->contact, $form->status, $form->semester));
+        $forms = new formInfo();
+        array_push($get_list_form, $forms->getFormInfo($form->ID, $form->user_id, $form->title, $form->description, $form->other_skil, $form->due_date, $form->contact, $form->status, $form->semester, $form->updated_date));
     }
 
     return $get_list_form;
@@ -217,6 +318,3 @@ function get_form_current_semester()
 
         return $get_current_semester;
     }
-
-?>
-
