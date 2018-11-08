@@ -1,5 +1,5 @@
-
 <?php
+
 include 'includes/core/profile/gpf-profile.php';
 function userInfo($meta_key, $user_id)
 {
@@ -18,10 +18,10 @@ function get_btn_case($btn)
     $button = '';
     switch ($btn) {
         case 'edit':
-        $button = '<div class="btn-edit-content"><a href="#"class="btn btn-warning">contact with us</a></div>';
+        $button = '<a href="#"class="btn btn-warning">Contact Us</a>';
         break;
         case 'join':
-        $button = '<button type="submit" name="btn-join-form" class="btn btn-info">Join In</button>';
+        $button = '<button type="submit" name="btn-join-form" class="btn btn-info">Join Us</button>';
         break;
         case 'closed':
         $button = '<button class="btn btn-close" disabled>Closed</button>';
@@ -42,7 +42,7 @@ function get_edit_btn($form_id)
         $renderHTML = '<div class="btn-edit-content">'.get_btn_case('edit').'</div>';
     } else {
         if (get_form_value($form_id, 'user_id') == get_current_user_id() && check_student_form() == $form_id) {
-            $renderHTML = '<div class="btn-edit-content"><a href="'.home_url('profile').'?profile-mode=edit"class="btn btn-primary">Edit</a></div>';
+            $renderHTML = '<div class="btn-edit-content"><a href="'.home_url('profile').'?form-mode=edit"class="btn btn-primary">Edit</a></div>';
         } else {
             if (empty(has_form_id())) {
                 $renderHTML = '<div class="btn-edit-content">'.get_btn_case('edit').'</div>';
@@ -52,31 +52,42 @@ function get_edit_btn($form_id)
 
     return $renderHTML;
 }
-// in processing : tạo button action join group
-function get_button_join($form_id, $user_id)
+function handle_request_form($form_id)
 {
-    $check = actionJoinForm($form_id, $user_id);
-    $status_form = checkStatusForm($form_id);
-    if ($check['result']) {
-        $renderHTML = '';
-    } elseif (!$status_form) {
-        $renderHTML = get_btn_case('closed');
-    } elseif (is_request_exist($form_id, $current_user_id)) {
-        $renderHTML = get_btn_case('cancel');
+    if (isset($_POST['btn-join-form'])) {
+        do_action('join_action');
+        echo get_button_join($form_id);
+    } elseif (isset($_POST['cancel-join-request'])) {
+        do_action('reject_request');
+        echo get_button_join($form_id);
     } else {
-        $renderHTML = get_btn_case('join');
+        echo get_button_join($form_id);
     }
+}
+// in processing : tạo button action join group
+function get_button_join($form_id)
+{
+    $status_form = checkStatusForm($form_id);
+    $renderHTML = '<div class="groups-button-request"> ';
+    if (is_request_exist($form_id)) {
+        $renderHTML .= get_btn_case('cancel');
+    } elseif (!$status_form) {
+        $renderHTML .= get_btn_case('closed');
+    } else {
+        $renderHTML .= get_btn_case('join');
+    }
+    $renderHTML .= '</div>';
 
     return $renderHTML;
 }
 
-function is_request_exist($form_id, $current_user_id)
+function is_request_exist($form_id)
 {
     global $wpdb;
     $result = $wpdb->get_var("
-    SELECT * FROM {$wpdb->prefix}request 
-    WHERE form_id = '".$form_id."' 
-    AND user_id = '".$current_user_id."'
+    SELECT * FROM {$wpdb->prefix}request
+    WHERE form_id = '".$form_id."'
+    AND member_id = '".get_current_user_id()."'
     ");
     if ($result) {
         return true;
@@ -88,7 +99,7 @@ function is_request_exist($form_id, $current_user_id)
 function formView($form_id)
 {
     $major = userInfo('major', get_form_value($form_id, 'user_id'));
-    $renderHTML .= '<div class="form-detail"><form action="#" method="POST"><h3>'.get_form_value($form_id, 'title').'</h3>';
+    $renderHTML .= '<div class="form-detail"><h3>'.get_form_value($form_id, 'title').'</h3>';
     $renderHTML .= get_edit_btn($form_id);
     $renderHTML .= '<input type="hidden" name="form-id" value="'.$form_id.'" /> ';
     $renderHTML .= '<input type="hidden" name="user-id" value="'.get_form_value($form_id, 'user_id').'" /> ';
@@ -131,8 +142,7 @@ function formView($form_id)
             <th>Due date</th>
             <td>'.get_form_value($form_id, 'due_date').'</td>
         </tr>';
-    $renderHTML .= '<tr><td colspan="3" style="text-align:center;padding-top:20px;">'.get_button_join($form_id, get_form_value($form_id, 'user_id')).'</td></tr>';
-    $renderHTML .= '</table></form></div>';
+    $renderHTML .= '</table></div>';
 
     return $renderHTML;
 }

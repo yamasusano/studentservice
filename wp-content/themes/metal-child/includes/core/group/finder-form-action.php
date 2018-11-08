@@ -315,17 +315,18 @@ function reopenFinderForm()
 );
 }
 
-function updateFinderForm()
+function updateFinderForm($title, $description, $other, $contact, $semester, $close_date)
 {
     global $wpdb;
     $form_id = has_form_id();
-    $update_form_finder = update(
+    $update_form_finder = $wpdb->update(
         "{$wpdb->prefix}finder_form",
         [
             'title' => $title,
             'description' => $description,
             'other_skill' => $other,
             'contact' => $contact,
+            'semester' => $semester,
             'due_date' => $close_date,
         ],
         [
@@ -333,9 +334,9 @@ function updateFinderForm()
         ]
     );
     if ($update_form_finder) {
-        return 'Update Finder form success!';
+        return 'Update success!';
     } else {
-        return 'update fail';
+        return 'Update failed. Have no something change !!!!';
     }
 }
 function major($user_id)

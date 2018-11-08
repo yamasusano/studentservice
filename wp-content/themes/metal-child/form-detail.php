@@ -14,18 +14,14 @@ $form_id = $_GET['form-id'];
 					<div id="content" class="site-content">
 						<div class="my-container">
                             <div class="row">
-								<?php echo formView($form_id); ?>
-								<div class="message">
-									<?php if (isset($_POST['btn-join-form'])) {
-    do_action('join_action');
-}
-                                    ?>
-								</div>
+								<form id="send-request" action="#" method="POST">
+									<?php echo formView($form_id); ?>
+									<?php handle_request_form($form_id); ?>
+								</form>
 							</div>
                         </div>
 					</div><!-- #content -->
 				</div><!-- #primary -->
-			
 				<?php get_sidebar(); ?>
 				
 			</div>

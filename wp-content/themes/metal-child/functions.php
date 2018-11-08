@@ -26,6 +26,10 @@ function zozo_enqueue_child_theme_styles()
     wp_enqueue_script('front-end-js', get_stylesheet_directory_uri().'/assets/js/front-end.js', array('jquery'), null, true);
     wp_enqueue_script('custom-js', get_stylesheet_directory_uri().'/assets/js/custom.js', array('jquery'), null, true);
     wp_enqueue_script('confirm-js', get_stylesheet_directory_uri().'/assets/js/jquery-confirm.min.js', array('jquery'), null, true);
+    //ckeditor-js
+    wp_enqueue_script('ckeditor-js', get_stylesheet_directory_uri().'/ckeditor/ckeditor.js', array('jquery'), null, true);
+    wp_enqueue_script('config-ckeditor-js', get_stylesheet_directory_uri().'/ckeditor/config.js', array('jquery'), null, true);
+    wp_enqueue_script('style-ckeditor-js', get_stylesheet_directory_uri().'/ckeditor/styles.js', array('jquery'), null, true);
 }
 //start session to login.
 add_action('init', 'my_session', 1);
@@ -239,21 +243,39 @@ function reopen_form_finder()
     echo wp_send_json(['message' => $message]);
     die();
 }
-add_action('join_action', 'joinFormaAction');
-function joinFormaAction()
+add_action('join_action', 'join_form_action');
+function join_form_action()
 {
     if (isset($_POST['form-id'])) {
         $form_id = $_POST['form-id'];
         $user_id = $_POST['user-id'];
         $check = actionJoinForm($form_id, $user_id);
+        $message = '';
+        $renderHTML = '<div class="message-show"> ';
         if (!$check['result']) {
-            echo $check['message'];
+            $renderHTML .= $check['message'];
         } else {
-            echo sendRequest($form_id, $user_id);
+            $renderHTML .= sendRequest($form_id, $user_id);
         }
+        $renderHTML .= '</div>';
+        echo $renderHTML;
     }
 }
-
+add_action('reject_request', 'userRejectRequest');
+function userRejectRequest()
+{
+    $form_id = $_POST['form-id'];
+    $user_id = get_current_user_id();
+    removeRequest($form_id, $user_id);
+    $renderHTML = '<div class="message-show"> ';
+    if (removeRequest($form_id, $user_id)) {
+        $renderHTML .= 'reject request success!';
+    } else {
+        $renderHTML .= 'Request have been rejected!';
+    }
+    $renderHTML .= '</div>';
+    echo $renderHTML;
+}
 add_action('wp_ajax_nopriv_magage_request', 'magage_request');
 add_action('wp_ajax_magage_request', 'magage_request');
 function magage_request()
@@ -349,17 +371,17 @@ function update_form_finder()
 {
     if (isset($_POST['title'])) {
         $title = $_POST['title'];
-        $description = $_POST['description'];
+        $description = stripslashes_deep($_POST['description']);
         $other = $_POST['otherSkill'];
         $contact = $_POST['contact'];
         $close_date = $_POST['close'];
+        $semester = $_POST['semester'];
         $form_validate = validFormFinder($title, $description, $close_date);
-        if (!isset($form_validate)) {
-            $message = updateFinderForm();
+        if ($form_validate['result']) {
+            $message = updateFinderForm($title, $description, $other, $contact, $semester, $close_date);
         } else {
-            $message = $form_validate;
+            $message = $form_validate['message'];
         }
-
         echo wp_send_json(['message' => $message]);
         die();
     }
@@ -371,18 +393,6 @@ function create_new_form()
 {
     echo wp_send_json(['message' => $message]);
     die();
-}
-add_action('reject_request', 'userRejectRequest');
-function userRejectRequest()
-{
-    $form_id = $_POST['form-id'];
-    $user_id = get_current_user_id();
-    removeRequest($form_id, $user_id);
-    if (removeRequest($form_id, $user_id)) {
-        echo 'reject request success!';
-    } else {
-        echo 'Request have been rejected!';
-    }
 }
 add_action('wp_ajax_nopriv_student_leave_group', 'student_leave_group');
 add_action('wp_ajax_student_leave_group', 'student_leave_group');
@@ -468,4 +478,11 @@ add_action('new-feed', 'support_student_ideas');
 function support_student_ideas()
 {
     echo get_ideas_form();
+}
+add_action('wp_ajax_nopriv_over_view_profile', 'over_view_profile');
+add_action('wp_ajax_over_view_profile', 'over_view_profile');
+function over_view_profile()
+{
+    echo wp_send_json(['overview' => overView()]);
+    die();
 }

@@ -23,7 +23,7 @@ function get_teacher_group()
         <a>Student groups</a>
         </div>';
     }
-    $renderHTML .= '<div id="manage-request" class="sub-menu-items"><a>Manage request</a></div>';
+    $renderHTML .= '<div id="manage-request" class="sub-menu-items"><i class="glyphicon glyphicon-hand-right"></i><a>Manage request</a></div>';
 
     return $renderHTML;
 }

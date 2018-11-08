@@ -127,6 +127,7 @@ function finderForm()
     $skills = major_skill();
     $major = info('major');
     $finder_form = check_student_form();
+
     $renderHTML = '<h3>Finder Form</h3><div class="finder-form">
         <div class="row">
             <div class="project-semester">
@@ -134,7 +135,7 @@ function finderForm()
                     <label for="title">Semester</label>
                 </div>
                 <div class="col-lg-9">
-                    <select id="semester">
+                    <select name="semester" id="semester">
                         '.semesterSelect().'
                     </select>
                 </div>
@@ -160,8 +161,8 @@ function finderForm()
                     <label for="title">Description</label>
                 </div>
                 <div class="col-lg-9">
-                <textarea name="description" id="description" rows="3" style="resize:none;width:100%">'.($finder_form ? form_data('description') : '').'</textarea>
-                </div>
+                <textarea name="description" id="description" rows="6" cols=107>'.($finder_form ? form_data('description') : '').'</textarea>';
+    $renderHTML .= '</div>
             </div>
             <div class="member-avaiable-form">
                 <div class="col-lg-3">
@@ -229,6 +230,7 @@ function finderForm()
         <div id="group-message">
         </div>
         <div class="col-lg-12  form-btn">';
+    $renderHTML .= '<input type="hidden" name="get-description" id="get-description" /> ';
     $renderHTML .= is_form_exist();
     $renderHTML .= ' </div></div>';
 

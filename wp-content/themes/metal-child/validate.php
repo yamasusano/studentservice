@@ -30,25 +30,29 @@ function descriptionCheck($description)
 }
 function closeDateCheck($close_date)
 {
-    $deadline = getDeadLine();
-    $is_validated_time = checkCloseDate($close_date, $deadline);
-    if (!$is_validated_time['result']) {
-        return array('result' => false, 'message' => 'Time to close form '.$is_validated_time['message']);
+    $close_date = new DateTime($close_date);
+    $today = new DateTime(date('Y-m-d'));
+
+    $diff = date_diff($today, $close_date);
+    $check = (int) $diff->format('%r%a');
+    if ($check < 2) {
+        return array('result' => false, 'message' => 'Due Date must close at least 2 day from today.');
     }
 
     return array('result' => true);
 }
 
-function checkCloseDate($close_date, $deadline)
+function check_end_semester($close_date)
 {
-    $date_format = 'Y-m-d H:i:s';
-    $today = date($date_format);
-    if (strtotime($close_date) <= strtotime($deadline) &&
-        strtotime($close_date) - strtotime($today) >= 48 * 60 * 60) {
-        return array('result' => true);
+    $close_date = new DateTime($close_date);
+    $deadline = new DateTime(getDeadLine());
+    $diff = date_diff($close_date, $deadline);
+    $check = (int) $diff->format('%r%a');
+    if ($check < 0) {
+        return array('result' => false, 'message' => 'Due Date must close before '.$deadline.'');
     }
 
-    return array('result' => false, 'message' => ' is before '.$deadline.' and after 48h from when the form opens.');
+    return array('result' => true);
 }
 
 function validEmptyField($value)
@@ -76,22 +80,25 @@ function formatText($value)
 function validFormFinder($title, $description, $close_date)
 {
     $message = '';
-    $deadline = getDeadLine();
     if (!titleCheck($title)['result']) {
         $message = titleCheck($title)['message'];
 
-        return $message;
+        return array('result' => false, 'message' => $message);
     } elseif (!descriptionCheck($description)['result']) {
         $message = descriptionCheck($description)['message'];
 
-        return $message;
+        return array('result' => false, 'message' => $message);
+    } elseif (!check_end_semester($close_date)['result']) {
+        $message = check_end_semester($close_date)['message'];
+
+        return array('result' => false, 'message' => $message);
     } elseif (!closeDateCheck($close_date)['result']) {
         $message = closeDateCheck($close_date)['message'];
 
-        return $message;
-    } else {
-        return true;
+        return array('result' => false, 'message' => $message);
     }
+
+    return array('result' => true);
 }
 function getDeadLine()
 {

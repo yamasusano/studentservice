@@ -399,8 +399,12 @@ div.menu-lists {
   display: none;
 }
 
-div.description-form div.col-lg-9 {
-  height: 81px;
+div.finder-form input {
+  padding-left: 5px;
+}
+
+div.finder-form>div>div {
+  display: flex;
 }
 
 div.finder-form {
@@ -410,7 +414,7 @@ div.finder-form {
 }
 
 div.finder-form .row {
-  height: 620px;
+  min-height: 620px;
 }
 
 div.prefix-element {

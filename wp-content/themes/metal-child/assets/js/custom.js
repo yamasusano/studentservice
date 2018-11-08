@@ -21,15 +21,30 @@ jQuery(function ($) {
             manageRequest();
         });
 
-        var tech = getUrlParameter('profile-mode');
+        var tech = getUrlParameter('form-mode');
         if (tech == 'edit') {
             $(window).load(function () {
-                dataLink();
                 setMenuGroup();
                 FinderForm();
+                optionSelectFinder();
             });
+        } else {
+            overViewProfile();
         }
     });
+    function overViewProfile() {
+
+        $.ajax({
+            url: zozo_js_vars.zozo_ajax_url,
+            data: { 'action': 'over_view_profile' },
+            type: 'post',
+            success: function (result) {
+                var html = $.parseHTML(result.overview);
+                $('#profile-contents').html(html);
+            },
+            errors: function (result) { }
+        });
+    }
     function menuTeacherGroup() {
         $.ajax({
             url: zozo_js_vars.zozo_ajax_url,
@@ -87,6 +102,7 @@ jQuery(function ($) {
                 $('#profile-contents').html(html);
                 $('button#finder-form').bind('click', function () {
                     FinderForm();
+
                 });
                 $('button#member-list').bind('click', function () {
                     generateMember();
@@ -222,8 +238,10 @@ jQuery(function ($) {
             data: { 'action': 'finder_form' },
             type: 'post',
             success: function (result) {
+                var data_description = '';
                 var html = $.parseHTML(result.form);
                 $('#group-contents').html(html);
+                CKEDITOR.replace('description');
                 dropdownSelectMenu($(".dropdown dt a"), $(".dropdown dd ul li a"));
                 $('input#skill-other').bind("enterKey", function (e) {
                     $(this).val($(this).val() + ' , ');
@@ -237,7 +255,7 @@ jQuery(function ($) {
                 $('#post-form').bind('click', function () {
                     var semester = $('select#semester').val();
                     var title = $('#title').val();
-                    var description = $('#description').val();
+                    var description = CKEDITOR.instances['description'].getData();
                     var members = '';
                     var skill = $('.multiSel span').text();
                     var otherSkill = $('#skill-other').val();
@@ -296,23 +314,24 @@ jQuery(function ($) {
                 $('div.form-btn').html(result.get_action);
                 $('button#save-form-finder').on('click', function () {
                     var title = $('#title').val();
-                    var description = $('#description').val();
+                    var description = CKEDITOR.instances['description'].getData();
                     var skill = $('.multiSel span').text();
                     var otherSkill = $('#skill-other').val();
                     var close_date = $('#close-date').val();
                     var contact = $('#contact-form').val();
-                    updateFinderForm(title, description, otherSkill, contact, close_date);
+                    var semester = $('select#semester').val();
+                    updateFinderForm(title, description, otherSkill, contact, close_date, semester);
                 });
             },
             errors: function (result) { }
 
         });
     }
-    function updateFinderForm(title, description, otherSkill, contact, close_date) {
+    function updateFinderForm(title, description, otherSkill, contact, close_date, semester) {
 
         $.ajax({
             url: zozo_js_vars.zozo_ajax_url,
-            data: { 'action': 'update_form_finder', 'title': title, 'description': description, 'otherSkill': otherSkill, 'contact': contact, 'close': close_date },
+            data: { 'action': 'update_form_finder', 'title': title, 'description': encodeVars(description), 'otherSkill': otherSkill, 'contact': contact, 'close': close_date, 'semester': semester },
             type: 'post',
             success: function (result) {
                 $('div#group-message').html(result.message);
@@ -337,7 +356,6 @@ jQuery(function ($) {
                 });
             },
             errors: function (result) { }
-
         });
     }
     function rejectRequest(button) {

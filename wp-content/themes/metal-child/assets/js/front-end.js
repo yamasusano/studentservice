@@ -4,6 +4,5 @@ jQuery(function ($) {
         if (keyword) {
             $('div.finder-post-title h5').unmark().mark(keyword);
         }
-
     });
 })

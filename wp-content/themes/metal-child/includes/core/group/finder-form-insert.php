@@ -144,7 +144,7 @@ function sendRequest($form_id, $leader_id)
                 ]
             );
             if ($insert_members_watting) {
-                $message = 'Waitting <a href="'.home_url('user').'?user-id='.$leader_id.'" >'.get_userdata($leader_id)->user_login.'</a> accept to join <a href="'.home_url('form-detail').'?form-id='.$form_id.'" >'.form_info('title', $form_id).'</a>.';
+                $message = 'Waitting <a href="'.home_url('user').'?user-id='.$leader_id.'" >'.get_userdata($leader_id)->user_login.'</a> accept';
             }
         }
     }
@@ -194,6 +194,7 @@ function actionJoinForm($form_id, $user_id)
 
     return array('result' => true);
 }
+
 function checkStatusForm($form_id)
 {
     global $wpdb;

@@ -5,7 +5,7 @@
 require 'includes/core/is-user-login.php';
 include 'includes/core/profile/gpf-teacher-profile.php';
 include 'includes/core/profile/gpf-student-profile.php';
-$mode = $_GET['mode'];
+$mode = $_GET['form-mode'];
 get_header();
 
 ?>
@@ -64,7 +64,6 @@ get_header();
                                 </div>
                                 <div class="col-md-9">
                                     <div id="profile-contents" class="profile-content">
-                                        <?php echo overView(); ?>
                                     </div>
 
                                 </div>

@@ -4,6 +4,7 @@
     border: 10px;
     margin-top: 50px;
     padding: 0px 20px 20px;
+    box-shadow: 0 10px 6px -6px #777;
 }
 
 .form-detail .form-detail-semester {
@@ -46,6 +47,15 @@ table#form-view-detail .btn-close {
     color: white;
 }
 
-table#form-view-detail tr:first-child {
-    border-top: unset;
+table#form-view-detail tr:nth-child(odd) {
+    background: #fff;
+}
+
+div.groups-button-request {
+    text-align: center;
+    margin: 50px;
+}
+
+.message-show {
+    margin: 15px 10px;
 }
