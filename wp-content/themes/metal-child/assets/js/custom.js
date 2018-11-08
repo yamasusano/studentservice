@@ -331,7 +331,7 @@ jQuery(function ($) {
 
         $.ajax({
             url: zozo_js_vars.zozo_ajax_url,
-            data: { 'action': 'update_form_finder', 'title': title, 'description': encodeVars(description), 'otherSkill': otherSkill, 'contact': contact, 'close': close_date, 'semester': semester },
+            data: { 'action': 'update_form_finder', 'title': title, 'description': description, 'otherSkill': otherSkill, 'contact': contact, 'close': close_date, 'semester': semester },
             type: 'post',
             success: function (result) {
                 $('div#group-message').html(result.message);
