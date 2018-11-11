@@ -1,6 +1,7 @@
 <?php
 
 include 'includes/core/profile/gpf-profile.php';
+require_once 'form-check.php';
 function userInfo($meta_key, $user_id)
 {
     global $wpdb;
@@ -28,6 +29,9 @@ function get_btn_case($btn)
         break;
         case 'cancel':
         $button = '<button type="submit" name="cancel-join-request" class="btn btn-danger">cancel</button>';
+        break;
+        case 'chat':
+        $button = '<button type="submit" name="chat-with-group" class="btn btn-primary">Chat now!</button>';
         break;
         default:
         break;
@@ -73,9 +77,12 @@ function get_button_join($form_id)
         $renderHTML .= get_btn_case('cancel');
     } elseif (!$status_form) {
         $renderHTML .= get_btn_case('closed');
+    } elseif (is_member_in_group($form_id, get_current_user_id())) {
+        $renderHTML .= get_btn_case('chat');
     } else {
         $renderHTML .= get_btn_case('join');
     }
+
     $renderHTML .= '</div>';
 
     return $renderHTML;
@@ -88,6 +95,7 @@ function is_request_exist($form_id)
     SELECT * FROM {$wpdb->prefix}request
     WHERE form_id = '".$form_id."'
     AND member_id = '".get_current_user_id()."'
+    AND request = 1
     ");
     if ($result) {
         return true;

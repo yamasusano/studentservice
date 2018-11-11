@@ -133,6 +133,7 @@ function currentUserPost($form_id)
         FROM {$wpdb->prefix}request 
         WHERE form_id = '".$form_id."' 
         AND member_id = '".$current_user."'
+        AND user_request = 1
         ");
 
         if ($is_student == 'Student') {

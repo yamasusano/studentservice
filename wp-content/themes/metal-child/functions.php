@@ -191,7 +191,6 @@ function post_finder_form()
     $members = $_POST['members'];
     $skill = $_POST['skill'];
     $other = $_POST['other'];
-    $supervisor = $_POST['supervisor'];
     $close_date = $_POST['close_date'];
     $contact = $_POST['contact'];
     $group_type = info('role');
@@ -206,7 +205,7 @@ function post_finder_form()
             if ($insert_finder_table) {
                 $form_id = finder_form_id($title);
                 $insert_member_table = insert_member_leader($form_id, $user_id);
-                $insert_group_table = insert_group($form_id, $group_type, $suppervisor_id);
+                $insert_group_table = insert_group($form_id, $group_type);
                 $insert_skill_table = insert_skill($form_id, $skill);
 
                 $message = 'Post success';
@@ -276,6 +275,23 @@ function userRejectRequest()
     $renderHTML .= '</div>';
     echo $renderHTML;
 }
+add_action('wp_ajax_nopriv_reject_request_form', 'reject_request_form');
+add_action('wp_ajax_reject_request_form', 'reject_request_form');
+function reject_request_form()
+{
+    $form_id = $_POST['form-id'];
+    $user_id = get_current_user_id();
+    removeRequest($form_id, $user_id);
+    $check = false;
+    if (removeRequest($form_id, $user_id)) {
+        $message = 'reject request success!';
+        $check = true;
+    } else {
+        $message = 'Request have been rejected!';
+    }
+    echo wp_send_json(['check' => $check, 'notification' => $message]);
+    die();
+}
 add_action('wp_ajax_nopriv_magage_request', 'magage_request');
 add_action('wp_ajax_magage_request', 'magage_request');
 function magage_request()
@@ -309,6 +325,37 @@ function accept_request()
 add_action('wp_ajax_nopriv_reject_user_request', 'reject_user_request');
 add_action('wp_ajax_reject_user_request', 'reject_user_request');
 function reject_user_request()
+{
+    if (isset($_POST['request-user'])) {
+        $user_name = $_POST['request-user'];
+        $user_id = get_userdatabylogin($user_name)->ID;
+    }
+    echo wp_send_json(['message' => rejectRequest($user_id)]);
+    die();
+}
+add_action('wp_ajax_nopriv_accept_request_via_user', 'accept_request_via_user');
+add_action('wp_ajax_accept_request_via_user', 'accept_request_via_user');
+function accept_request_via_user()
+{
+    $form_id = $_POST['form-id'];
+    $action = user_access_request($form_id);
+    $message = '';
+    $result;
+    if ($action['result']) {
+        $message = $action['message'];
+        $result = $action['result'];
+    } else {
+        $message = $action['message'];
+        $result = $action['result'];
+    }
+
+    echo wp_send_json(['results' => $result, 'message' => $message]);
+    die();
+}
+
+add_action('wp_ajax_nopriv_reject_request_via_user', 'reject_request_via_user');
+add_action('wp_ajax_reject_request_via_user', 'reject_request_via_user');
+function reject_request_via_user()
 {
     if (isset($_POST['request-user'])) {
         $user_name = $_POST['request-user'];
@@ -484,5 +531,46 @@ add_action('wp_ajax_over_view_profile', 'over_view_profile');
 function over_view_profile()
 {
     echo wp_send_json(['overview' => overView()]);
+    die();
+}
+add_action('wp_ajax_nopriv_invite_user_join', 'invite_user_join');
+add_action('wp_ajax_invite_user_join', 'invite_user_join');
+function invite_user_join()
+{
+    $user_id = $_POST['user-id'];
+    $check = action_invite_user($user_id);
+    $message = '';
+    $button_cancel = '';
+    if ($check['result']) {
+        $message = $check['message'];
+        $button_cancel = $check['button'];
+    } else {
+        $message = $check['message'];
+    }
+    echo wp_send_json(['check' => $check['result'], 'message' => $message, 'button' => $button_cancel]);
+    die();
+}
+add_action('wp_ajax_nopriv_re_invite_user_join', 're_invite_user_join');
+add_action('wp_ajax_re_invite_user_join', 're_invite_user_join');
+function re_invite_user_join()
+{
+    $user_id = $_POST['user-id'];
+    $check = re_action_invite_student($user_id);
+    $message = '';
+    $button_join = '';
+    if ($check['result']) {
+        $message = $check['message'];
+        $button_join = $check['button'];
+    } else {
+        $message = $check['message'];
+    }
+    echo wp_send_json(['check' => $check['result'], 'message' => $message, 'button' => $button_join]);
+    die();
+}
+add_action('wp_ajax_nopriv_action_invite_teacher', 'action_invite_teacher');
+add_action('wp_ajax_action_invite_teacher', 'action_invite_teacher');
+function action_invite_teacher()
+{
+    echo wp_send_json(['check' => $check['result'], 'message' => $message, 'button' => $button_join]);
     die();
 }

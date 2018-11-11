@@ -88,18 +88,6 @@ function get_skill_set()
 
     return $renderHTML;
 }
-function get_supervior()
-{
-    global $wpdb;
-    $finder_form = check_student_form();
-    $supervior_id = $wpdb->get_var("
-    SELECT suppervisor_id 
-    FROM {$wpdb->prefix}groups 
-    WHERE type = 'Student' AND form_id = '".$finder_form."'
-    ");
-
-    return get_userdata($supervior_id->suppervisor_id)->user_login;
-}
 function finderFormView()
 {
     $renderHTML = '';
@@ -115,7 +103,7 @@ function finderFormView()
         $renderHTML .= '<div class="members"><div class="col-lg-3 col">Members</div><div class="col-lg-9 col">'.$members.'</div></div>';
         $renderHTML .= '<div class="skill-set"><div class="col-lg-3">Skill set</div><div class="col-lg-9">'.get_skill_set().'</div></div>';
         $renderHTML .= '<div class="Others"><div class="col-lg-3">Others</div><div class="col-lg-9">'.form_data('other_skill').'</div></div>';
-        $renderHTML .= '<div class="Supervisor"><div class="col-lg-3">Supervisor</div><div class="col-lg-9">'.get_supervior().'</div></div>';
+        $renderHTML .= '<div class="Supervisor"><div class="col-lg-3">Supervisor</div><div class="col-lg-9">'.get_suppervisor($finder_form).'</div></div>';
         $renderHTML .= '<div class="closed_date"><div class="col-lg-3">Closed</div><div class="col-lg-9">'.form_data('due_date').'</div></div>';
         $renderHTML .= '</div></div>';
     }
@@ -214,10 +202,13 @@ function finderForm()
                 </div>
                 <div class="supervisor-form">
                     <div class="col-lg-6">
-                        <div class="form-group">
+                        <div class="col-lg-6">
                             <label for="title">Supervisor</label>
                         </div>
-                    </div>
+                        <div class="col-lg-6">
+                        '.get_suppervisor($finder_form).'
+                        </div>
+                    </div>  
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label for="title">Due Date</label>
@@ -293,6 +284,22 @@ function set_member_to_form($form_id)
 
     return $renderHTML;
 }
+function get_suppervisor($form_id)
+{
+    global $wpdb;
+    $renderHTML = '';
+    $suppervisor = $wpdb->get_var("
+    SELECT member_id
+    FROM {$wpdb->prefix}members
+    WHERE form_id = '".$form_id."' 
+    AND member_role = 2
+    ");
+    if ($suppervisor) {
+        $renderHTML .= '<a href="'.home_url('user').'?user-id='.$suppervisor.'" class="btn btn-sm btn-info btn-sm" >'.get_userdata($suppervisor)->user_login.'</a>';
+    }
+
+    return $renderHTML;
+}
 function get_members_to_form($form_id)
 {
     global $wpdb;
@@ -319,8 +326,6 @@ function leaveGroup()
 
     return $renderHTML;
 }
-// check có phải là leader k
-//
 function actionLeaveGroup()
 {
     $form_id = check_student_form();
@@ -340,34 +345,33 @@ function actionLeaveGroup()
 function studentLeaveGroup($form_id, $user_id)
 {
     global $wpdb;
-    $delete_request = $wpdb->query("
-        DELETE 
-        FROM {$wpdb->prefix}request 
-        WHERE form_id = '".$form_id."' 
-        ");
-    $delete_members = $wpdb->query("
-        DELETE 
-        FROM {$wpdb->prefix}members 
-        WHERE form_id = '".$form_id."'
-        AND member_id = '".$user_id."'
-        ");
-    $delete_groups = $wpdb->query("
-        DELETE 
-        FROM {$wpdb->prefix}groups 
-        WHERE form_id = '".$form_id."' 
-        ");
-    $delete_skill = $wpdb->query("
-        DELETE 
-        FROM {$wpdb->prefix}form_skill 
-        WHERE form_id = '".$form_id."' 
-        ");
+    $delete_members = $wpdb->delete("
+        {$wpdb->prefix}members",
+        [
+            'form_id' => $form_id,
+            'member_id' => $user_id,
+        ]
+        );
+    $delete_groups = $wpdb->delete("
+        {$wpdb->prefix}groups",
+        [
+            'form_id' => $form_id,
+        ]
+        );
+    $delete_skill = $wpdb->delete("
+        {$wpdb->prefix}form_skill",
+        [
+            'form_id' => $form_id,
+        ]
+        );
     if (isset($delete_groups) && isset($delete_members) && isset($delete_skill)) {
-        $delete_form = $wpdb->query("
-            DELETE 
-            FROM {$wpdb->prefix}finder_form 
-            WHERE ID = '".$form_id."' 
-            AND user_id = '".$user_id."'
-            ");
+        $delete_form = $wpdb->delete("
+        {$wpdb->prefix}finder_form",
+           [
+            'ID' => $form_id,
+            'user_id' => $user_id,
+           ]
+        );
     }
 }
 

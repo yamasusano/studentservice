@@ -59,3 +59,19 @@ div.groups-button-request {
 .message-show {
     margin: 15px 10px;
 }
+
+.member-message {
+    min-height: 25px;
+}
+
+.btn-user {
+    padding: 0 !important;
+}
+
+.supervisor-form>div>div {
+    padding: 0;
+}
+
+.supervisor-form>div>div:last-child {
+    padding-left: 20px;
+}

@@ -27,7 +27,7 @@ case 'role':
         case 1:
             return 'Student';
             break;
-        case 2:
+        case 0:
             return 'Teacher';
             break;
     }
