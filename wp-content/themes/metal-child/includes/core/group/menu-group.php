@@ -1,16 +1,30 @@
 <?php
 
 include 'includes/core/profile/gpf-profile.php';
-function teacherGroupMenu()
+function get_groups()
 {
     $renderHTML = '';
-    $renderHTML .= '<div class="col-lg-12"><div class="row"><div class="menu-lists">';
-    $renderHTML .= '<div class="group-menu-item"><button id="create-new-group" class="btn btn-info">Create</button></div>';
-    $renderHTML .= '<div class="invite-members">
-                <input type="text" name="student-name" id="student-name"  placeholder="search student here...">
-                <button class="btn btn-info" name="search-students" id="search-students" >Search</button>
-                </div></div>';
-    $renderHTML .= '<div id="group-contents"></div></div></div>';
+    $user_role = info('role');
+    if ($user_role == 'Student') {
+        $renderHTML .= '<div id="my-group" class="sub-menu-items">
+        <i class="glyphicon glyphicon-hand-right"></i>
+        <a>My Group</a>
+    </div>
+    <div id="other-group" class="sub-menu-items">
+        <i class="glyphicon glyphicon-hand-right"></i>
+        <a>Teacher Groups</a>
+    </div>';
+    } else {
+        $renderHTML .= '<div id="my-groups" class="sub-menu-items">
+        <i class="glyphicon glyphicon-hand-right"></i>
+        <a>My Groups</a>
+        </div>
+        <div id="student-groups" class="sub-menu-items">
+        <i class="glyphicon glyphicon-hand-right"></i>
+        <a>Student groups</a>
+        </div>';
+    }
+    $renderHTML .= '<div id="manage-request" class="sub-menu-items"><i class="glyphicon glyphicon-hand-right"></i><a>My request</a></div>';
 
     return $renderHTML;
 }
@@ -192,14 +206,6 @@ function finderForm()
                         <input type="text" id="skill-other" value="'.($finder_form ? form_data('other_skill') : '').'">
                     </div>
                 </div>
-                <div class="contact-form">
-                    <div class="col-lg-3">
-                        <label for="title">Contact</label>
-                    </div>
-                    <div class="col-lg-9">
-                        <input type="text" id="contact-form"value="'.($finder_form ? form_data('contact') : '').'">
-                    </div>
-                </div>
                 <div class="supervisor-form">
                     <div class="col-lg-6">
                         <div class="col-lg-6">
@@ -209,12 +215,6 @@ function finderForm()
                         '.get_suppervisor($finder_form).'
                         </div>
                     </div>  
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label for="title">Due Date</label>
-                            <input type="date"  id="close-date" value="'.($finder_form ? form_data('due_date') : date('Y-m-d')).'">
-                        </div>
-                    </div>
                 </div>
              </div>
         </div>
@@ -241,23 +241,16 @@ function is_form_exist()
         WHERE ID = '".$finder_form."'
         ");
         if ($check_status == 1) {
-            $renderHTML .= '<button id="edit-form-finder" class="btn btn-info">Edit</button>';
+            // $renderHTML .= '<button id="edit-form-finder" class="btn btn-info">Edit</button>';
+            $renderHTML .= '<button id="save-form-finder" class="btn btn-info">Public</button>';
             $renderHTML .= '<button id="close-form-finder" class="btn btn-danger">Close</button>';
         } else {
             $renderHTML .= '<button id="reopen-form-finder" class="btn btn-info">Re-Open</button>';
         }
     } else {
-        $renderHTML .= '<button id="post-form" class="btn btn-info">Post</button>';
+        $renderHTML .= '<button id="post-form" class="btn btn-info">Public</button>';
         $renderHTML .= '<a href="'.home_url('profile').'" class="btn btn-danger">cancel</a>';
     }
-
-    return $renderHTML;
-}
-function actionEditForm()
-{
-    $renderHTML = '';
-    $renderHTML .= '<button id="save-form-finder" class="btn btn-info">Post</button>';
-    $renderHTML .= '<a href="'.home_url('profile').'" class="btn btn-danger">cancel</a>';
 
     return $renderHTML;
 }
@@ -345,28 +338,28 @@ function actionLeaveGroup()
 function studentLeaveGroup($form_id, $user_id)
 {
     global $wpdb;
-    $delete_members = $wpdb->delete("
-        {$wpdb->prefix}members",
+    $delete_members = $wpdb->delete(
+        "{$wpdb->prefix}members",
         [
             'form_id' => $form_id,
             'member_id' => $user_id,
         ]
         );
-    $delete_groups = $wpdb->delete("
-        {$wpdb->prefix}groups",
+    $delete_groups = $wpdb->delete(
+        "{$wpdb->prefix}groups",
         [
             'form_id' => $form_id,
         ]
         );
-    $delete_skill = $wpdb->delete("
-        {$wpdb->prefix}form_skill",
+    $delete_skill = $wpdb->delete(
+        "{$wpdb->prefix}form_skill",
         [
             'form_id' => $form_id,
         ]
         );
     if (isset($delete_groups) && isset($delete_members) && isset($delete_skill)) {
-        $delete_form = $wpdb->delete("
-        {$wpdb->prefix}finder_form",
+        $delete_form = $wpdb->delete(
+            "{$wpdb->prefix}finder_form",
            [
             'ID' => $form_id,
             'user_id' => $user_id,

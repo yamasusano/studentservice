@@ -79,7 +79,7 @@ function overView()
         <div class="col-lg-12 desciption">
         <div class="row">
             <div class="biography">
-                <textarea name="user-description" id="user-description" rows="10" style="width:99%" placeholder="about me..." '.$disabled.' >'.info('biography').'</textarea>
+                <textarea name="user-description" id="user-description" rows="10" placeholder="about me..." '.$disabled.' >'.info('biography').'</textarea>
             </div>    
         </div>
     </div>
@@ -104,7 +104,7 @@ function overView()
                 </div>
                  <div class="col-lg-10">    
                     <div class="gender">
-                        <input type="text" name="gender" id="gender" value="'.info('gender').'" '.$disabled.' >
+                        <input type="text" name="gender" id="gender" value="'.checkGender(info('gender'), 'Select gender').'" '.$disabled.' >
                     </div>     
                 </div>
             </div>
@@ -130,7 +130,7 @@ function overView()
                 </div>
                  <div class="col-lg-10">    
                     <div class="major">
-                        <input type="text" name="major" id="major" value="'.info('major').'" '.$disabled.' >
+                        <input type="text" name="major" id="major" value="'.checkGender(info('major'), 'Select your major').'" '.$disabled.' >
                     </div>     
                 </div>
             </div>
@@ -138,20 +138,22 @@ function overView()
         </div>
     </div>
     <div class="col-lg-12">
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="row">
-                    <div class="col-lg-2" style="padding:0">
-                        <label for="phone">Phone</label>
-                    </div>
-                    <div class="col-lg-10">    
-                        <div class="phone">
-                            <input type="text" name="phone" id="phone" value="'.info('phone').'" '.$disabled.' >
-                        </div>     
-                    </div>
+        <div class="row">';
+    if (is_student()) {
+        $renderHTML .= '<div class="col-lg-6">
+            <div class="row">
+                <div class="col-lg-2" style="padding:0">
+                    <label for="phone">Batch</label>
+                </div>
+                <div class="col-lg-10">    
+                    <div class="semester-level">
+                        <input type="text" name="user-level" id="user-level" value="'.checkGender(info('phone'), 'Select your semester level').'" '.$disabled.' >
+                    </div>     
                 </div>
             </div>
-            <div class="col-lg-6">
+        </div>';
+    }
+    $renderHTML .= '<div class="col-lg-6">
                 <div class="row">
                     <div class="col-lg-2" style="padding:0">
                         <label for="name">Address</label>
@@ -179,7 +181,24 @@ function overView()
 
     return $renderHTML;
 }
-
+function is_student()
+{
+    global $wpdb;
+    $is_student = info('role');
+    if ($is_student == 'Student') {
+        return true;
+    } else {
+        return false;
+    }
+}
+function checkGender($value, $message)
+{
+    if (empty($value)) {
+        return $message;
+    } else {
+        return $value;
+    }
+}
 function btnChangeEdit()
 {
     $renderHTML .= '<button type="submit" id="update-profile" name="update-profile" class="btn btn-info btn-sm">Save</button>
@@ -236,9 +255,34 @@ function selectMajor()
 
     return $renderHTML;
 }
+function select_semester_level()
+{
+    global $wpdb;
+    $user_level = $wpdb->get_results("
+    SELECT * 
+    FROM {$wpdb->prefix}semester_level
+    "
+    );
+    $has_level = info('phone');
+    $renderHTML = '';
+    $renderHTML .= '<select name="user-level" id="user-level" required>';
+    if (!empty($has_level)) {
+        $renderHTML .= '<option value="'.$has_level.'" selected="selected" >'.$has_level.'</option>';
+        foreach ($user_level as $level) {
+            if ($level->level != $has_level) {
+                $renderHTML .= '<option value="'.$level->level.'">'.$level->level.'</option>';
+            }
+        }
+    } else {
+        $renderHTML .= '<option value="" disabled selected>Select a major</option>';
+        foreach ($user_level as $level) {
+            $renderHTML .= '<option value="'.$level->level.'">'.$level->level.'</option>';
+        }
+    }
+    $renderHTML .= '</select>';
 
-//HUYLV
-//can't know who current user know belong in form.
+    return $renderHTML;
+}
 function has_form_id()
 {
     global $wpdb;
@@ -251,8 +295,6 @@ function has_form_id()
 
     return $form_id;
 }
-//HUYLV
-// can't check type of group is student or teacher .
 
 function check_student_form()
 {
@@ -270,8 +312,6 @@ function check_student_form()
     return $form_id;
 }
 
-//HUYLV
-//Missing appear current semester
 function getSemester()
 {
     global $wpdb;
@@ -293,7 +333,7 @@ function updateUserProfile($username, $gender, $address, $phone, $biography, $ma
     updateFieldProfile('phone', $phone);
     updateFieldProfile('biography', $biography);
 
-    return 'update information success!!';
+    return 'Update information success';
 }
 
 function updateFieldProfile($key, $value)

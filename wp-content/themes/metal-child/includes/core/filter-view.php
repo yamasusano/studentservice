@@ -206,9 +206,7 @@ function backgroundImage()
 function result_search($post_type, $semester, $major, $poster)
 {
     global $wpdb;
-    $result = '';
-    if ($post_type) {
-        $get_results = $wpdb->get_results("
+    $get_results = $wpdb->get_results("
         SELECT f.* FROM {$wpdb->prefix}finder_form as f
         JOIN {$wpdb->prefix}users as u
         ON f.user_id = u.ID
@@ -224,9 +222,8 @@ function result_search($post_type, $semester, $major, $poster)
         ON umd.user_id = f.user_id
         WHERE f.semester LIKE '%".$semester."%' 
         AND f.title LIKE '%".$poster."%' 
-        ORDER BY f.updated_date DESC
+        ORDER BY f.created_date DESC
         ");
-    }
 
     return $get_results;
 }
@@ -238,17 +235,17 @@ function result_form_content($post_type, $semester, $major, $poster)
         $major = user_metadata('major', $form->user_id);
         $renderHTML .= '<div class="finder-form-items">';
         $renderHTML .= '<div class="col-lg-2"><div class="finder-poster-box">';
+        $renderHTML .= get_avatar(get_the_author_meta($form->user_id), 110).'<br>';
         $renderHTML .= '<a href="'.home_url('search-form').'?major-value='.$major.'" target="_blank">'.$major.'</a>';
-        $renderHTML .= get_avatar(get_the_author_meta($form->user_id), 90).'<br>';
-        $renderHTML .= '';
         $renderHTML .= '</div></div>';
         $renderHTML .= '<div class="col-lg-8"><div class="finder-post">';
         $renderHTML .= '<div class="finder-post-title">';
-        $renderHTML .= '<h5>'.$form->title.'</h5></div> ';
+        $renderHTML .= '<h5>'.wp_trim_words($form->title, 10, '..').'</h5></div> ';
         $renderHTML .= '<div class="form-content-author">';
-        $renderHTML .= '<p>By <a href="'.home_url('user').'?user-id='.$form->user_id.'"> '.get_userdata($form->user_id)->user_login.'</a></p>';
-        $renderHTML .= '<p>Updated at : '.$form->updated_date.'</p> </div>';
-        $renderHTML .= '<div class="finder-post-content"><p>'.$form->description.'</p></div> ';
+        $renderHTML .= '<p>By <a href="'.home_url('user').'?user-id='.$form->user_id.'"> '.get_userdata($form->user_id)->user_login.'</a></p>&nbsp;&nbsp;&nbsp;';
+        $renderHTML .= '<p><b>created at :</b> '.$form->created_date.'</p> </div>';
+        $renderHTML .= '<div class="form-content-members">Members: '.count_member_in_form($form->ID).' / 6 </div>';
+        $renderHTML .= '<div class="finder-post-content"><p>'.wp_trim_words($form->description, 20, '..').'</p></div> ';
         $renderHTML .= '</div>';
         $renderHTML .= '</div>';
         $renderHTML .= '<div class="col-lg-2 center">';
@@ -259,6 +256,19 @@ function result_form_content($post_type, $semester, $major, $poster)
     $renderHTML .= '</div>';
 
     return $renderHTML;
+}
+function count_member_in_form($form_id)
+{
+    global $wpdb;
+    $count = $wpdb->get_var("
+    SELECT COUNT(*) 
+    FROM {$wpdb->prefix}members 
+    WHERE form_id = '".$form_id."' 
+    AND member_role = 0 
+    OR member_role = 1 
+    ");
+
+    return $count;
 }
 
 function result_search_message($count, $post_type, $semester, $major, $poster)
@@ -346,7 +356,7 @@ function result_search_check($post_type, $semester, $major, $poster)
         ON umd.user_id = f.user_id
         WHERE f.semester LIKE '%".$semester."%' 
         AND f.title LIKE '%".$poster."%' 
-        ORDER BY f.updated_date DESC
+        ORDER BY f.created_date DESC
         LIMIT $start , 10");
 
     return $get_results;
@@ -366,7 +376,7 @@ function support_ideas()
             ON u.user_id = f.user_id 
             WHERE u.meta_key = 'role'
             AND u.meta_value = 1
-            order by f.updated_date DESC
+            order by f.created_date DESC
             limit 1,5");
 
             return $list_forms;
@@ -382,7 +392,7 @@ function get_ideas_form()
         $renderHTML .= '<div class="new-feed-contents">';
         $renderHTML .= '<div class="content-title">'.$form->title.'</div> ';
         $renderHTML .= '<div class="content-author">By '.get_userdata($form->user_id)->user_login.'</div> ';
-        $renderHTML .= '<div class="content-updated">Updated '.$form->updated_date.'</div> ';
+        $renderHTML .= '<div class="content-updated"><b>created at</b> '.$form->created_date.'</div> ';
         $renderHTML .= '<div class="content-description">'.$form->description.'</div> ';
         $renderHTML .= '</div>';
     }

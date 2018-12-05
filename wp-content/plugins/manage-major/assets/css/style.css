@@ -1,0 +1,71 @@
+table.major-view {
+    margin-top: 50px;
+}
+
+table.major-view th {
+    border-bottom: 1px solid;
+}
+
+table.major-view th:nth-child(1) {
+    width: 5%;
+}
+
+table.major-view th:nth-child(2) {
+    width: 25%;
+}
+
+table.major-view th:nth-child(3) {
+    width: 7%;
+}
+
+table.major-view th:nth-child(4) {
+    width: 40%;
+}
+
+input.editable-major {
+    width: 100%;
+    border: none;
+    box-shadow: unset;
+    background: unset;
+    color: black;
+}
+
+input.editable-major:focus {
+    background: unset;
+    box-shadow: unset;
+}
+
+input.enable-major {
+    border-bottom: 1px solid gainsboro;
+}
+
+button.edit-major {
+    argin-left: 4px;
+    padding: 4px 8px;
+    position: relative;
+    top: -3px;
+    text-decoration: none;
+    border: none;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    background: #f7f7f7;
+    text-shadow: none;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: normal;
+    color: #0073aa;
+    cursor: pointer;
+    outline: 0;
+}
+
+.message-success {
+    background: #dbf1d6;
+    padding: 10px;
+    margin: 10px 20px 0 2px;
+}
+
+.message-error {
+    margin: 10px 20px 0 2px;
+    background: #f6dddc;
+    padding: 10px;
+}

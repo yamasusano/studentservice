@@ -1,14 +1,39 @@
-.form-detail {
+.view-form-detail {
     position: relative;
     background: #f5f5f5;
     border: 10px;
     margin-top: 50px;
-    padding: 0px 20px 20px;
     box-shadow: 0 10px 6px -6px #777;
+}
+
+.view-form-detail h6, .view-form-detail div:not(:first-child) .col-lg-6 .col-lg-4 {
+    font-weight: bold;
 }
 
 .form-detail .form-detail-semester {
     border-bottom: 1px solid;
+}
+
+.form-detail-info>div div {
+    margin-bottom: 20px;
+}
+
+.form-detail-info {
+    border-bottom: 1px solid gainsboro;
+    overflow: hidden;
+    margin: 20px 0px;
+}
+
+.form-view-title {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px 10px;
+}
+
+.form-detail-info {
+    overflow: hidden;
+    padding: 10px 20px;
 }
 
 .form-detail h3 {
@@ -32,14 +57,22 @@ mark {
     color: red !important;
 }
 
+.desc-view .col-lg-9 {
+    text-align: justify;
+}
+
 table#form-view-detail tr>th {
     width: 10%;
 }
 
-.form-detail .btn-edit-content {
+.btn-edit-content {
     position: absolute;
     top: 30px;
     right: 30px;
+}
+
+.form-detail-head {
+    border-bottom: 10px solid #fff;
 }
 
 table#form-view-detail .btn-close {
@@ -56,10 +89,6 @@ div.groups-button-request {
     margin: 50px;
 }
 
-.message-show {
-    margin: 15px 10px;
-}
-
 .member-message {
     min-height: 25px;
 }
@@ -74,4 +103,82 @@ div.groups-button-request {
 
 .supervisor-form>div>div:last-child {
     padding-left: 20px;
+}
+
+td.method-action {
+    width: 25%;
+}
+
+.other-form {
+    overflow: hidden;
+    background: #f5f5f5;
+    padding: 50px 0px;
+}
+
+.other-form .my-container {
+    overflow: hidden;
+    border-top: 1px solid black;
+    padding: 10px 0px;
+}
+
+.other-form .form-related {
+    padding-left: 10px;
+}
+
+div.form-view {
+    margin-top: 10px;
+}
+
+.submit-request {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 35em;
+    height: 19em;
+    margin-top: -9em;
+    margin-left: -15em;
+    display: none;
+    background-color: gainsboro;
+    transition: opacity 0.6s;
+    padding: 20px;
+    text-align: center;
+}
+
+.submit-request textarea {
+    resize: none;
+    padding: 10px;
+}
+
+.button-box {
+    display: inline-block;
+    width: 100%;
+}
+
+.closebtn {
+    margin-left: 15px;
+    color: black;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closebtn:hover {
+    color: #fff;
+}
+
+.message-success {
+    background: #dbf1d6;
+    padding: 10px;
+}
+
+.message-fail {
+    padding: 10px;
+    background: #f6dddc;
+}
+
+.form-detail-desciption {
+    text-align: justify;
 }

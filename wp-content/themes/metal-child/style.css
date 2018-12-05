@@ -101,11 +101,6 @@ li>div.main-bar-item, ul#main-menu {
   margin: 0 auto;
 }
 
-.user-profile .profile-userpic {
-  width: 300px;
-  height: auto;
-}
-
 .user-profile .user-name, .user-profile .user-major {
   text-align: center;
 }
@@ -177,6 +172,10 @@ li>div.main-bar-item, ul#main-menu {
 .sub-menu-items {
   display: none;
   margin-left: 30px;
+}
+
+#group-view .active {
+  background: #8DEEEE;
 }
 
 .profile-usermenu {
@@ -414,7 +413,7 @@ div.finder-form {
 }
 
 div.finder-form .row {
-  min-height: 620px;
+  height: 670px;
 }
 
 div.prefix-element {
@@ -432,7 +431,11 @@ div.prefix-element>div {
 }
 
 div.prefix-element div.supervisor-form {
-  top: 120px;
+  top: 60px;
+}
+
+.supervisor-form>div>div {
+  margin-top: 0 !important;
 }
 
 div.prefix-element div.contact-form {
@@ -446,7 +449,6 @@ div.prefix-element div.form-group {
 div#group-message {
   position: relative;
   bottom: 15px;
-  height: 30px;
 }
 
 div.finder-form div.form-btn {
@@ -791,6 +793,10 @@ ol.carousel-indicators {
   display: flex;
 }
 
+.form-item>div:first-child {
+  text-align: center;
+}
+
 .form-item>div {
   border-bottom: 1px solid #f5f5f5;
 }
@@ -799,7 +805,7 @@ ol.carousel-indicators {
   min-height: 350px;
 }
 
-div.tabs-container a {
+div.tabs-container .form-content-title a {
   color: #555;
   font-weight: bold;
 }
@@ -813,6 +819,10 @@ button.btn-show-message {
   top: 0;
   right: 0;
   padding: 0px 3px;
+}
+
+button.btn-show-message:focus {
+  background-color: none !important;
 }
 
 button.btn-closed {
@@ -945,14 +955,17 @@ select#type-value option::first-letter {
 
 .form-content-author {
   font-size: 12px;
+  display: flex;
 }
 
 .form-content-author p {
   margin: 0;
 }
 
-.form-content-description {
-  font-size: 16px;
+.form-content-description, .finder-post-content {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .finder-post-title h5 {
@@ -990,4 +1003,13 @@ div#footer {
 
 .jconfirm .jconfirm-box div.jconfirm-content-pane {
   display: none !important;
+}
+
+div.finder-poster-box {
+  text-align: center;
+}
+
+textarea#user-description {
+  width: 99%;
+  padding: 10px;
 }

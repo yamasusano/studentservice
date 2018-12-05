@@ -17,9 +17,27 @@ $form_id = $_GET['form-id'];
 								<form id="send-request" action="#" method="POST">
 									<?php echo formView($form_id); ?>
 									<?php handle_request_form($form_id); ?>
+									<div class="submit-request">
+									<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+									<textarea name="message" id="request-message" maxlength="200" cols="58" rows="4" placeholder="Send something here for leader ..."></textarea>
+									<div style="float:right"><span id="chars">200 </span>characters remaining.</div>
+									<div class="button-box"><?php echo get_btn_case('join'); ?></div>
+									</div>
 								</form>
+							</div>							
+						</div>
+						<div class="other-form">
+							<div class="my-container">
+								<div class="col-lg-6 related-topic">
+										<h6>Related Topic</h6>
+										<?php echo related_topic($form_id); ?>
+								</div>		
+								<div class="col-lg-6 related-semester">
+								<h6>Related Semester</h6>
+										<?php echo related_semester($form_id); ?>
+								</div>
 							</div>
-                        </div>
+						</div>
 					</div><!-- #content -->
 				</div><!-- #primary -->
 				<?php get_sidebar(); ?>

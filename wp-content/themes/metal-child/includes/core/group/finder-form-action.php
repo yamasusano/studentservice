@@ -19,18 +19,24 @@ function get_request_via_leader($get_request, $request)
     $user_name = get_user_by('id', $get_request->member_id)->user_login;
     switch ($request) {
         case 0:
-        $message = '<p>you have invited '.get_url('user', $get_request->member_id).$user_name.'</a>to join in to project <b>'.form_meta('title', $get_request->form_id).'</b></p>';
-        $button = '<button type="submit" id="reject-invite-request" class="btn btn-sm btn-danger btn-sm">Cancel</button>';
+        $user_name = '<td>'.get_url('user', $get_request->member_id).$user_name.'</a></td>';
+        $project = '<td><b>'.form_meta('title', $get_request->form_id).'</b></td>';
+        $message = '<td><p>'.$get_request->message.'</p></td>';
+        $created = '<td>'.$get_request->time_request.'</td>';
+        $button = '<td><div class="button-request"><button type="submit" id="reject-invite-request" class="btn btn-sm btn-danger btn-sm">Cancel</button><input type="hidden" id="user-id" value="'.$get_request->member_id.'" /></div></td>';
         break;
         case 1:
-        $message = '<p>'.get_url('user', $get_request->member_id).$user_name.'</a> want join in to project <b>'.form_meta('title', $get_request->form_id).'</b></p>';
-        $button = '<button type="submit" id="acxept-user" class="btn btn-sm btn-info btn-sm">Access</button><button type="submit" id="deny-user" class="btn btn-sm btn-danger btn-sm">Deny</button>';
+        $user_name = '<td>'.get_url('user', $get_request->member_id).$user_name.'</a></td>';
+        $project = '<td><b>'.form_meta('title', $get_request->form_id).'</b></td>';
+        $message = '<td><p>'.$get_request->message.'</p></td>';
+        $created = '<td>'.$get_request->time_request.'</td>';
+        $button = '<td><div class="button-request"><button type="submit" id="acxept-user" class="btn btn-sm btn-info btn-sm">Access</button><button type="submit" id="deny-user" class="btn btn-sm btn-danger btn-sm">Deny</button><input type="hidden" id="user-id" value="'.$get_request->member_id.'" /></div></td>';
         break;
         default:
         break;
     }
 
-    return array('message' => $message, 'button' => $button);
+    return array('message' => $message, 'button' => $button, 'user' => $user_name, 'project' => $project, 'created' => $created);
 }
 
 function get_request_via_users($get_request, $request)
@@ -40,26 +46,33 @@ function get_request_via_users($get_request, $request)
     $user_name = get_user_by('id', $get_request->member_id)->user_login;
     switch ($request) {
         case 0:
-        $message = '<p>'.get_url('user', form_meta('user_id', $get_request->form_id)).get_userdata(form_meta('user_id', $get_request->form_id))->user_login.'</a>
-        want to invite you to join project '.get_url('form-detail', $get_request->form_id).form_meta('title', $get_request->form_id).'</a></p>';
-        $button = '<button type="submit" id="join-in-form" class="btn btn-sm btn-info btn-sm">Join in</button><button type="submit" id="deny-join-in" class="btn btn-sm btn-danger btn-sm">Deny</button>';
+        $user_name = '<td>'.get_url('user', form_meta('user_id', $get_request->form_id)).get_userdata(form_meta('user_id', $get_request->form_id))->user_login.'</a></td>';
+        $project = '<td><b>'.get_url('form-detail', $get_request->form_id).form_meta('title', $get_request->form_id).'</a></b></td>';
+        $message = '<td><p>'.$get_request->message.'</p></td>';
+        $created = '<td>'.$get_request->time_request.'</td>';
+        $button = '<td><div class="button-request"><button type="submit" id="join-in-form" class="btn btn-sm btn-info btn-sm">Join in</button><button type="submit" id="deny-join-in" class="btn btn-sm btn-danger btn-sm">Deny</button><input type="hidden" id="user-id" value="'.$get_request->form_id.'" /> </div></td>';
         break;
         case 1:
-        $message = '<p>You have send request to project :  '.get_url('form-detail', $get_request->form_id).form_meta('title', $get_request->form_id).'</a></p>';
-        $button = '<button type="submit" id="cancel-request-join-form" class="btn btn-sm btn-danger btn-sm">Cancel</button>';
+        $user_name = '<td>'.get_url('user', form_meta('user_id', $get_request->form_id)).get_userdata(form_meta('user_id', $get_request->form_id))->user_login.'</a></td>';
+        $project = '<td><b>'.get_url('form-detail', $get_request->form_id).form_meta('title', $get_request->form_id).'</a></b></td>';
+        $message = '<td><p>'.$get_request->message.'</p></td>';
+        $created = '<td>'.$get_request->time_request.'</td>';
+        $button = '<td><div class="button-request"><button type="submit" id="cancel-request-join-form" class="btn btn-sm btn-danger btn-sm">Cancel</button><input type="hidden" id="user-id" value="'.$get_request->form_id.'" /> </div></td>';
         break;
         default:
         break;
     }
 
-    return array('message' => $message, 'button' => $button);
+    return array('message' => $message, 'button' => $button, 'user' => $user_name, 'project' => $project, 'created' => $created);
 }
 function manageRequest()
 {
     global $wpdb;
     $is_leader = is_leader();
     $renderHtml = '';
-    $renderHtml .= '<div class="noti-message"></div><hr>';
+    $renderHtml .= '<div class="noti-message"></div>';
+    $renderHtml .= '<table class="table-striped">';
+    $renderHtml .= '<tr><th>Receiver/Sender</th> <th>Project Name</th> <th>Message</th> <th>Date Created</th> <th>Status</th></tr>';
     if ($is_leader) {
         $form_id = has_form_id();
         $get_request = $wpdb->get_results("
@@ -70,14 +83,13 @@ function manageRequest()
         ");
         foreach ($get_request as $request) {
             $get_action = get_request_via_leader($request, $request->request);
-            $renderHtml .= '<div class="request-items">';
-            $renderHtml .= '<div class="content-request">';
+            $renderHtml .= '<tr>';
+            $renderHtml .= $get_action['user'];
+            $renderHtml .= $get_action['project'];
             $renderHtml .= $get_action['message'];
-            $renderHtml .= '</div>';
-            $renderHtml .= '<div class="button-request">';
+            $renderHtml .= $get_action['created'];
             $renderHtml .= $get_action['button'];
-            $renderHtml .= '<input type="hidden" id="user-id" value="'.$request->member_id.'" /> </div>';
-            $renderHtml .= '</div>';
+            $renderHtml .= '</tr>';
         }
     } else {
         $get_request = $wpdb->get_results("
@@ -88,16 +100,16 @@ function manageRequest()
         ");
         foreach ($get_request as $request) {
             $get_action = get_request_via_users($request, $request->request);
-            $renderHtml .= '<div class="request-items">';
-            $renderHtml .= '<div class="content-request">';
+            $renderHtml .= '<tr>';
+            $renderHtml .= $get_action['user'];
+            $renderHtml .= $get_action['project'];
             $renderHtml .= $get_action['message'];
-            $renderHtml .= '</div>';
-            $renderHtml .= '<div class="button-request">';
+            $renderHtml .= $get_action['created'];
             $renderHtml .= $get_action['button'];
-            $renderHtml .= '<input type="hidden" id="user-id" value="'.$request->form_id.'" /> </div>';
-            $renderHtml .= '</div>';
+            $renderHtml .= '</tr>';
         }
     }
+    $renderHtml .= '</table>';
 
     return $renderHtml;
 }
@@ -106,8 +118,7 @@ function get_url($key, $value)
     $renderHTML = '';
     switch ($key) {
     case 'user':
-    $renderHTML = '<a href="'.home_url($key).'?user-id='.$value.'" class="btn btn-info btn-sm btn-user" >';
-
+    $renderHTML = '<a href="'.home_url($key).'?user-id='.$value.'" >';
     break;
     case 'form-detail':
     $renderHTML = '<a href="'.home_url($key).'?form-id='.$value.'" >';
@@ -186,7 +197,7 @@ function user_access_request($form_id)
         return array('result' => false, 'message' => 'You have already team.Reject request!!');
     } else {
         if (removeRequest($form_id, $user_id)) {
-            if (userInformation('major', $user_id) == 'Student') {
+            if (user_metadata('role', $user_id) == '1') {
                 $approve_member = $wpdb->insert(
                     "{$wpdb->prefix}members",
                     [
@@ -260,7 +271,7 @@ function get_member_list()
     $renderHTML = '';
     $get_member = get_all_member($form_id);
     $renderHTML .= '<div class="member-message"></div>';
-    $renderHTML .= '<table><tr><th>Name</th><th>role</th><th>action</th></tr>';
+    $renderHTML .= '<table class=""><tr><th>Name</th><th>role</th><th>action</th></tr>';
     foreach ($get_member as $member_id) {
         $member_name = get_userdata($member_id->member_id)->user_login;
         $member_role = get_role_form($form_id, $member_id->member_id);
@@ -270,7 +281,7 @@ function get_member_list()
         $renderHTML .= '<td>'.$member_role.'</td>';
         $renderHTML .= '<td class="method-action">';
         if ($is_leader) {
-            if ($member_role == 'Student') {
+            if ($member_role == 'Member') {
                 $renderHTML .= '<button id="change-admin" class="btn btn-info btn-sm" >set to leader</button>';
                 $renderHTML .= '<button id="kick-out" class="btn btn-danger btn-sm" >remove from group</button>';
             } elseif ($member_role == 'Supervisor') {
@@ -432,10 +443,11 @@ function reopenFinderForm()
 );
 }
 
-function updateFinderForm($title, $description, $other, $contact, $semester, $close_date)
+function updateFinderForm($title, $description, $other, $contact, $semester, $skill)
 {
     global $wpdb;
     $form_id = has_form_id();
+    $skills = explode(',', $skill);
     $update_form_finder = $wpdb->update(
         "{$wpdb->prefix}finder_form",
         [
@@ -444,17 +456,31 @@ function updateFinderForm($title, $description, $other, $contact, $semester, $cl
             'other_skill' => $other,
             'contact' => $contact,
             'semester' => $semester,
-            'due_date' => $close_date,
         ],
         [
             'ID' => $form_id,
         ]
     );
-    if ($update_form_finder) {
-        return 'Update success!';
-    } else {
-        return 'Update failed. Have no something change !!!!';
+    $reset_skill = $wpdb->delete(
+    "{$wpdb->prefix}form_skill",
+    [
+        'form_id' => $form_id,
+    ]
+    );
+    foreach ($skills as $skill) {
+        if (!empty($skill)) {
+            $skill_id = get_skill_id($skill);
+            $get_skill = $wpdb->insert(
+                    "{$wpdb->prefix}form_skill",
+                    [
+                        'form_id' => $form_id,
+                        'skill_id' => $skill_id,
+                    ]
+                );
+        }
     }
+
+    return '<div class="message-success">Update success!</div>';
 }
 function major($user_id)
 {
@@ -628,7 +654,6 @@ function action_invite_user($user_id)
                     "{$wpdb->prefix}request",
                     [
                         'form_id' => $form_id,
-                        'user_id' => $user_id,
                     ]
                     );
                 if ($user_join_in) {

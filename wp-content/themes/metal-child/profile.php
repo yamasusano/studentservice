@@ -3,9 +3,7 @@
  * Template Name: Profile Template.
  */
 require 'includes/core/is-user-login.php';
-include 'includes/core/profile/gpf-teacher-profile.php';
 include 'includes/core/profile/gpf-student-profile.php';
-$mode = $_GET['form-mode'];
 get_header();
 
 ?>
@@ -43,21 +41,16 @@ get_header();
                                                 <a>
                                                     <i class="glyphicon glyphicon-home"></i> Overview </a>
                                             </div>
-                                            <div class="menu-items">
+                                            <div id="group-view" class="menu-items">
                                                 <a>
                                                     <i class="glyphicon glyphicon-user"></i> Group
                                                 </a>
-                                                <?php echo get_teacher_group(); ?>
+                                                <?php do_action('groups'); ?>
                                             </div>
                                             <div id="pivacy" class="menu-items">
                                                 <a>
                                                     <i class="glyphicon glyphicon-eye-close"></i> Pivacy </a>
                                             </div>
-                                                <!-- <div id="notification" class="sub-menu-items">
-                                                    <i class="glyphicon glyphicon-globe"></i>
-                                                    <a>Notification</a>
-                                                </div> -->
-
                                         </div>
                                         <!-- END MENU -->
                                     </div>
@@ -65,7 +58,6 @@ get_header();
                                 <div class="col-md-9">
                                     <div id="profile-contents" class="profile-content">
                                     </div>
-
                                 </div>
                             </div>
                         </div>

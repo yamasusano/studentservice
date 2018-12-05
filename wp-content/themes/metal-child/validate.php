@@ -1,7 +1,6 @@
 <?php
 
 define('MAX_LENGTH_TITLE', 200);
-define('MAX_LENGTH_DESCRIPTION', 400);
 function titleCheck($title)
 {
     $title = formatText($title);
@@ -19,11 +18,8 @@ function descriptionCheck($description)
 {
     $description = formatText($description);
     $is_empty = validEmptyField($description);
-    $is_over_length = validMaxLength($description, constant('MAX_LENGTH_DESCRIPTION'));
     if (!$is_empty['result']) {
         return array('result' => false, 'message' => 'Description'.$is_empty['message']);
-    } elseif (!$is_over_length['result']) {
-        return array('result' => false, 'message' => 'Description'.$is_over_length['message']);
     }
 
     return array('result' => true);
@@ -77,7 +73,7 @@ function formatText($value)
 {
     return trim($value);
 }
-function validFormFinder($title, $description, $close_date)
+function validFormFinder($title, $description)
 {
     $message = '';
     if (!titleCheck($title)['result']) {
@@ -90,10 +86,6 @@ function validFormFinder($title, $description, $close_date)
         return array('result' => false, 'message' => $message);
     } elseif (!check_end_semester($close_date)['result']) {
         $message = check_end_semester($close_date)['message'];
-
-        return array('result' => false, 'message' => $message);
-    } elseif (!closeDateCheck($close_date)['result']) {
-        $message = closeDateCheck($close_date)['message'];
 
         return array('result' => false, 'message' => $message);
     }

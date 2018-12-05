@@ -1,0 +1,58 @@
+.user-view-detail {
+    overflow: hidden;
+    background-color: #f5f5f5;
+    margin: 20px 0px;
+    padding: 50px 0px;
+    border-bottom: 1px solid gainsboro;
+    border-top: 1px solid;
+    box-shadow: 0 10px 6px -6px #777;
+}
+
+.view-block-head {
+    overflow: hidden;
+    padding-bottom: 50px;
+    border-bottom: 1px solid gainsboro;
+}
+
+.view-ava {
+    text-align: center;
+    font-weight: bold;
+}
+
+.view-ava .profile-userpic {
+    height: auto;
+}
+
+.view-ava .user-name {
+    text-transform: uppercase;
+}
+
+.user-bio-content {
+    min-height: 100px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.view-block-tail {
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.view-block-tail .form-groups {
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.view-block-tail .form-groups div:first-child {
+    font-weight: bold;
+}
+
+.btn-chatting-block {
+    margin-top: 20px;
+    text-align: center;
+}
+
+input#user-name, input#gender, input#major, input#user-level, textarea#address {
+    padding-left: 10px;
+}

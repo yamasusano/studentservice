@@ -4,27 +4,31 @@ function has_major()
 {
     $current_major = info('major');
     if (empty($current_major)) {
-        return array('result' => false, 'message' => 'You need to have a major to post Finder form, go to profile to update your major.');
+        return array('result' => false, 'message' => '<div class="message-fail">You need to have a major to post Finder form, go to profile to update your major.</div>');
     }
 
     return array('result' => true);
 }
-function insert_finder_form($semester, $title, $description, $close_date, $other, $contact, $user_id)
+function insert_finder_form($semester, $title, $description, $other, $contact, $user_id)
 {
     global $wpdb;
-    $get_finder_form = $wpdb->insert(
-        "{$wpdb->prefix}finder_form",
-        [
-            'user_id' => get_current_user_id(),
-            'semester' => $semester,
-            'title' => $title,
-            'description' => $description,
-            'other_skill' => $other,
-            'due_date' => $close_date,
-            'contact' => $contact,
-            'status' => 1,
-        ]
-    );
+    $has_form = has_form_id();
+    if ($has_form) {
+        return false;
+    } else {
+        $get_finder_form = $wpdb->insert(
+            "{$wpdb->prefix}finder_form",
+            [
+                'user_id' => get_current_user_id(),
+                'semester' => $semester,
+                'title' => $title,
+                'description' => $description,
+                'other_skill' => $other,
+                'contact' => $contact,
+                'status' => 1,
+            ]
+        );
+    }
     if ($get_finder_form) {
         return true;
     } else {
@@ -119,7 +123,7 @@ function form_info($field, $form_id)
     return $value;
 }
 
-function sendRequest($form_id, $leader_id)
+function sendRequest($form_id, $leader_id, $request_message)
 {
     global $wpdb;
     $message = '';
@@ -135,7 +139,7 @@ function sendRequest($form_id, $leader_id)
             AND request = 1
             ");
             if (isset($get_request)) {
-                $message = 'Waitting <a href="'.home_url('user').'?user-id='.$leader_id.'" >'.get_userdata($leader_id)->user_login.'</a> accept';
+                $message = 'Thanks for joining us, we contact you soon .';
             } else {
                 $user_join_in = $wpdb->insert(
                     "{$wpdb->prefix}members",
@@ -163,10 +167,11 @@ function sendRequest($form_id, $leader_id)
                     'form_id' => $form_id,
                     'member_id' => get_current_user_id(),
                     'request' => 1,
+                    'message' => $request_message,
                 ]
             );
             if ($user_set_request) {
-                $message = 'Waitting <a href="'.home_url('user').'?user-id='.$leader_id.'" >'.get_userdata($leader_id)->user_login.'</a> accept';
+                $message = 'Thanks for joining us, we contact you soon .';
             }
         }
     }
@@ -210,11 +215,7 @@ function actionJoinForm($form_id, $user_id)
     $is_major = info('major');
     $status = checkStatusForm($form_id);
     $message = '';
-    if (!is_user_logged_in()) {
-        $message = 'error!!! login first.';
-
-        return array('result' => false, 'message' => $message);
-    } elseif (!$status) {
+    if (!$status) {
         $message = 'Sorry! Form closed. You can not join to this form.';
 
         return array('result' => false, 'message' => $message);

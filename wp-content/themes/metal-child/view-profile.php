@@ -4,6 +4,7 @@
  */
  get_header();
  include 'includes/core/profile/profile-view.php';
+ $user_id = $_GET['user-id'];
  ?>
 <div class="container">
 	<div id="main-wrapper" class="zozo-row row">
@@ -12,9 +13,8 @@
 				<div id="primary" class="content-area <?php zozo_primary_content_classes(); ?>">
 					<div id="content" class="site-content">
 						<div class="container"><b><?php echo getSemester(); ?></b>
-                            <div class="row">
-								<?php $user_id = $_GET['user-id'];
-                                echo viewDetail($user_id); ?>
+                            <div class="my-container">
+								<?php echo userViewDetail($user_id); ?>
                             </div>
 							</div>
 					</div><!-- #content -->

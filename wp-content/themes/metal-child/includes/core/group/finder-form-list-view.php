@@ -29,7 +29,7 @@ function get_list_form()
         <th class="col-lg-1">Members avaialbe</th>
         <th class="col-lg-2">Skill</th>
         <th class="col-lg-2">Contact</th>
-        <th class="col-lg-1">Close</th>
+        <th class="col-lg-1">Closing at</th>
         <th class="col-lg-1">Status</th>
     </tr>';
     $renderHTML .= '</table>';
@@ -43,7 +43,7 @@ function get_list_form()
         $renderHTML .= '<td class="col-lg-1"><p>'.get_members($view->ID).'</p></td>';
         $renderHTML .= '<td class="col-lg-2">'.get_list_skill($view->ID, $view->other_skill).'</td>';
         $renderHTML .= '<td class="col-lg-2"><p>'.$view->contact.'</p></td>';
-        $renderHTML .= '<td class="col-lg-1"><p>'.$view->due_date.'</p></td>';
+        $renderHTML .= '<td class="col-lg-1"><p></p></td>';
         $renderHTML .= '<td class="col-lg-1">'.statusForm($view->ID, $view->status).'</td>';
         $renderHTML .= '</tr></table></form>';
     }
@@ -180,7 +180,7 @@ function form_by_major()
     <div class="container-inner">';
     foreach ($major_list as $major) {
         $renderHTML .= '<div class="form-major-item">';
-        $renderHTML .= '<a href="'.home_url('search-form').'?major-value='.$major->name.'" target="_blank"><img src="'.major_analyst($major->ID).'" alt=""></a>';
+        $renderHTML .= '<a href="'.home_url('search-form').'?major-value='.$major->name.'" target="_blank">'.major_analyst($major->ID).'</a>';
         $renderHTML .= '<div class="item-content"><a href="'.home_url('search-form').'?major-value='.$major->name.'" target="_blank">'.$major->name.' ('.count_form_by_major($major->name).')</a>';
         $renderHTML .= '</div></div>';
     }
@@ -205,16 +205,16 @@ function count_form_by_major($majorName)
 }
 function major_analyst($majorID)
 {
+    global $wpdb;
     $backgroundImg = '';
-    if ($majorID == 1) {
-        $backgroundImg = wp_get_attachment_image_src(56, 'full');
-    } elseif ($majorID == 2) {
-        $backgroundImg = wp_get_attachment_image_src(55, 'full');
-    } elseif ($majorID == 3) {
-        $backgroundImg = wp_get_attachment_image_src(57, 'full');
-    }
+    $get_url_img = $wpdb->get_var("
+    SELECT url_image 
+    FROM {$wpdb->prefix}major
+    WHERE ID = '".$majorID."'
+    ");
+    $backgroundImg = '<img src="'.$get_url_img.'" alt="">';
 
-    return $backgroundImg[0];
+    return $backgroundImg;
 }
 function current_semster_form()
 {
@@ -222,10 +222,10 @@ function current_semster_form()
     $count = 0;
     $forms = get_form_current_semester();
     $total_page = 0;
-    if ((count($forms) + 1) % 5 === 0) {
-        $total_page = (count($forms) + 1) / 5;
+    if ((count($forms)) % 5 === 0) {
+        $total_page = (count($forms)) / 5;
     } else {
-        $total_page = floor((count($forms) + 1) / 5) + 1;
+        $total_page = floor((count($forms)) / 5) + 1;
     }
     $renderHTML .= '<section id="current-semster-view"><h3>CALL FOR APPLICATIONS FOR '.get_current_semester().'</h3>';
     $renderHTML .= '<div class="tabs-container"> <div id="myCarousel" class="carousel slide">';
@@ -239,7 +239,7 @@ function current_semster_form()
     }
     $renderHTML .= '</ol>';
     $renderHTML .= '<div class="carousel-inner">';
-    for ($x = 0; $x < $total_page; ++$x) {
+    for ($x = 0; $x <= $total_page; ++$x) {
         if ($x === 0) {
             $renderHTML .= '<div class="item active">';
             foreach (array_slice($forms, 0, 5) as $form) {
@@ -249,7 +249,6 @@ function current_semster_form()
         } else {
             $renderHTML .= '<div class="item">';
             $start = ($x * 5) + 1;
-            $end = 5;
             foreach (array_slice($forms, $start, 5)  as $form) {
                 $renderHTML .= list_form_semester($form);
             }
@@ -268,17 +267,18 @@ function list_form_semester($form)
 {
     $major = user_metadata('major', $form->user_id);
     $renderHTML .= '<div class="col-lg-12"><div class="form-item"> ';
-    $renderHTML .= '<div class="col-lg-2">';
+    $renderHTML .= '<div class="col-lg-2" style="width:10%">';
     $renderHTML .= get_avatar(get_the_author_meta($form->user_id), 70).'<br>';
     $renderHTML .= '<a href="'.home_url('search-form').'?major-value='.$major.'" target="_blank">'.$major.'</a>';
     $renderHTML .= '</div>';
     $renderHTML .= '<div class="col-lg-10 form-item-content">';
-    $renderHTML .= '<div class="form-content-title"><h5><a href="'.home_url('form-detail').'?form-id='.$form->ID.'" class="title-form" target="_blank">'.$form->title.'</a></h5></div>';
+    $renderHTML .= '<div class="form-content-title"><h5><a href="'.home_url('form-detail').'?form-id='.$form->ID.'" class="title-form" target="_blank">'.wp_trim_words($form->title, 20, '..').'</a></h5></div>';
     $renderHTML .= '<div class="form-content-author">';
-    $renderHTML .= '<p>By <a href="'.home_url('user').'?user-id='.$form->user_id.'"> '.get_userdata($form->user_id)->user_login.'</a></p>';
-    $renderHTML .= '<p> Updated at '.$form->updated_date.'</p>';
+    $renderHTML .= '<p>By <a href="'.home_url('user').'?user-id='.$form->user_id.'"> '.get_userdata($form->user_id)->user_login.'</a></p>&nbsp;&nbsp;&nbsp;';
+    $renderHTML .= '<p> created at '.$form->created_date.'</p>';
     $renderHTML .= '</div>';
-    $renderHTML .= '<p class="form-content-description">'.$form->description.'</p>';
+    $renderHTML .= '<div class="form-content-members">Members: '.member_in_form_counting($form->ID).' / 6 </div>';
+    $renderHTML .= '<p class="form-content-description">'.wp_trim_words($form->description, 30, '..').'</p>';
     if ($form->status == 1) {
         $renderHTML .= '<button class="btn btn-warning btn-show-message">Openning</button>';
     } else {
@@ -294,28 +294,37 @@ function list_form_semester($form)
 function get_form_current_semester()
 {
     global $wpdb;
-    $get_list_form = array();
     $get_forms = $wpdb->get_results("
-    select *
+    SELECT *
     FROM {$wpdb->prefix}finder_form 
     WHERE semester = '".get_current_semester()."' 
-    order by updated_date DESC
-    LIMIT 1,40 
+    ORDER BY created_date DESC  
+    LIMIT 40 
     ");
-    foreach ($get_forms as $form) {
-        $forms = new formInfo();
-        array_push($get_list_form, $forms->getFormInfo($form->ID, $form->user_id, $form->title, $form->description, $form->other_skil, $form->due_date, $form->contact, $form->status, $form->semester, $form->updated_date));
-    }
 
-    return $get_list_form;
+    return $get_forms;
 }
-    function get_current_semester()
-    {
-        global $wpdb;
-        $get_current_semester = $wpdb->get_var("
+function get_current_semester()
+{
+    global $wpdb;
+    $get_current_semester = $wpdb->get_var("
         SELECT name from {$wpdb->prefix}semester 
         where status = 1
         ");
 
-        return $get_current_semester;
-    }
+    return $get_current_semester;
+}
+
+function member_in_form_counting($form_id)
+{
+    global $wpdb;
+    $count = $wpdb->get_var("
+    SELECT COUNT(*)
+    FROM {$wpdb->prefix}members
+    WHERE form_id = '".$form_id."'
+    AND member_role = 0
+    OR member_role = 1
+    ");
+
+    return $count;
+}

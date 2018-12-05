@@ -1,0 +1,11 @@
+table#teacher-list-group {
+    margin-top: 5px;
+}
+
+table#teacher-list-group tr>th:nth-child(1) {
+    width: 90%;
+}
+
+input#title-form {
+    padding: 0px 5px;
+}

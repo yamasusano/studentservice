@@ -18,11 +18,11 @@ function get_btn_case($btn)
 {
     $button = '';
     switch ($btn) {
-        case 'edit':
-        $button = '<a href="#"class="btn btn-warning">Contact Us</a>';
+        case 'alert-join':
+        $button = '<button  type="button" id="btn-alert-join" class="btn btn-info">Join Us</button>';
         break;
         case 'join':
-        $button = '<button type="submit" name="btn-join-form" class="btn btn-info">Join Us</button>';
+        $button = '<button type="submit" name="btn-join-form" class="btn btn-info">Join</button>';
         break;
         case 'closed':
         $button = '<button class="btn btn-close" disabled>Closed</button>';
@@ -31,7 +31,7 @@ function get_btn_case($btn)
         $button = '<button type="submit" name="cancel-join-request" class="btn btn-danger">cancel</button>';
         break;
         case 'chat':
-        $button = '<button type="submit" name="chat-with-group" class="btn btn-primary">Chat now!</button>';
+        $button = '<button type="submit" name="chat-with-group" id="chat-with-group" class="btn btn-primary">Chat now!</button>';
         break;
         default:
         break;
@@ -46,11 +46,7 @@ function get_edit_btn($form_id)
         $renderHTML = '<div class="btn-edit-content">'.get_btn_case('edit').'</div>';
     } else {
         if (get_form_value($form_id, 'user_id') == get_current_user_id() && check_student_form() == $form_id) {
-            $renderHTML = '<div class="btn-edit-content"><a href="'.home_url('profile').'?form-mode=edit"class="btn btn-primary">Edit</a></div>';
-        } else {
-            if (empty(has_form_id())) {
-                $renderHTML = '<div class="btn-edit-content">'.get_btn_case('edit').'</div>';
-            }
+            $renderHTML = '<div class="btn-edit-content"><a href="'.home_url('profile').'?mode=edit"class="btn btn-primary">Edit</a></div>';
         }
     }
 
@@ -72,18 +68,36 @@ function handle_request_form($form_id)
 function get_button_join($form_id)
 {
     $status_form = checkStatusForm($form_id);
-    $renderHTML = '<div class="groups-button-request"> ';
-    if (is_request_exist($form_id)) {
-        $renderHTML .= get_btn_case('cancel');
-    } elseif (!$status_form) {
-        $renderHTML .= get_btn_case('closed');
-    } elseif (is_member_in_group($form_id, get_current_user_id())) {
-        $renderHTML .= get_btn_case('chat');
-    } else {
-        $renderHTML .= get_btn_case('join');
-    }
+    if (is_user_logged_in()) {
+        $user_role = info('role');
+        if ($user_role != 'Teacher') {
+            $renderHTML = '<div class="groups-button-request"> ';
+            if (is_request_exist($form_id)) {
+                $renderHTML .= get_btn_case('cancel');
+            } elseif (!$status_form) {
+                $renderHTML .= get_btn_case('closed');
+            } elseif (is_member_in_group($form_id, get_current_user_id())) {
+                $renderHTML .= get_btn_case('chat');
+            } else {
+                $renderHTML .= get_btn_case('alert-join');
+            }
 
-    $renderHTML .= '</div>';
+            $renderHTML .= '</div>';
+        }
+    } else {
+        $renderHTML = '<div class="groups-button-request"> ';
+        if (is_request_exist($form_id)) {
+            $renderHTML .= get_btn_case('cancel');
+        } elseif (!$status_form) {
+            $renderHTML .= get_btn_case('closed');
+        } elseif (is_member_in_group($form_id, get_current_user_id())) {
+            $renderHTML .= get_btn_case('chat');
+        } else {
+            $renderHTML .= get_btn_case('alert-join');
+        }
+
+        $renderHTML .= '</div>';
+    }
 
     return $renderHTML;
 }
@@ -104,53 +118,81 @@ function is_request_exist($form_id)
     return false;
 }
 
-function formView($form_id)
+function formViewInfo($form_id)
 {
     $major = userInfo('major', get_form_value($form_id, 'user_id'));
-    $renderHTML .= '<div class="form-detail"><h3>'.get_form_value($form_id, 'title').'</h3>';
+    $user_role = userInfo('role', get_form_value($form_id, 'user_id'));
+    $renderHTML .= '<div class="form-detail-info"><h6>General Information:</h6> ';
+    $renderHTML .= '<div>';
+    $renderHTML .= '<div class="col-lg-6">';
+    $renderHTML .= '<div class="col-lg-4">Semester  </div>';
+    $renderHTML .= '<div class="col-lg-8">'.get_form_value($form_id, 'semester').'</div>';
+    $renderHTML .= '<div class="col-lg-4">Leader  </div>';
+    $renderHTML .= '<div class="col-lg-8"><a href="'.home_url('user').'?user-id='.get_form_value($form_id, 'user_id').'" target="_blank" class="btn btn-info btn-sm">'.get_userdata(get_form_value($form_id, 'user_id'))->user_login.'</a></div>';
+    $renderHTML .= '</div>';
+    $renderHTML .= '<div class="col-lg-6">';
+    $renderHTML .= '<div class="col-lg-4">Major  </div>';
+    $renderHTML .= '<div class="col-lg-8">'.$major.'</div>';
+    if ($user_role == '1') {
+        $renderHTML .= '<div class="col-lg-4">Supervisor  </div>';
+        if (get_supervisor($form_id)) {
+            $renderHTML .= '<div class="col-lg-8">'.get_supervisor($form_id).'</div>';
+        } else {
+            $renderHTML .= '<div class="col-lg-8">Not yet</div>';
+        }
+    }
+    $renderHTML .= '</div>';
+    $renderHTML .= '</div></div>';
+
+    return $renderHTML;
+}
+function formViewSkill($form_id)
+{
+    $renderHTML .= '<div class="form-detail-info"><h6>Requirements:</h6> ';
+    $renderHTML .= '<div>';
+    $renderHTML .= '<div class="col-lg-6">';
+    $renderHTML .= '<div class="col-lg-4">Responsibilities  </div>';
+    $renderHTML .= '<div class="col-lg-8">'.get_skills($form_id).'</div>';
+    $renderHTML .= '</div>';
+    $renderHTML .= '<div class="col-lg-6">';
+    $renderHTML .= '<div class="col-lg-4">Other requirements  </div>';
+    $renderHTML .= '<div class="col-lg-8">'.get_form_value($form_id, 'other_skill').'</div>';
+    $renderHTML .= '</div>';
+    $renderHTML .= '</div></div>';
+
+    return $renderHTML;
+}
+function formDescription($form_id)
+{
+    $renderHTML .= '<div class="form-detail-info"><h6>Description:</h6> ';
+    $renderHTML .= '<div class="form-detail-desciption" >';
+    $renderHTML .= get_form_value($form_id, 'description');
+    $renderHTML .= '</div></div>';
+
+    return $renderHTML;
+}
+function formMember($form_id)
+{
+    $renderHTML .= '<div class="form-detail-info"><h6>Members:</h6> ';
+    $renderHTML .= '<div class="form-detail-members" >';
+    $renderHTML .= get_list_member($form_id);
+    $renderHTML .= '</div></div>';
+
+    return $renderHTML;
+}
+function formView($form_id)
+{
+    $renderHTML .= '<div class="view-form-detail">';
+    $renderHTML .= '<div class="form-detail-head"><div class="form-view-title"> <h3>'.get_form_value($form_id, 'title').'</h3></div>';
     $renderHTML .= get_edit_btn($form_id);
     $renderHTML .= '<input type="hidden" name="form-id" value="'.$form_id.'" /> ';
     $renderHTML .= '<input type="hidden" name="user-id" value="'.get_form_value($form_id, 'user_id').'" /> ';
-    $renderHTML .= '<div class="form-major" style="text-align:center;"><b>'.$major.'</b></div>';
-    $renderHTML .= '<div class= "form-detail-semester">Semester - <b>'.get_form_value($form_id, 'semester').'</b></div>';
-    $renderHTML .= '<table id="form-view-detail">
-        <tr>
-            <th>Leader</th>
-            <td><a href="'.home_url('user').'?user-id='.get_form_value($form_id, 'user_id').'" target="_blank" class="btn btn-info btn-sm">'.get_userdata(get_form_value($form_id, 'user_id'))->user_login.'</a></td>
-        </tr>
-        <tr>
-            <th>Members</th>
-            <td>'.get_list_member($form_id).'</td>
-        </tr>
-        <tr>
-            <th>Description</th>
-            <td class="description">'.get_form_value($form_id, 'description').'</td>
-        </tr>
-        <tr>
-            <th>Skill set</th>
-            <td>'.get_skills($form_id).'</td>
-        </tr>
-        <tr>
-            <th>Other</th>
-            <td>'.get_form_value($form_id, 'other_skill').'</td>
-        </tr>
-        <tr>
-            <th>contact</th>
-            <td>'.get_form_value($form_id, 'contact').'</td>
-        </tr>
-        <tr>
-            <th>Suppervisor</th>';
-    if (get_supervisor($form_id)) {
-        $renderHTML .= '<td>'.get_supervisor($form_id).'</td>';
-    } else {
-        $renderHTML .= '<td>Not yet</td>';
-    }
-    $renderHTML .= '</tr>
-        <tr>
-            <th>Due date</th>
-            <td>'.get_form_value($form_id, 'due_date').'</td>
-        </tr>';
-    $renderHTML .= '</table></div>';
+    $renderHTML .= '</div>';
+    $renderHTML .= formViewInfo($form_id);
+    $renderHTML .= formMember($form_id);
+    $renderHTML .= formViewSkill($form_id);
+    $renderHTML .= formDescription($form_id);
+    $renderHTML .= '</div>';
 
     return $renderHTML;
 }
@@ -178,7 +220,7 @@ function get_list_member($form_id)
     AND member_role = 1
     ");
     foreach ($members_id as $members) {
-        $renderHTML .= '<a href="'.home_url('user').'?user-id='.$members->member_id.'" class="btn btn-info btn-sm">'.get_userdata($members->member_id)->user_login.'</a>';
+        $renderHTML .= '<a href="'.home_url('user').'?user-id='.$members->member_id.'" class="btn btn-info btn-sm">'.get_userdata($members->member_id)->user_login.'</a><br>';
     }
 
     return $renderHTML;
@@ -196,6 +238,7 @@ function get_supervisor($form_id)
     ");
     if ($supervisor) {
         $renderHTML .= '<a href="'.home_url('user').'?user-id='.$supervisor.'" class="btn btn-info btn-sm">'.get_userdata($supervisor)->user_login.'</a>';
+    } else {
     }
 
     return $renderHTML;
@@ -213,8 +256,67 @@ function get_skills($form_id)
     WHERE f.form_id = '".$form_id."'
     ");
     foreach ($skills as $skill) {
-        $renderHTML .= $skill->name.' , ';
+        $renderHTML .= $skill->name.' <br> ';
     }
+
+    return $renderHTML;
+}
+
+function get_form_related($form_id)
+{
+    global $wpdb;
+    $form_major = userInfo('major', get_form_value($form_id, 'user_id'));
+    $get_forms = $wpdb->get_results("
+    SELECT f.* FROM {$wpdb->prefix}finder_form as f
+    JOIN {$wpdb->prefix}usermetaData as u
+    ON f.user_id = u.user_id 
+    WHERE meta_value = '".$form_major."'
+    AND f.ID != '".$form_id."'
+    order by created_date DESC
+    limit 5
+    ");
+
+    return $get_forms;
+}
+
+function related_topic($form_id)
+{
+    $forms = get_form_related($form_id);
+    $renderHTML = '';
+    $renderHTML .= '<div class="form-related"> ';
+    foreach ($forms as $form) {
+        $renderHTML .= '<p><a href="'.home_url('form-detail').'?form-id='.$form->ID.'" >';
+        $renderHTML .= '<b>'.$form->title.'</b></a></p>';
+    }
+    $renderHTML .= '</div>';
+
+    return $renderHTML;
+}
+
+function get_form_related_semester($form_id)
+{
+    global $wpdb;
+    $semester = get_form_value($form_id, 'semester');
+    $get_forms = $wpdb->get_results("
+    SELECT * FROM {$wpdb->prefix}finder_form as f
+    WHERE semester = '".$semester."'
+    AND f.ID != '".$form_id."'
+    order by created_date DESC
+    limit 5
+    ");
+
+    return $get_forms;
+}
+function related_semester($form_id)
+{
+    $forms = get_form_related_semester($form_id);
+    $renderHTML = '';
+    $renderHTML .= '<div class="form-related"> ';
+    foreach ($forms as $form) {
+        $renderHTML .= '<p><a href="'.home_url('form-detail').'?form-id='.$form->ID.'" >';
+        $renderHTML .= '<b>'.$form->title.'</b></a></p>';
+    }
+    $renderHTML .= '</div>';
 
     return $renderHTML;
 }
