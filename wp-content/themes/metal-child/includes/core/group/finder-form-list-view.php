@@ -61,7 +61,7 @@ function get_list_skill($form_id, $other_skill)
     INNER JOIN {$wpdb->prefix}form_skill as f 
     ON s.ID = f.skill_id 
     WHERE f.form_id = '".$form_id."'
-
+    
     ");
 
     foreach ($skills as $skill) {
@@ -199,6 +199,7 @@ function count_form_by_major($majorName)
     ON u.user_id = f.user_id 
     WHERE u.meta_key = 'major' 
     AND u.meta_value = '".$majorName."'
+    AND special = 0
     ");
 
     return $count;
@@ -298,6 +299,7 @@ function get_form_current_semester()
     SELECT *
     FROM {$wpdb->prefix}finder_form 
     WHERE semester = '".get_current_semester()."' 
+    AND special = 0
     ORDER BY created_date DESC  
     LIMIT 40 
     ");

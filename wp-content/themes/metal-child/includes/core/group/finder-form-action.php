@@ -551,7 +551,7 @@ function actionInSearch($user_id)
                 if ($user_major == $form_major) {
                     $renderHTML = '<button id="action-invite-student" class="btn btn-primary btn-sm">Invite student</button>';
                 } else {
-                    $renderHTML = '<a href="'.home_url('user').'?>user-id='.$user_id.' class="btn btn-info">View</a>';
+                    $renderHTML = '<a href="'.home_url('user').'?>user-id='.$user_id.'" class="btn btn-info">View</a>';
                 }
             } else {
                 $renderHTML = '<button  id="action-invite-student" class="btn btn-primary btn-sm">Invite supervisor</button>';

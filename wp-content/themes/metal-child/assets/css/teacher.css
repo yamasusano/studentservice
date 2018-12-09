@@ -9,3 +9,31 @@ table#teacher-list-group tr>th:nth-child(1) {
 input#title-form {
     padding: 0px 5px;
 }
+
+.title-group-teacher {
+    color: black;
+}
+
+.title-group-teacher:hover {
+    cursor: pointer;
+    color: #FEB600;
+}
+
+.title-group-teacher:visited {
+    color: #FEB600;
+}
+
+.form-teach-title {
+    text-transform: uppercase;
+}
+
+.btn-edit-form {
+    position: absolute;
+    right: 40px;
+    top: 20px;
+}
+
+.button-back {
+    margin: 20px 0px;
+    text-align: center;
+}

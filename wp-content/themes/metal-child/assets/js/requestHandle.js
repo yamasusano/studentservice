@@ -10,6 +10,7 @@ jQuery(function ($) {
                         $parent = 'table#result_list_users tr:eq(' + $current_action + ') ';
                         $($parent + 'div.btn-group-invite').append(result.button);
                         $('div.member-message').html(result.message);
+
                     } else {
                         $('div.member-message').html(result.message);
                     }
@@ -29,6 +30,7 @@ jQuery(function ($) {
                         $parent = 'table#result_list_users tr:eq(' + $current_action + ') ';
                         $($parent + 'div.btn-group-invite').append(result.button);
                         $('div.member-message').html(result.message);
+
                     } else {
                         $('div.member-message').html(result.message);
                     }
@@ -142,12 +144,11 @@ jQuery(function ($) {
                 success: function (result) {
                     if (result.results == true) {
                         $('div.noti-message').html(result.message);
-                        // parents.slideUp('slow', function () { parents.remove(); });
                         par.slideUp('slow', function () { par.remove(); });
                     } else {
                         $('div.noti-message').html(result.message);
                         par.slideUp('slow', function () { par.remove(); });
-                        // parents.slideUp('slow', function () { parents.remove(); });
+
                     }
 
                 },

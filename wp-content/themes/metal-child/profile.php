@@ -58,6 +58,8 @@ get_header();
                                 <div class="col-md-9">
                                     <div id="profile-contents" class="profile-content">
                                     </div>
+                                    <div id="btn-quick-link">
+                                    </div>
                                 </div>
                             </div>
                         </div>

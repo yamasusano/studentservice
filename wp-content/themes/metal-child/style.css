@@ -276,10 +276,6 @@ div.menu-lists {
   margin-bottom: 5px;
 }
 
-.invite-members input {
-  width: 300px;
-}
-
 #group-contents {
   overflow: hidden;
   min-height: 560px;
@@ -305,6 +301,8 @@ div.menu-lists {
 #group-contents h3 {
   text-align: center;
   margin-top: 10px;
+  margin: 0 auto;
+  width: 70%;
 }
 
 #group-contents .result-search {
@@ -475,7 +473,13 @@ td.method-action button, div.button-request button {
   margin-right: 10px;
 }
 
-button#finder-form {
+.invite-members input {
+  width: 300px;
+  padding-left: 5px;
+  margin-right: 5px;
+}
+
+div.group-menu-item button {
   margin-right: 5px;
 }
 
@@ -732,7 +736,7 @@ div.carousel-inner {
   overflow: hidden;
   width: 100%;
   margin-bottom: 50px;
-  min-height: 650px;
+  min-height: 700px;
 }
 
 div.carousel-inner div {
@@ -799,10 +803,6 @@ ol.carousel-indicators {
 
 .form-item>div {
   border-bottom: 1px solid #f5f5f5;
-}
-
-.carousel-inner {
-  min-height: 350px;
 }
 
 div.tabs-container .form-content-title a {

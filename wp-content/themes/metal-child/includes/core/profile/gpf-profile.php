@@ -70,114 +70,81 @@ function info($meta_key)
             return $user_info;
     }
 }
+function get_user_bio()
+{
+    $renderHTML .= '<div class="col-lg-12 desciption"><div class="row"><div class="biography">';
+    $renderHTML .= '<textarea name="user-description" id="user-description" rows="10" placeholder="about me..." '.$disabled.' >'.info('biography').'</textarea>';
+    $renderHTML .= '</div></div></div>';
 
+    return $renderHTML;
+}
+function get_user_group_name()
+{
+    $renderHTML .= '<div class="col-lg-12"><div class="row">';
+    $renderHTML .= '<div class="col-lg-6"><div class="row">';
+    $renderHTML .= '<div class="col-lg-2" style="padding:0"><label for="name">Full Name</label></div>';
+    $renderHTML .= ' <div class="col-lg-10"><div class="name"><input type="text" name="user-name" id="user-name" value="'.info('username').'" '.$disabled.' ></div>';
+    $renderHTML .= '</div></div></div>';
+    $renderHTML .= '<div class="col-lg-6"><div class="row">';
+    $renderHTML .= '<div class="col-lg-2" style="padding:0"><label for="gender">Gender</label></div>';
+    $renderHTML .= '<div class="col-lg-10"><div class="gender"><input type="text" name="gender" id="gender" value="'.checkGender(info('gender'), 'Select gender').'" '.$disabled.' ></div>';
+    $renderHTML .= '</div></div></div>';
+    $renderHTML .= '</div></div>';
+
+    return $renderHTML;
+}
+function get_user_group_mail()
+{
+    $renderHTML .= '<div class="col-lg-12"><div class="row">';
+    $renderHTML .= '<div class="col-lg-6"><div class="row">';
+    $renderHTML .= '<div class="col-lg-2" style="padding:0"><label for="email">Email</label></div>';
+    $renderHTML .= '<div class="col-lg-10 email"><a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to='.info('email').'" target="_blank">'.info('email').'</a></div></div>';
+    $renderHTML .= '</div>';
+    $renderHTML .= '<div class="col-lg-6"><div class="row">';
+    $renderHTML .= '<div class="col-lg-2" style="padding:0"><label for="name">Major</label></div>';
+    $renderHTML .= '<div class="col-lg-10"><div class="major"><input type="text" name="major" id="major" value="'.checkGender(info('major'), 'Select your major').'" '.$disabled.' ></div>';
+    $renderHTML .= '</div></div>';
+    $renderHTML .= '</div>';
+    $renderHTML .= '</div>';
+    $renderHTML .= '</div></div>';
+
+    return $renderHTML;
+}
+
+function get_student_block()
+{
+    $renderHTML .= '<div class="col-lg-12"><div class="row">';
+    if (is_student()) {
+        $renderHTML .= '<div class="col-lg-6"><div class="row">';
+        $renderHTML .= '<div class="col-lg-2" style="padding:0"><label for="phone">Batch</label></div>';
+        $renderHTML .= '<div class="col-lg-10"><div class="semester-level"><input type="text" name="user-level" id="user-level" value="'.checkGender(info('phone'), 'Select your semester level').'" '.$disabled.' ></div></div>';
+        $renderHTML .= '</div></div>';
+    }
+    $renderHTML .= '<div class="col-lg-6"><div class="row">';
+    $renderHTML .= '<div class="col-lg-2" style="padding:0"><label for="name">Address</label></div>';
+    $renderHTML .= '<div class="col-lg-10"><div class="address"><textarea name="address" id="address" rows="3" style="width: 100%;"  '.$disabled.' >'.info('address').'</textarea></div>';
+    $renderHTML .= '</div></div>';
+    $renderHTML .= '</div></div>';
+
+    return $renderHTML;
+}
+function get_block_button()
+{
+    $renderHTML .= '<div class="col-lg-12"><div class="verify-input"></div></div>';
+    $renderHTML .= '<div class="col-lg-12"><div id="edit-btn" class="form-group"><button id="edit-profile" name="edit-profile" class="btn btn-success">Edit</button>';
+    $renderHTML .= '</div></div> ';
+
+    return $renderHTML;
+}
 function overView()
 {
     $disabled = 'disabled';
     $renderHTML = '';
-    $renderHTML .= '
-        <div class="col-lg-12 desciption">
-        <div class="row">
-            <div class="biography">
-                <textarea name="user-description" id="user-description" rows="10" placeholder="about me..." '.$disabled.' >'.info('biography').'</textarea>
-            </div>    
-        </div>
-    </div>
-    <div class="col-lg-12">
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="row">
-                    <div class="col-lg-2" style="padding:0">
-                        <label for="name">Full Name</label>
-                    </div>
-                     <div class="col-lg-10">    
-                        <div class="name">
-                            <input type="text" name="user-name" id="user-name" value="'.info('username').'" '.$disabled.' >
-                        </div>     
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-            <div class="row">
-                <div class="col-lg-2" style="padding:0">
-                    <label for="gender">Gender</label>
-                </div>
-                 <div class="col-lg-10">    
-                    <div class="gender">
-                        <input type="text" name="gender" id="gender" value="'.checkGender(info('gender'), 'Select gender').'" '.$disabled.' >
-                    </div>     
-                </div>
-            </div>
-        </div>
-        </div>
-    </div>
-    <div class="col-lg-12">
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="row">
-                    <div class="col-lg-2" style="padding:0">
-                        <label for="email">Email</label>
-                    </div>
-                    <div class="col-lg-10 email">
-                        <a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to='.info('email').'" target="_blank">'.info('email').'</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-            <div class="row">
-                <div class="col-lg-2" style="padding:0">
-                    <label for="name">Major</label>
-                </div>
-                 <div class="col-lg-10">    
-                    <div class="major">
-                        <input type="text" name="major" id="major" value="'.checkGender(info('major'), 'Select your major').'" '.$disabled.' >
-                    </div>     
-                </div>
-            </div>
-        </div>
-        </div>
-    </div>
-    <div class="col-lg-12">
-        <div class="row">';
-    if (is_student()) {
-        $renderHTML .= '<div class="col-lg-6">
-            <div class="row">
-                <div class="col-lg-2" style="padding:0">
-                    <label for="phone">Batch</label>
-                </div>
-                <div class="col-lg-10">    
-                    <div class="semester-level">
-                        <input type="text" name="user-level" id="user-level" value="'.checkGender(info('phone'), 'Select your semester level').'" '.$disabled.' >
-                    </div>     
-                </div>
-            </div>
-        </div>';
-    }
-    $renderHTML .= '<div class="col-lg-6">
-                <div class="row">
-                    <div class="col-lg-2" style="padding:0">
-                        <label for="name">Address</label>
-                    </div>
-                    <div class="col-lg-10">    
-                        <div class="address">
-                            <textarea name="address" id="address" rows="3" style="width: 100%;"  '.$disabled.' >'.info('address').'</textarea>
-                        </div>     
-                    </div>
-                </div>
-             </div>   
-        </div>
-    </div>
-<div class="col-lg-12">
-    <div class="verify-input">
-    </div>
-</div>
-    <div class="col-lg-12">
-        <div id="edit-btn" class="form-group">
-            <button  id="edit-profile" name="edit-profile" class="btn btn-success">Edit</button>
-        </div>
-    </div>
-
-';
+    $renderHTML .= get_user_bio();
+    $renderHTML .= get_user_group_name();
+    $renderHTML .= get_user_group_mail();
+    $renderHTML .= get_student_block();
+    $renderHTML .= get_block_button();
 
     return $renderHTML;
 }

@@ -6,7 +6,6 @@ jQuery(function ($) {
                 data: { 'action': 'finder_form' },
                 type: 'post',
                 success: function (result) {
-                    var data_description = '';
                     var html = $.parseHTML(result.form);
                     $('#group-contents').html(html);
                     CKEDITOR.replace('description');
@@ -97,7 +96,7 @@ jQuery(function ($) {
                         $('div#group-message').html(result.message);
                     } else {
                         $('div#group-message').html(result.message);
-                        window.location.reload();
+                        setMenuGroup();
                     }
 
                 },
@@ -130,7 +129,7 @@ jQuery(function ($) {
                 type: 'post',
                 success: function (result) {
                     $('div.member-message').html(result.message);
-                    window.location.reload();
+                    generateMember();
                 },
                 errors: function (result) { }
 
@@ -145,14 +144,14 @@ jQuery(function ($) {
                 type: 'post',
                 success: function (result) {
                     $('div.member-message').html(result.message);
-                    window.location.reload();
+                    generateMember();
                 },
                 errors: function (result) { }
 
             });
 
         }
-        function dropdownSelectMenu(el1, el2) {
+        window.dropdownSelectMenu = function (el1, el2) {
             el1.on('click', function () {
                 $(".dropdown dd ul").slideToggle('fast');
             });
