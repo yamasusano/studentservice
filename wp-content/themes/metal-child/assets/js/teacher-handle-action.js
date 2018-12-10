@@ -61,7 +61,10 @@ jQuery(function ($) {
             invite_student_via_teacher(form_id, $(this));
             $(this).remove();
         });
-
+        $('body').on('click', 'button#cancel-invite-user-via-teacher', function () {
+            re_action_intive_user_via_teacher($form_id, $(this));
+            $(this).remove();
+        });
 
     });
 });

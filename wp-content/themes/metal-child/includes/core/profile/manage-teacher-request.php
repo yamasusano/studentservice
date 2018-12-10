@@ -88,7 +88,7 @@ function get_view_action_search_via_teacher($user_id, $form_id)
         AND request = 0
         ");
     if ($check_request_exist) {
-        $renderHTML = '<button id="cancel-invite-user" class="btn-danger btn btn-sm">Cancel</button>';
+        $renderHTML = '<button id="cancel-invite-user-via-teacher" class="btn-danger btn btn-sm">Cancel</button>';
     } else {
         $renderHTML = action_search_via_teacher($user_id, $form_id);
     }
@@ -136,9 +136,9 @@ function action_invite_user_via_teacher($user_id, $form_id)
         AND request = 0
         ");
         if ($check_request_exist) {
-            $cancel_request = '<button id="cancel-invite-user" class="btn-danger btn btn-sm">Cancel</button>';
+            $cancel_request = '<button id="cancel-invite-user-via-teacher" class="btn-danger btn btn-sm">Cancel</button>';
 
-            return array('result' => true, 'message' => 'waiting <b>'.get_userdata($user_id)->user_login.' </b>confirm', 'button' => $cancel_request);
+            return array('result' => true, 'message' => '<div class="message-success">waiting <b>'.get_userdata($user_id)->user_login.' </b>confirm</div>', 'button' => $cancel_request);
         } else {
             if (userInformation('role', $user_id) == 'Student') {
                 $user_join_in = $wpdb->insert(
@@ -184,11 +184,40 @@ function action_invite_user_via_teacher($user_id, $form_id)
                 ]
             );
         if ($make_request) {
-            $cancel_request = '<button id="cancel-invite-user" class="btn-danger btn btn-sm">Cancel</button>';
+            $cancel_request = '<button id="cancel-invite-user-via-teacher" class="btn-danger btn btn-sm">Cancel</button>';
 
-            return array('result' => true, 'message' => 'waiting <b>'.get_userdata($user_id)->user_login.' </b>confirm', 'button' => $cancel_request);
+            return array('result' => true, 'message' => '<div class="message-success">waiting <b>'.get_userdata($user_id)->user_login.' </b>confirm</div>', 'button' => $cancel_request);
         } else {
             return array('result' => false, 'message' => 'invite user failed');
         }
+    }
+}
+
+function re_action_invite_via_teacher($form_id, $user_id)
+{
+    global $wpdb;
+    $check_request_exist = $wpdb->get_var("
+        SELECT * FROM {$wpdb->prefix}request
+        WHERE form_id = '".$form_id."' 
+        AND member_id = '".$user_id."'
+        AND request = 0
+        ");
+    if ($check_request_exist) {
+        $delete_request = $wpdb->delete(
+            "{$wpdb->prefix}request",
+            [
+                'form_id' => $form_id,
+                'member_id' => $user_id,
+            ]
+            );
+        if ($delete_request) {
+            $button = '<button id="action-invite-via-teacher" class="btn btn-primary btn-sm">Invite</button>';
+
+            return array('result' => true, 'message' => '<div class="message-fail">reject request success</div>', 'button' => $button);
+        } else {
+            return array('result' => false, 'message' => '<div class="message-fail">reject request failed</div>');
+        }
+    } else {
+        return array('result' => false, 'message' => '<div class="message-fail">request have not exist</div>');
     }
 }

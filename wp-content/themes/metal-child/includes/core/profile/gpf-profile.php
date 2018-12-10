@@ -255,9 +255,9 @@ function has_form_id()
     global $wpdb;
 
     $form_id = $wpdb->get_var("
-    SELECT form_id 
+    SELECT form_id
     FROM {$wpdb->prefix}members 
-    WHERE member_id = '".get_current_user_id()."' 
+    WHERE member_id = '".get_current_user_id()."'
     ");
 
     return $form_id;

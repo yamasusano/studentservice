@@ -304,5 +304,26 @@ jQuery(function ($) {
 
             });
         }
+        window.re_action_intive_user_via_teacher = function (ID, button) {
+            $user_id = button.parent().find($('input#user-id')).val();
+            $current_action = button.parents('tr').index();
+            $.ajax({
+                url: zozo_js_vars.zozo_ajax_url,
+                data: { 'action': 're_invite_user_join_via_teacher', 'ID': ID, 'user-id': $user_id },
+                type: 'post',
+                success: function (result) {
+                    if (result.check) {
+                        $parent = 'table#result_list_users tr:eq(' + $current_action + ') ';
+                        $($parent + 'div.btn-group-invite').append(result.button);
+                        $('div.member-message').html(result.message);
+
+                    } else {
+                        $('div.member-message').html(result.message);
+                    }
+                },
+                errors: function (result) { }
+
+            });
+        }
     });
 });

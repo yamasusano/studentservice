@@ -6,11 +6,13 @@ jQuery(function ($) {
         $('div#my-group').on('click', function () {
             setMenuGroup();
         });
+        $('div#teacher-group').on('click', function () {
+            get_teacher_group_list();
+        })
         $('div#manage-request').on('click', function () {
             manageRequest();
         })
         $('body').on('click', 'button#edit-profile', function () {
-
             changeButton();
         });
         $('body').on('click', 'button#finder-form', function () {

@@ -14,6 +14,8 @@ include 'includes/core/group/menu-group.php';
 include 'includes/core/group/finder-form-action.php';
 include 'includes/core/group/finder-form-insert.php';
 
+include 'includes/core/other-groups/student.php';
+
 include 'includes/core/chat-group/chat-form.php';
 include 'includes/core/entity.php';
 include 'validate.php';
@@ -48,6 +50,7 @@ function zozo_enqueue_child_theme_styles()
     //teacher-js
     wp_enqueue_script('teacher-action', get_stylesheet_directory_uri().'/assets/js/teacher-action.js', array('jquery'), null, true);
     wp_enqueue_script('teacher-handle', get_stylesheet_directory_uri().'/assets/js/teacher-handle-action.js', array('jquery'), null, true);
+    wp_enqueue_script('other-form', get_stylesheet_directory_uri().'/assets/js/other-form.js', array('jquery'), null, true);
 }
 //start session to login.
 add_action('init', 'my_session', 1);
@@ -347,9 +350,8 @@ add_action('wp_ajax_nopriv_accept_request', 'accept_request');
 add_action('wp_ajax_accept_request', 'accept_request');
 function accept_request()
 {
-    if (isset($_POST['request-user'])) {
-        $user_name = $_POST['request-user'];
-        $user_id = get_userdatabylogin($user_name)->ID;
+    if (isset($_POST['user-id'])) {
+        $user_id = $_POST['user-id'];
         $action = accessRequest($user_id);
         $message = '';
         $result;
@@ -369,9 +371,8 @@ add_action('wp_ajax_nopriv_reject_user_request', 'reject_user_request');
 add_action('wp_ajax_reject_user_request', 'reject_user_request');
 function reject_user_request()
 {
-    if (isset($_POST['request-user'])) {
-        $user_name = $_POST['request-user'];
-        $user_id = get_userdatabylogin($user_name)->ID;
+    if (isset($_POST['user-id'])) {
+        $user_id = $_POST['user-id'];
     }
     echo wp_send_json(['message' => rejectRequest($user_id)]);
     die();
@@ -793,4 +794,35 @@ function invite_student_via_teacher()
     }
     echo wp_send_json(['check' => $check['result'], 'message' => $message, 'button' => $button_cancel]);
     die();
+}
+add_action('wp_ajax_nopriv_re_invite_user_join_via_teacher', 're_invite_user_join_via_teacher');
+add_action('wp_ajax_re_invite_user_join_via_teacher', 're_invite_user_join_via_teacher');
+function re_invite_user_join_via_teacher()
+{
+    $form_id = $_POST['ID'];
+    $user_id = $_POST['user-id'];
+    $check = re_action_invite_via_teacher($form_id, $user_id);
+    $message = '';
+    $button_join = '';
+    if ($check['result']) {
+        $message = $check['message'];
+        $button_join = $check['button'];
+    } else {
+        $message = $check['message'];
+    }
+    echo wp_send_json(['check' => $check['result'], 'message' => $message, 'button' => $button_join]);
+    die();
+}
+add_action('wp_ajax_nopriv_get_teacher_list', 'get_teacher_list');
+add_action('wp_ajax_get_teacher_list', 'get_teacher_list');
+function get_teacher_list()
+{
+    $create_menu = list_form_teacher();
+    echo wp_send_json(['create_menu' => $create_menu]);
+    die();
+}
+add_action('wp_ajax_nopriv_get_teacher_form_detail', 'get_teacher_form_detail');
+add_action('wp_ajax_get_teacher_form_detail', 'get_teacher_form_detail');
+function get_teacher_form_detail()
+{
 }

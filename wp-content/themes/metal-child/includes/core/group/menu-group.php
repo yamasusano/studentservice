@@ -7,7 +7,7 @@ function get_groups()
     $user_role = info('role');
     if ($user_role == 'Student') {
         $renderHTML .= '<div id="my-group" class="sub-menu-items"><i class="glyphicon glyphicon-hand-right"></i><a>My Group</a></div>';
-        $renderHTML .= '<div id="other-group" class="sub-menu-items"><i class="glyphicon glyphicon-hand-right"></i><a>Teacher Groups</a></div>';
+        $renderHTML .= '<div id="teacher-group" class="sub-menu-items"><i class="glyphicon glyphicon-hand-right"></i><a>Teacher Groups</a></div>';
         $renderHTML .= '<div id="manage-request" class="sub-menu-items"><i class="glyphicon glyphicon-hand-right"></i><a>My request</a></div>';
     } else {
         $renderHTML .= '<div id="my-groups" class="sub-menu-items"><i class="glyphicon glyphicon-hand-right"></i><a>My Groups</a></div>';
@@ -89,8 +89,8 @@ function finderFormView()
         $renderHTML .= '<hr class="style-four">';
         $renderHTML .= '<div class="form-view-detail">';
         $renderHTML .= '<div class="members"><div class="col-lg-3 col">Members</div><div class="col-lg-9 col">'.$members.'</div></div>';
-        $renderHTML .= '<div class="skill-set"><div class="col-lg-3">Skill set</div><div class="col-lg-9">'.get_skill_set().'</div></div>';
-        $renderHTML .= '<div class="Others"><div class="col-lg-3">Others</div><div class="col-lg-9">'.form_data('other_skill').'</div></div>';
+        $renderHTML .= '<div class="skill-set"><div class="col-lg-3">Responsibilities</div><div class="col-lg-9">'.get_skill_set().'</div></div>';
+        $renderHTML .= '<div class="Others"><div class="col-lg-3">Other requirements</div><div class="col-lg-9">'.form_data('other_skill').'</div></div>';
         $renderHTML .= '<div class="Supervisor"><div class="col-lg-3">Supervisor</div><div class="col-lg-9">'.get_suppervisor($finder_form).'</div></div>';
         $renderHTML .= '<div class="desc-view"><div class="col-lg-3 col">Description</div><div class="col-lg-9 col">'.form_data('description').'</div></div>';
         $renderHTML .= '</div></div>';
@@ -148,7 +148,7 @@ function finderForm()
             </div>
             <div class="skill-form">
                 <div class="col-lg-3">
-                    <label for="title">Skill Set</label>
+                    <label for="title">Responsibilities</label>
                 </div>
                 <div class="col-lg-9">
                     <dl class="dropdown">
@@ -174,7 +174,7 @@ function finderForm()
             <div class="prefix-element">
                 <div class="skill-other">
                     <div class="col-lg-3">
-                        <label for="title">Other</label>
+                        <label for="title">Other requirements</label>
                     </div>
                     <div class="col-lg-9">
                         <input type="text" id="skill-other" value="'.($finder_form ? form_data('other_skill') : '').'">

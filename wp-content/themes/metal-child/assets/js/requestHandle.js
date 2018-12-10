@@ -96,7 +96,6 @@ jQuery(function ($) {
         }
 
         window.rejectInviteRequest = function (button, $user_id) {
-            // var parents = button.parents().eq(1);
             var par = button.parents('tr');
             $.ajax({
                 url: zozo_js_vars.zozo_ajax_url,
@@ -114,12 +113,11 @@ jQuery(function ($) {
             });
         }
         window.rejectRequest = function (button) {
-            var parents = button.parents().eq(1);
             var par = button.parents('tr');
-            var user = parents.find('div.content-request>p>a').text();
+            var user_id = button.parent().find('input#user-id').val();
             $.ajax({
                 url: zozo_js_vars.zozo_ajax_url,
-                data: { 'action': 'reject_user_request', 'request-user': user },
+                data: { 'action': 'reject_user_request', 'user-id': user_id },
                 type: 'post',
                 success: function (result) {
                     if (result.results == true) {
@@ -134,12 +132,11 @@ jQuery(function ($) {
             });
         }
         window.requestHandle = function (button) {
-            var parents = button.parents().eq(1);
             var par = button.parents('tr');
-            var user = parents.find('div.content-request>p>a').text();
+            var user_id = button.parent().find('input#user-id').val();
             $.ajax({
                 url: zozo_js_vars.zozo_ajax_url,
-                data: { 'action': 'accept_request', 'request-user': user },
+                data: { 'action': 'accept_request', 'user-id': user_id },
                 type: 'post',
                 success: function (result) {
                     if (result.results == true) {
@@ -151,6 +148,33 @@ jQuery(function ($) {
 
                     }
 
+                },
+                errors: function (result) { }
+
+            });
+        }
+        window.get_teacher_group_list = function () {
+            $.ajax({
+                url: zozo_js_vars.zozo_ajax_url,
+                data: { 'action': 'get_teacher_list' },
+                type: 'post',
+                success: function (result) {
+                    var html = $.parseHTML(result.create_menu);
+                    $('#profile-contents').html(html);
+                },
+                errors: function (result) { }
+
+            });
+        }
+        window.teacher_form_detail = function () {
+            $.ajax({
+                url: zozo_js_vars.zozo_ajax_url,
+                data: { 'action': 'get_teacher_form_detail', 'ID': form_id },
+                type: 'post',
+                success: function (result) {
+                    $('.group-menu-item').html(result.groups);
+                    $('#group-contents').html(result.form);
+                    get_btn_back();
                 },
                 errors: function (result) { }
 

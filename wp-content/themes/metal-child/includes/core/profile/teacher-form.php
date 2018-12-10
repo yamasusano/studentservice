@@ -87,7 +87,7 @@ function genarate_skill()
 {
     $skills = major_skill();
     $renderHTML .= '<div class="skill-form">';
-    $renderHTML .= '<div class="col-lg-3"><label for="title">Skill Set</label></div>';
+    $renderHTML .= '<div class="col-lg-3"><label for="title">Responsibilities</label></div>';
     $renderHTML .= '<div class="col-lg-9"><dl class="dropdown">';
     $renderHTML .= '<dt><a id="skill"><span class="hida">Select Skill</span><p class="multiSel"></p></a></dt>';
     $renderHTML .= '<dd><div class="mutliSelect"><ul>';
@@ -103,7 +103,7 @@ function genarate_other_skill($form_id)
 {
     $other_skill = get_form_teacher_info($form_id, 'other_skill');
     $renderHTML .= '<div class="prefix-element"><div class="skill-other">';
-    $renderHTML .= '<div class="col-lg-3"><label for="title">Other</label></div>';
+    $renderHTML .= '<div class="col-lg-3"><label for="title">Other requirements</label></div>';
     $renderHTML .= '<div class="col-lg-9"><input type="text" id="skill-other" value="'.($form_id ? $other_skill : '').'"></div>';
     $renderHTML .= '</div></div></div>';
 
@@ -176,7 +176,6 @@ function get_form_teacher_info($form_id, $key)
 function teacher_info_detail($user_id, $key)
 {
     global $wpdb;
-    $user_id = get_current_user_id();
     $value = $wpdb->get_var("
     SELECT meta_value
     FROM {$wpdb->prefix}usermetaData

@@ -6,6 +6,10 @@ table#teacher-list-group tr>th:nth-child(1) {
     width: 90%;
 }
 
+table#teacher-lists tr>th:nth-child(1) {
+    width: 20%;
+}
+
 input#title-form {
     padding: 0px 5px;
 }
@@ -36,4 +40,8 @@ input#title-form {
 .button-back {
     margin: 20px 0px;
     text-align: center;
+}
+
+table#result_list_users tr>th:nth-child(4) {
+    width: 10%;
 }

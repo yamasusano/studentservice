@@ -12,56 +12,6 @@ AND meta_key = '".$meta_key."'
 
     return $values;
 }
-
-// function viewDetail($user_id)
-// {
-//     $disabled = 'disabled';
-//     $renderHTML = '';
-//     $renderHTML .= '<div class="col-lg-12">
-//             <div class="user-profile">';
-//     $renderHTML .= '<div class="profile-userpic">'.get_avatar($user_id).'</div>';
-//     $renderHTML .= '<div class="user-name">'.userInfo('username', $user_id).'</div>';
-//     $renderHTML .= '<div class="user-major">';
-//     if (empty(userInfo('major', $user_id))) {
-//         $renderHTML .= 'have not major';
-//     } else {
-//         $renderHTML .= userInfo('major', $user_id);
-//     }
-//     $renderHTML .= '
-// <table class="table-info">
-// <tr>
-// <th>Biograph</th>
-// <td>'.userInfo('biography', $user_id).'</td>
-// </tr>
-// <tr>
-// <th>Account</th>
-// <td>'.get_userdata($user_id)->user_login.'</td>
-// </tr>
-// <tr>
-// <th>Birth date</th>
-// <td></td>
-// </tr>
-// <tr>
-// <th>Gender</th>
-// <td>'.userInfo('gender', $user_id).'</td>
-// </tr>
-// <tr>
-// <th>Email</th>
-// <td><a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to='.info('email').'" target="_blank">'.userInfo('email', $user_id).'</a></td>
-// </tr>
-// <tr>
-// <th>Phone number</th>
-// <td>'.userInfo('phone', $user_id).'</td>
-// </tr>
-// <tr>
-// <th>Address</th>
-// <td>'.userInfo('address', $user_id).'</td>
-// </tr>
-// </table>
-// ';
-
-//     return $renderHTML;
-// }
     function userViewDetail($user_id)
     {
         $renderHTML = '';
@@ -131,10 +81,12 @@ function user_view_block_tail_left($user_id)
     $renderHTML .= '<div class="col-lg-4">Gender</div>';
     $renderHTML .= '<div class="col-lg-8">'.userInfo('gender', $user_id).'</div>';
     $renderHTML .= '</div>';
-    $renderHTML .= '<div class="form-groups">';
-    $renderHTML .= '<div class="col-lg-4">Batch</div>';
-    $renderHTML .= '<div class="col-lg-8">'.userInfo('phone', $user_id).'</div>';
-    $renderHTML .= '</div>';
+    if (define_major($user_id) == 'Student') {
+        $renderHTML .= '<div class="form-groups">';
+        $renderHTML .= '<div class="col-lg-4">Batch</div>';
+        $renderHTML .= '<div class="col-lg-8">'.userInfo('phone', $user_id).'</div>';
+        $renderHTML .= '</div>';
+    }
 
     return $renderHTML;
 }
@@ -204,4 +156,17 @@ function get_user_form($user_id)
     ");
 
     return $form_id;
+}
+function define_major($user_id)
+{
+    global $wpdb;
+
+    $major = $wpdb->get_var("
+    SELECT meta_value
+    FROM {$wpdb->prefix}usermetaDate 
+    WHERE user_id = '".$user_id."' 
+    AND meta_key = 'major'
+    ");
+
+    return $major;
 }

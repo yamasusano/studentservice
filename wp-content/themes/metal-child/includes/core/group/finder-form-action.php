@@ -539,6 +539,14 @@ function actionInSearch($user_id)
     WHERE form_id = '".$form_id."'
     AND member_id = '".$user_id."' 
     ");
+    $has_form = $wpdb->get_var("
+    SELECT m.form_id
+    FROM {$wpdb->prefix}members as m
+    INNER JOIN {$wpdb->prefix}groups as g
+    ON m.form_id = g.form_id
+    WHERE member_id = '".$user_id."'
+    AND g.type = 'Student'
+    ");
     $is_leader = get_leader_id($form_id);
     $user_role = userInformation('role', $user_id);
     $user_major = userInformation('major', $user_id);
@@ -548,17 +556,21 @@ function actionInSearch($user_id)
             $renderHTML = '<a href="'.home_url('user').'?>user-id='.$user_id.'" class="btn btn-info btn-sm">View</a>';
         } else {
             if ($user_role == 'Student') {
-                if ($user_major == $form_major) {
-                    $renderHTML = '<button id="action-invite-student" class="btn btn-primary btn-sm">Invite student</button>';
+                if (isset($has_form)) {
+                    $renderHTML = '<a href="'.home_url('user').'?user-id='.$user_id.'" class="btn btn-info btn-sm">View</a>';
                 } else {
-                    $renderHTML = '<a href="'.home_url('user').'?>user-id='.$user_id.'" class="btn btn-info">View</a>';
+                    if ($user_major == $form_major) {
+                        $renderHTML = '<button id="action-invite-student" class="btn btn-primary btn-sm">Invite student</button>';
+                    } else {
+                        $renderHTML = '<a href="'.home_url('user').'?user-id='.$user_id.'" class="btn btn-info btn-sm">View</a>';
+                    }
                 }
             } else {
                 $renderHTML = '<button  id="action-invite-student" class="btn btn-primary btn-sm">Invite supervisor</button>';
             }
         }
     } else {
-        $renderHTML = '<a href="'.home_url('user').'?>user-id='.$user_id.'" class="btn btn-info btn-sm">View</a>';
+        $renderHTML = '<a href="'.home_url('user').'?user-id='.$user_id.'" class="btn btn-info btn-sm">View</a>';
     }
 
     return $renderHTML;
@@ -602,14 +614,14 @@ function re_action_invite_student($user_id)
             ]
             );
         if ($delete_request) {
-            $button = '<button id="action-invite-student" class="btn btn-primary btn-sm">Invite student</button>';
+            $button = '<button id="action-invite-via-teacher" class="btn btn-primary btn-sm">Invite</button>';
 
-            return array('result' => true, 'message' => 'reject request success ', 'button' => $button);
+            return array('result' => true, 'message' => '<div class="message-fail">reject request success</div>', 'button' => $button);
         } else {
-            return array('result' => false, 'message' => 'reject request failed');
+            return array('result' => false, 'message' => '<div class="message-fail">reject request failed</div>');
         }
     } else {
-        return array('result' => false, 'message' => 'request have not exist');
+        return array('result' => false, 'message' => '<div class="message-fail">request have not exist</div>');
     }
 }
 function action_invite_user($user_id)
@@ -628,7 +640,7 @@ function action_invite_user($user_id)
             if ($check_request_exist) {
                 $cancel_request = '<button id="cancel-invite-user" class="btn-danger btn btn-sm">Cancel</button>';
 
-                return array('result' => true, 'message' => 'waiting <b>'.get_userdata($user_id)->user_login.' </b>confirm', 'button' => $cancel_request);
+                return array('result' => true, 'message' => '<div class="message-success">waiting <b>'.get_userdata($user_id)->user_login.' </b>confirm</div>', 'button' => $cancel_request);
             } else {
                 if (userInformation('role', $user_id) == 'Student') {
                     $user_join_in = $wpdb->insert(
@@ -676,7 +688,7 @@ function action_invite_user($user_id)
             if ($make_request) {
                 $cancel_request = '<button id="cancel-invite-user" class="btn-danger btn btn-sm">Cancel</button>';
 
-                return array('result' => true, 'message' => 'waiting <b>'.get_userdata($user_id)->user_login.' </b>confirm', 'button' => $cancel_request);
+                return array('result' => true, 'message' => '<div class="message-success">waiting <b>'.get_userdata($user_id)->user_login.' </b>confirm</div>', 'button' => $cancel_request);
             } else {
                 return array('result' => false, 'message' => 'invite user failed');
             }
