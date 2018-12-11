@@ -1,3 +1,15 @@
+@media (min-width: 992px) {
+    .col-md-4 {
+        width: 25%;
+    }
+    .col-md-8 {
+        width: 75%;
+    }
+    .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9 {
+        float: left;
+    }
+}
+
 table.major-view {
     margin-top: 50px;
 }
@@ -40,7 +52,7 @@ input.enable-major {
 }
 
 button.edit-major {
-    argin-left: 4px;
+    margin-left: 4px;
     padding: 4px 8px;
     position: relative;
     top: -3px;
@@ -70,21 +82,30 @@ button.edit-major {
     padding: 10px;
 }
 
-table.add-new-major {
+.add-new-major {
+    overflow: hidden;
     margin-top: 10px;
-
+    background: #ffffff;
 }
 
-
-table.add-new-major th:nth-child(1){
-    width: 10%;
+form#form-add-new {
+    overflow: hidden;
+    padding: 20px 20px;
 }
 
-table.add-new-major th:nth-child(3),table.add-new-major th:nth-child(5){
+form#form-add-new .form-group {
+    overflow: hidden;
+    margin: 15px;
+}
+
+.form-group input#major-code {
     width: 15%;
 }
 
-table.add-new-major input,
-table.add-new-major textarea {
-    width: 100%;
+.form-group input#major-name {
+    width: 80%;
+}
+
+.form-group textarea {
+    width: 80%;
 }

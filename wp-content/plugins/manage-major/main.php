@@ -7,6 +7,7 @@ Version: 1.0.0
 Author: Huy Le
 Author URI: www.facebook.com/huymasterle
  */
+include 'core/major-add-new.php';
 add_action('admin_init', 'manage_major_style');
 function manage_major_style()
 {
@@ -18,21 +19,22 @@ add_action('admin_menu', 'manage_major_plugin_menu');
  function manage_major_plugin_menu()
  {
      add_menu_page('Manage majors', 'Manage Major', 'manage_options', 'major-settings', 'get_admin_major_list');
+     add_submenu_page('major-settings', 'Add New', 'Add New', 'manage_options', 'add-new-major', 'form_major_add');
  }
 
 function get_admin_major_list()
- {
-     $HTML = '<div class="wrap"> ';
-     $HTML .= '<h1 class="wp-heading-inline">Manage Major List</h1>';
-     $HTML .= '<button class="btn btn-md page-title-action" id="add-new-major">Add new</button>';
-     $HTML .= '<div class="form-add-new"></div>';
-     $HTML .= '<div class="message"></div>';
-     $HTML .= admin_major_list();
-     $HTML .= '</div>';
-     $HTML .= '<script type="text/javascript">';
-     $HTML .= 'var ajaxurl= "'.admin_url('admin-ajax.php').'"';
-     $HTML .= '</script>';
-     echo  $HTML;
+{
+    $HTML = '<div class="wrap"> ';
+    $HTML .= '<h1 class="wp-heading-inline">Major List</h1>';
+    $HTML .= '<a href="'.admin_url('admin.php').'?page=add-new-major" class="btn btn-md page-title-action" id="add-new-major">Add new</a>';
+    $HTML .= '<div class="form-add-new"></div>';
+    $HTML .= '<div class="message"></div>';
+    $HTML .= admin_major_list();
+    $HTML .= '</div>';
+    $HTML .= '<script type="text/javascript">';
+    $HTML .= 'var ajaxurl= "'.admin_url('admin-ajax.php').'"';
+    $HTML .= '</script>';
+    echo  $HTML;
     if (isset($_POST['save-major'])) {
         update_major();
     }
@@ -93,6 +95,7 @@ function action_major_item($major)
     $HTML .= '<input type="hidden" name="major-status-value" id="major-status-value" value="'.$major->status.'"/>';
     $HTML .= '<textarea name="major-comment" id="major-comment-edit" style="display:none;"></textarea>';
     $HTML .= '</form>';
+
     return $HTML;
 }
 
@@ -103,6 +106,7 @@ function query_major()
     SELECT * 
     FROM {$wpdb->prefix}major
     ");
+
     return $majors;
 }
 
@@ -168,21 +172,6 @@ function update_major()
     }
 }
 
-function createNewMajor()
-{
-    global $wpdb;
-    $insert = $wpdb->insert(
-        "{$wpdb->prefix}major",
-        [ 
-            'code' => $_POST['major-code'],
-            'name' => $_POST['major-name'],
-            'comment' => $_POST['major-comment'],
-            'status' => 1
-        ]
-    );
-    echo '<div class="message-success">Insert major success</div>';
-}
-
 add_action('wp_ajax_nopriv_select_major_status', 'select_major_status');
 add_action('wp_ajax_select_major_status', 'select_major_status');
 function select_major_status()
@@ -206,27 +195,6 @@ function select_major_status()
     die();
 }
 
-function submit_new_major()
-{
-    $HTML = '';
-    $HTML .= '<form method="POST" enctype="multipart/form-data" style="padding:20px 0px">';
-    $HTML = '<table class="add-new-major wp-list-table widefat fixed striped pages">';
-    $HTML .= '<tr>';
-    $HTML .= '<th>Code</th> <th>Name</th>  <th>Icon</th> <th><span class="vers comment-grey-bubble"></span></th> <th>Action</th>';
-    $HTML .= '<tr><td><input id="major-code" name="major-code" type="text" /></td>';
-    $HTML .= '<td><input id="major-name" name="major-name" type="text" /></td>';
-    $HTML .= '<td><input type="file" name="my_image_upload" id="my_image_upload" accept="image/*" multiple="false" style="margin-bottom:10px;"/></td>';
-    $HTML .= '<td><textarea name="major-comment" id="major-comment" cols="65" rows="5"></textarea></td>';
-    $HTML .= '<td><div class="action-submit">';
-    $HTML .= '<button type="submit" id="add-new-major" name="add-new-major" class="btn btn-sm btn-primary">Add new</button>';
-    $HTML .= '<button type="button" id="cancel-add-new-major" name="cancel-add-new-major"  class="btn btn-sm btn-danger">Cancel</button>';
-    $HTML .= '</div></td>';
-    $HTML .= '</tr>';
-    $HTML .= '</table>';
-    $HTML .= '</form>';
-    return $HTML; 
-}
-
 add_action('wp_ajax_nopriv_add_new_major', 'add_new_major');
 add_action('wp_ajax_add_new_major', 'add_new_major');
 function add_new_major()
@@ -247,7 +215,8 @@ function get_image($image, $name, $code, $id)
     $img_name = $name.'_'.$code.'_'.$id.'.'.substr($img_type, 6);
     $image_name = $name.'_'.$code.'_'.$id;
     if ($image['size'] > $MAX_SIZE) {
-       return array('result' =>false ,'message' => '<div class="message-error"> Image maximum size is 3Mb</div>');
-    }   
-    return array('result' =>true);
+        return array('result' => false, 'message' => '<div class="message-error"> Image maximum size is 3Mb</div>');
+    }
+
+    return array('result' => true);
 }

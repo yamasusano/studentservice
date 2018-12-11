@@ -33,10 +33,6 @@ jQuery(function ($) {
             major_status = $grandPar.find('td:nth-child(6)');
             optionSelectMajor(major_status);
         });
-        $('button#add-new-major').on('click', function () {
-            addNewMajor();
-        });
-   
         var check = $('div.message-success').text();
         if (check != '') {
             setTimeout(function () { window.location.reload(); }, 1500);
@@ -64,13 +60,11 @@ jQuery(function ($) {
         window.addNewMajor = function () {
             $.ajax({
                 url: ajaxurl,
-                data: { 'action': 'add_new_major'},
+                data: { 'action': 'add_new_major' },
                 type: 'post',
                 success: function (result) {
                     $('div.form-add-new').html(result.content);
-                    $('body').on('click', 'button#cancel-add-   new-major', function (){
-                        $('div.form-add-new').html('');
-                    })
+
                 },
                 errors: function (result) { }
             });
