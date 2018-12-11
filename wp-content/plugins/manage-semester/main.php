@@ -10,7 +10,7 @@ Author URI: www.facebook.com/huymasterle
 add_action('admin_init', 'manage_semester_style');
 function manage_semester_style()
 {
-    wp_enqueue_style('myStyleSheet', plugins_url('assets/css/style.css', __FILE__));
+    wp_enqueue_style('semester-css', plugins_url('assets/css/style.css', __FILE__));
     wp_enqueue_script('manage-semester-js', plugins_url('assets/js/main.js', __FILE__), array('jquery'));
 }
 
@@ -27,7 +27,7 @@ function get_admin_semester_list()
      $HTML .= '<button class="btn btn-md page-title-action" id="add-new-semester">Add new</button>';
      $HTML .= '<div class="form-add-new"></div>';
      $HTML .= '<div class="message"></div>';
-    //  $HTML .= admin_semester_list();
+     $HTML .= admin_semester_list();
      $HTML .= '</div>';
      $HTML .= '<script type="text/javascript">';
      $HTML .= 'var ajaxurl= "'.admin_url('admin-ajax.php').'"';
@@ -41,64 +41,63 @@ function get_admin_semester_list()
     // }
 }
 
-// function admin_semester_list()
-// {
-//     $HTML = '';
-//     $HTML = '<table class="major-view wp-list-table widefat fixed striped pages">';
-//     $HTML .= '<tr>';
-//     $HTML .= '<th>Name</th>  <th>Start date</th> <th>End date</th> <th>Status</th>';
-//     $HTML .= '</tr>';
-//     $semester = query_semester();
-//     foreach ($semester as $semester) {
-//         $HTML .= '<tr>';
-//         $HTML .= '<td><input id="name-view" type="text" class="editable-major" value="'.$semester->name.'" disabled/></td>';
-//         $HTML .= '<td><input id="start-date-view" type="text" class="editable-major" value="'.$semester->start.'" disabled/></td>';
-//         $HTML .= '<td><input id="end-date-view" type="text" class="editable-major" value="'.$semester->end.'" disabled/></td>';
-//         $HTML .= '<td id="'.$semester->status.'" >'.get_semester_status($semester->status).'</td>';
-//         $HTML .= '<td>'.action_major_item($major).'</td>';
-//         $HTML .= '</tr>';
-//     }
-//     $HTML .= '</table>';
+function admin_semester_list()
+{
+    $HTML = '';
+    $HTML = '<table class="semester-view wp-list-table widefat fixed striped pages">';
+    $HTML .= '<tr>';
+    $HTML .= '<th>Name</th>  <th>Start date</th> <th>End date</th> <th>Status</th> <th>Action</th>';
+    $HTML .= '</tr>';
+    $semester = query_semester();
+    foreach ($semester as $semester) {
+        $HTML .= '<tr>';
+        $HTML .= '<td><input id="name-view" type="text" class="editable-major" value="'.$semester->name.'" disabled/></td>';
+        $HTML .= '<td><input id="start-date-view" type="text" class="editable-major" value="'.$semester->start.'" disabled/></td>';
+        $HTML .= '<td><input id="end-date-view" type="text" class="editable-major" value="'.$semester->end.'" disabled/></td>';
+        $HTML .= '<td id="'.$semester->status.'" >'.get_semester_status($semester->status).'</td>';
+        $HTML .= '<td>'.action_semester_item($major).'</td>';
+        $HTML .= '</tr>';
+    }
+    $HTML .= '</table>';
 
-//     return $HTML;
-// }
+    return $HTML;
+}
 
-// function get_semester_status($status)
-// {
-//     switch ($status) {
-//         case 0:
-//         $HTML .= 'Closed';
-//         break;
-//         case 1:
-//         $HTML .= 'Openning';
-//         break;
-//     }
+function get_semester_status($status)
+{
+    switch ($status) {
+        case 0:
+        $HTML .= 'Not available';
+        break;
+        case 1:
+        $HTML .= 'Available';
+        break;
+    }
+    return $HTML;
+}
 
-//     return $HTML;
-// }
-// function action_major_item($major)
-// {
-//     $HTML = '';
-//     $HTML .= '<form method="POST" enctype="multipart/form-data" style="padding:20px 0px">';
-//     $HTML .= '<button type="button" id="edit-major" class= "btn btn-sm edit-major">Edit</button>';
-//     $HTML .= '<input type="hidden" name="major-id" value="'.$major->ID.'"/>';
-//     $HTML .= '<input type="hidden" name="major-code" id="major-code" value="'.$major->code.'"/>';
-//     $HTML .= '<input type="hidden" name="major-name" id="major-name" value="'.$major->name.'"/>';
-//     $HTML .= '<input type="hidden" name="major-status-value" id="major-status-value" value="'.$major->status.'"/>';
-//     $HTML .= '<textarea name="major-comment" id="major-comment-edit" style="display:none;"></textarea>';
-//     $HTML .= '</form>';
-//     return $HTML;
-// }
+function action_semester_item($semester)
+{
+    $HTML = '';
+    $HTML .= '<form method="POST" enctype="multipart/form-data" style="padding:20px 0px">';
+    $HTML .= '<button type="button" id="edit-major" class= "btn btn-sm edit-major">Edit</button>';
+    $HTML .= '<input type="hidden" name="start-semester" id="start-semester" value="'.$semester->start.'"/>';
+    $HTML .= '<input type="hidden" name="end-semester" id="end-semester" value="'.$semester->end.'"/>';
+    $HTML .= '<input type="hidden" name="major-status-value" id="major-status-value" value="'.$major->status.'"/>';
+    $HTML .= '<textarea name="major-comment" id="major-comment-edit" style="display:none;"></textarea>';
+    $HTML .= '</form>';
+    return $HTML;
+}
 
-// function query_semester()
-// {
-//     global $wpdb;
-//     $semester = $wpdb->get_results("
-//     SELECT * 
-//     FROM {$wpdb->prefix}semester
-//     ");
-//     return $semester;
-// }
+function query_semester()
+{
+    global $wpdb;
+    $semester = $wpdb->get_results("
+    SELECT * 
+    FROM {$wpdb->prefix}semester
+    ");
+    return $semester;
+}
 
 // function update_major()
 // {
