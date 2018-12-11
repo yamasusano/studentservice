@@ -23,14 +23,18 @@ function get_request_via_leader($get_request, $request)
         $project = '<td><b>'.form_meta('title', $get_request->form_id).'</b></td>';
         $message = '<td><p>'.$get_request->message.'</p></td>';
         $created = '<td>'.$get_request->time_request.'</td>';
-        $button = '<td><div class="button-request"><button type="submit" id="reject-invite-request" class="btn btn-sm btn-danger btn-sm">Cancel</button><input type="hidden" id="user-id" value="'.$get_request->member_id.'" /></div></td>';
+        $button = '<td><div class="button-request"><button type="submit" id="reject-invite-request" class="btn btn-sm btn-danger btn-sm">Cancel</button>';
+        $button .= '<input type="hidden" id="form-id" value="'.$get_request->form_id.'" /></div></td>';
         break;
         case 1:
         $user_name = '<td>'.get_url('user', $get_request->member_id).$user_name.'</a></td>';
         $project = '<td><b>'.form_meta('title', $get_request->form_id).'</b></td>';
         $message = '<td><p>'.$get_request->message.'</p></td>';
         $created = '<td>'.$get_request->time_request.'</td>';
-        $button = '<td><div class="button-request"><button type="submit" id="acxept-user" class="btn btn-sm btn-info btn-sm">Access</button><button type="submit" id="deny-user" class="btn btn-sm btn-danger btn-sm">Deny</button><input type="hidden" id="user-id" value="'.$get_request->member_id.'" /></div></td>';
+        $button = '<td><div class="button-request"><button type="submit" id="acxept-user" class="btn btn-sm btn-info btn-sm">Access</button>';
+        $button .= '<button type="submit" id="deny-user" class="btn btn-sm btn-danger btn-sm">Deny</button>';
+        $button .= '<input type="hidden" id="form-id" value="'.$get_request->form_id.'" />';
+        $button .= '<input type="hidden" id="user-id" value="'.$get_request->member_id.'" /></div></td>';
         break;
         default:
         break;
@@ -50,14 +54,17 @@ function get_request_via_users($get_request, $request)
         $project = '<td><b>'.get_url('form-detail', $get_request->form_id).form_meta('title', $get_request->form_id).'</a></b></td>';
         $message = '<td><p>'.$get_request->message.'</p></td>';
         $created = '<td>'.$get_request->time_request.'</td>';
-        $button = '<td><div class="button-request"><button type="submit" id="join-in-form" class="btn btn-sm btn-info btn-sm">Join in</button><button type="submit" id="deny-join-in" class="btn btn-sm btn-danger btn-sm">Deny</button><input type="hidden" id="user-id" value="'.$get_request->form_id.'" /> </div></td>';
+        $button = '<td><div class="button-request"><button type="submit" id="join-in-form" class="btn btn-sm btn-info btn-sm">Join in</button>';
+        $button .= '<button type="submit" id="deny-join-in" class="btn btn-sm btn-danger btn-sm">Deny</button>';
+        $button .= '<input type="hidden" id="form-id" value="'.$get_request->form_id.'" /> </div></td>';
         break;
         case 1:
         $user_name = '<td>'.get_url('user', form_meta('user_id', $get_request->form_id)).get_userdata(form_meta('user_id', $get_request->form_id))->user_login.'</a></td>';
         $project = '<td><b>'.get_url('form-detail', $get_request->form_id).form_meta('title', $get_request->form_id).'</a></b></td>';
         $message = '<td><p>'.$get_request->message.'</p></td>';
         $created = '<td>'.$get_request->time_request.'</td>';
-        $button = '<td><div class="button-request"><button type="submit" id="cancel-request-join-form" class="btn btn-sm btn-danger btn-sm">Cancel</button><input type="hidden" id="user-id" value="'.$get_request->form_id.'" /> </div></td>';
+        $button = '<td><div class="button-request"><button type="submit" id="cancel-request-join-form" class="btn btn-sm btn-danger btn-sm">Cancel</button>';
+        $button .= '<input type="hidden" id="form-id" value="'.$get_request->form_id.'" /> </div></td>';
         break;
         default:
         break;
@@ -65,23 +72,38 @@ function get_request_via_users($get_request, $request)
 
     return array('message' => $message, 'button' => $button, 'user' => $user_name, 'project' => $project, 'created' => $created);
 }
+function get_list_request()
+{
+    global $wpdb;
+
+    $get_request1 = $wpdb->get_results("
+    SELECT * FROM {$wpdb->prefix}request as r
+    INNER JOIN {$wpdb->prefix}finder_form as f
+    ON f.ID = r.form_id
+    where f.user_id = '".get_current_user_id()."'
+    ORDER BY time_request DESC
+    ");
+    $get_request2 = $wpdb->get_results("
+    SELECT * 
+    FROM {$wpdb->prefix}request 
+    WHERE member_id = '".get_current_user_id()."' 
+    ORDER BY time_request DESC
+    ");
+    $array = array_merge($get_request1, $get_request2);
+
+    return $array;
+}
 function manageRequest()
 {
     global $wpdb;
-    $is_leader = is_leader();
     $renderHtml = '';
     $renderHtml .= '<div class="noti-message"></div>';
     $renderHtml .= '<table class="table-striped">';
     $renderHtml .= '<tr><th>Receiver/Sender</th> <th>Project Name</th> <th>Message</th> <th>Date Created</th> <th>Status</th></tr>';
-    if ($is_leader) {
-        $form_id = has_form_id();
-        $get_request = $wpdb->get_results("
-        SELECT * 
-        FROM {$wpdb->prefix}request 
-        where form_id = '".$form_id."' 
-        ORDER BY time_request DESC
-        ");
-        foreach ($get_request as $request) {
+    $get_request = get_list_request();
+    foreach ($get_request as $request) {
+        $is_leader = is_leader($request->ID);
+        if ($is_leader) {
             $get_action = get_request_via_leader($request, $request->request);
             $renderHtml .= '<tr>';
             $renderHtml .= $get_action['user'];
@@ -90,15 +112,7 @@ function manageRequest()
             $renderHtml .= $get_action['created'];
             $renderHtml .= $get_action['button'];
             $renderHtml .= '</tr>';
-        }
-    } else {
-        $get_request = $wpdb->get_results("
-        SELECT * 
-        FROM {$wpdb->prefix}request 
-        WHERE member_id = '".get_current_user_id()."' 
-        ORDER BY time_request DESC
-        ");
-        foreach ($get_request as $request) {
+        } else {
             $get_action = get_request_via_users($request, $request->request);
             $renderHtml .= '<tr>';
             $renderHtml .= $get_action['user'];
@@ -127,17 +141,15 @@ function get_url($key, $value)
 
     return $renderHTML;
 }
-function is_leader()
+function is_leader($form_id)
 {
     global $wpdb;
-    $form_id = has_form_id();
     $is_leader = $wpdb->get_var("
-    SELECT COUNT(*) FROM {$wpdb->prefix}members
-    where form_id = '".$form_id."'
-    and member_id = '".get_current_user_id()."'
-    and member_role = 0
+    SELECT * FROM {$wpdb->prefix}finder_form
+    where ID = '".$form_id."'
+    AND user_id = '".get_current_user_id()."'
     ");
-    if ($is_leader == 1) {
+    if ($is_leader) {
         return true;
     }
 
@@ -146,11 +158,10 @@ function is_leader()
 //HUYLV
 // 23/10 leader still access user although user have already joined in other form.
 
-function accessRequest($user_id)
+function accessRequest($form_id, $user_id)
 {
     global $wpdb;
     $message = '';
-    $form_id = has_form_id();
     $user_name = get_userdata($user_id)->user_login;
     $remove_request = removeRequest($form_id, $user_id);
     $form_exist = isFormExist($user_id);
@@ -167,38 +178,56 @@ function accessRequest($user_id)
                     ]
                 );
             if ($approve_member) {
-                return array('result' => true, 'message' => 'Graduation !!! you have a new member');
+                return array('result' => true, 'message' => '<div class="message-success"> Graduation !!! you have a new member </div>');
             } else {
-                return array('result' => false, 'message' => 'approve user failed');
+                return array('result' => false, 'message' => '<div class="message-fail"> Approve user failed</div>');
             }
         }
     } else {
-        return array('result' => false, 'message' => 'approve user failed');
+        return array('result' => false, 'message' => '<div class="message-fail">Approve user failed<div>');
     }
 }
 
-function rejectRequest($user_id)
+function rejectRequest($form_id)
 {
-    $form_id = has_form_id();
-    removeRequest($form_id, $user_id);
-    if (removeRequest($form_id, $user_id)) {
+    global $wpdb;
+
+    $remove_request = $wpdb->delete(
+    "{$wpdb->prefix}request",
+    [
+        'form_id' => $form_id,
+    ]
+    );
+    if ($remove_request) {
         return true;
     } else {
         return false;
     }
 }
+function checkFormType($form_id)
+{
+    global $wpdb;
+    $type = $wpdb->get_var("
+    SELECT type 
+    FROM {$wpdb->prefix}groups
+    WHERE form_id = '".$form_id."'
+    ");
 
+    return $type;
+}
 function user_access_request($form_id)
 {
     global $wpdb;
     $user_id = get_current_user_id();
     $form_exist = isFormExist($user_id);
-    if ($form_exist) {
-        return array('result' => false, 'message' => 'You have already team.Reject request!!');
-    } else {
-        if (removeRequest($form_id, $user_id)) {
-            if (user_metadata('role', $user_id) == '1') {
-                $approve_member = $wpdb->insert(
+    $form_type = checkFormType($form_id);
+    if ($form_type == 'Student') {
+        if ($form_exist) {
+            return array('result' => false, 'message' => 'You have already team.Reject request!!');
+        } else {
+            if (removeRequest($form_id, $user_id)) {
+                if (user_metadata('role', $user_id) == '1') {
+                    $approve_member = $wpdb->insert(
                     "{$wpdb->prefix}members",
                     [
                         'form_id' => $form_id,
@@ -206,8 +235,8 @@ function user_access_request($form_id)
                         'member_role' => 1,
                     ]
                 );
-            } else {
-                $approve_member = $wpdb->insert(
+                } else {
+                    $approve_member = $wpdb->insert(
                     "{$wpdb->prefix}members",
                     [
                         'form_id' => $form_id,
@@ -215,6 +244,37 @@ function user_access_request($form_id)
                         'member_role' => 2,
                     ]
                 );
+                }
+            } else {
+                return array('result' => false, 'message' => 'join in  failed');
+            }
+
+            if ($approve_member) {
+                return array('result' => true, 'message' => 'Join in success');
+            } else {
+                return array('result' => false, 'message' => 'join in  failed');
+            }
+        }
+    } else {
+        if (removeRequest($form_id, $user_id)) {
+            if (user_metadata('role', $user_id) == '1') {
+                $approve_member = $wpdb->insert(
+                "{$wpdb->prefix}members",
+                [
+                    'form_id' => $form_id,
+                    'member_id' => $user_id,
+                    'member_role' => 1,
+                ]
+            );
+            } else {
+                $approve_member = $wpdb->insert(
+                "{$wpdb->prefix}members",
+                [
+                    'form_id' => $form_id,
+                    'member_id' => $user_id,
+                    'member_role' => 2,
+                ]
+            );
             }
         } else {
             return array('result' => false, 'message' => 'join in  failed');
@@ -367,10 +427,9 @@ function get_leader_id($form_id)
 {
     global $wpdb;
     $leader_id = $wpdb->get_var("
-    SELECT member_id
-    FROM {$wpdb->prefix}members
-    WHERE form_id = '".$form_id."'
-    AND member_role = 0
+    SELECT user_id
+    FROM {$wpdb->prefix}finder_form
+    WHERE ID = '".$form_id."'
     ");
 
     return $leader_id;
@@ -599,6 +658,7 @@ function re_action_invite_student($user_id)
 {
     global $wpdb;
     $form_id = has_form_id();
+    $user_role = userInformation('role', $user_id);
     $check_request_exist = $wpdb->get_var("
         SELECT * FROM {$wpdb->prefix}request
         WHERE form_id = '".$form_id."' 
@@ -614,7 +674,11 @@ function re_action_invite_student($user_id)
             ]
             );
         if ($delete_request) {
-            $button = '<button id="action-invite-via-teacher" class="btn btn-primary btn-sm">Invite</button>';
+            if ($user_role == 'Teacher') {
+                $button = '<button id="action-invite-student" class="btn btn-primary btn-sm">Invite Supervisor</button>';
+            } elseif ($user_role == 'Student') {
+                $button = '<button id="action-invite-student" class="btn btn-primary btn-sm">Invite Student</button>';
+            }
 
             return array('result' => true, 'message' => '<div class="message-fail">reject request success</div>', 'button' => $button);
         } else {
@@ -640,7 +704,7 @@ function action_invite_user($user_id)
             if ($check_request_exist) {
                 $cancel_request = '<button id="cancel-invite-user" class="btn-danger btn btn-sm">Cancel</button>';
 
-                return array('result' => true, 'message' => '<div class="message-success">waiting <b>'.get_userdata($user_id)->user_login.' </b>confirm</div>', 'button' => $cancel_request);
+                return array('result' => true, 'message' => '<div class="message-success">Waiting <b>'.get_userdata($user_id)->user_login.' </b>confirm</div>', 'button' => $cancel_request);
             } else {
                 if (userInformation('role', $user_id) == 'Student') {
                     $user_join_in = $wpdb->insert(
@@ -651,7 +715,7 @@ function action_invite_user($user_id)
                             'member_role' => 1,
                         ]
                     );
-                } elseif (userInformation('role', $user_id) == 'Student') {
+                } elseif (userInformation('role', $user_id) == 'Teacher') {
                     $user_join_in = $wpdb->insert(
                         "{$wpdb->prefix}members",
                         [
@@ -688,7 +752,7 @@ function action_invite_user($user_id)
             if ($make_request) {
                 $cancel_request = '<button id="cancel-invite-user" class="btn-danger btn btn-sm">Cancel</button>';
 
-                return array('result' => true, 'message' => '<div class="message-success">waiting <b>'.get_userdata($user_id)->user_login.' </b>confirm</div>', 'button' => $cancel_request);
+                return array('result' => true, 'message' => '<div class="message-success">Waiting <b>'.get_userdata($user_id)->user_login.' </b>confirm</div>', 'button' => $cancel_request);
             } else {
                 return array('result' => false, 'message' => 'invite user failed');
             }

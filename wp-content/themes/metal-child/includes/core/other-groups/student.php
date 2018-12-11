@@ -57,13 +57,57 @@ function list_form_teacher()
 {
     $renderHTML = '';
     $renderHTML .= '<div class="col-lg-12"><div class="row"><div class="menu-lists" style="padding:10px;">';
-    $renderHTML .= '<div class="group-menu-item"<h4>Teacher Groups</h4></div>';
+    $renderHTML .= '<div class="group-menu-items"><h4>Teacher Groups</h4></div>';
     $renderHTML .= '</div>';
+    $renderHTML .= '<div class="group-button-other"></div>';
     $renderHTML .= '<div class="message-show"></div>';
     $renderHTML .= '<div id="group-contents" style= "padding:10px;">';
 
     $renderHTML .= gen_list_form_teacher();
     $renderHTML .= '</div></div></div>';
+
+    return $renderHTML;
+}
+function get_group_button()
+{
+    $renderHTML .= '<button id="group-chat" class="btn btn-info">Chating</button>';
+    $renderHTML .= '<button id="members-lists" class="btn btn-info">Members</button>';
+
+    return $renderHTML;
+}
+function form_teacher_detail($form_id)
+{
+    $renderHTML = '';
+    $renderHTML .= form_teacher_view_detail($form_id);
+
+    return $renderHTML;
+}
+
+function form_teacher_view_detail($form_id)
+{
+    $members = set_member_to_form($form_id);
+    $status = get_form_teacher_info($form_id, 'status');
+    if ($form_id) {
+        $renderHTML .= '<div class="form-view" style="position:relative;">';
+        $renderHTML .= '<h3 style="text-transform: uppercase;">'.get_form_teacher_info($form_id, 'title').'</h3>';
+        $renderHTML .= '<h5 style="padding-left: 40px;">Semester  <b>'.get_form_teacher_info($form_id, 'semester').'</b></h5>';
+        $renderHTML .= '<hr class="style-four">';
+        $renderHTML .= '<div class="form-view-detail">';
+        $renderHTML .= '<div class="desc-view"><div class="col-lg-3 col">Description</div><div class="col-lg-9 col">'.get_form_teacher_info($form_id, 'description').'</div></div>';
+        $renderHTML .= '<div class="members"><div class="col-lg-3 col">Members</div><div class="col-lg-9 col">'.$members.'</div></div>';
+        $renderHTML .= '<div class="skill-set"><div class="col-lg-3">Skill Set</div><div class="col-lg-9">'.get_skill_teacher_form($form_id).'</div></div>';
+        $renderHTML .= '<div class="Others"><div class="col-lg-3">Others</div><div class="col-lg-9">'.get_form_teacher_info($form_id, 'other_skill').'</div></div>';
+        $renderHTML .= '<div class="status"><div class="col-lg-3">Status</div><div class="col-lg-9">'.(($status == 1) ? 'Opening' : 'Closed').'</div></div>';
+
+        $renderHTML .= '</div></div>';
+    }
+
+    return $renderHTML;
+}
+
+function btn_view_list_other_group()
+{
+    $renderHTML .= '<div class="button-back"><button id="btn-view-list-other-group" class="btn btn-danger">Back</button></div> ';
 
     return $renderHTML;
 }

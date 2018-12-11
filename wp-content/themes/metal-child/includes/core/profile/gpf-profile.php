@@ -255,9 +255,11 @@ function has_form_id()
     global $wpdb;
 
     $form_id = $wpdb->get_var("
-    SELECT form_id
-    FROM {$wpdb->prefix}members 
-    WHERE member_id = '".get_current_user_id()."'
+    SELECT m.form_id FROM {$wpdb->prefix}members as m
+    INNER JOIN {$wpdb->prefix}groups as g
+    ON m.form_id = g.form_id 
+    WHERE m.member_id = '".get_current_user_id()."' 
+    AND  g.type = 'Student'
     ");
 
     return $form_id;

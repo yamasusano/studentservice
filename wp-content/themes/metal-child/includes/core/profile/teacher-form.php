@@ -310,43 +310,23 @@ function reOpenFormTeach($form_id)
 function get_request_form_id()
 {
     global $wpdb;
-    $forms_id = $wpdb->get_results("
-    SELECT r.* FROM {$wpdb->prefix}finder_form as f
-    INNER JOIN {$wpdb->prefix}request as r
+
+    $get_request1 = $wpdb->get_results("
+    SELECT * FROM {$wpdb->prefix}request as r
+    INNER JOIN {$wpdb->prefix}finder_form as f
     ON f.ID = r.form_id
-    WHERE f.user_id = '".get_current_user_id()."'
+    where f.user_id = '".get_current_user_id()."'
     ORDER BY time_request DESC
     ");
+    $get_request2 = $wpdb->get_results("
+    SELECT * 
+    FROM {$wpdb->prefix}request 
+    WHERE member_id = '".get_current_user_id()."' 
+    ORDER BY time_request DESC
+    ");
+    $array = array_merge($get_request1, $get_request2);
 
-    return $forms_id;
-}
-function get_request_via_receiver($get_request, $request)
-{
-    $message = '';
-    $button = '';
-    $user_name = get_user_by('id', $get_request->member_id)->user_login;
-    switch ($request) {
-        case 0:
-        $user_name = '<td>'.get_url('user', $get_request->member_id).$user_name.'</a></td>';
-        $project = '<td><b>'.form_meta('title', $get_request->form_id).'</b></td>';
-        $message = '<td><p>'.$get_request->message.'</p></td>';
-        $created = '<td>'.$get_request->time_request.'</td>';
-        $button = '<td><div class="button-request"><button type="submit" id="reject-invite-request" class="btn btn-sm btn-danger btn-sm">Cancel</button>';
-        $button .= '<input type="hidden" id="user-id" value="'.$get_request->member_id.'" /><input type="hidden" id="form-id" value="'.$get_request->form_id.'" /></div></td>';
-        break;
-        case 1:
-        $user_name = '<td>'.get_url('user', $get_request->member_id).$user_name.'</a></td>';
-        $project = '<td><b>'.form_meta('title', $get_request->form_id).'</b></td>';
-        $message = '<td><p>'.$get_request->message.'</p></td>';
-        $created = '<td>'.$get_request->time_request.'</td>';
-        $button = '<td><div class="button-request"><button type="submit" id="acxept-user-via-leader" class="btn btn-sm btn-info btn-sm">Access</button><button type="submit" id="deny-user-via-leader" class="btn btn-sm btn-danger btn-sm">Deny</button>';
-        $button .= '<input type="hidden" id="user-id" value="'.$get_request->member_id.'" /><input type="hidden" id="form-id" value="'.$get_request->form_id.'" /></div></td>';
-        break;
-        default:
-        break;
-    }
-
-    return array('message' => $message, 'button' => $button, 'user' => $user_name, 'project' => $project, 'created' => $created);
+    return $array;
 }
 function get_request_list()
 {
@@ -357,9 +337,17 @@ function get_request_list()
     $renderHtml .= '<tr><th>Receiver/Sender</th> <th>Project Name</th> <th>Message</th> <th>Date Created</th> <th>Status</th></tr>';
     $get_request = get_request_form_id();
     foreach ($get_request as $request) {
-        $is_leader = is_teacher($request->form_id);
-        if ($is_leader) {
-            $get_action = get_request_via_receiver($request, $request->request);
+        if (is_teacher($request->form_id)) {
+            $get_action = get_request_via_leader($request, $request->request);
+            $renderHtml .= '<tr>';
+            $renderHtml .= $get_action['user'];
+            $renderHtml .= $get_action['project'];
+            $renderHtml .= $get_action['message'];
+            $renderHtml .= $get_action['created'];
+            $renderHtml .= $get_action['button'];
+            $renderHtml .= '</tr>';
+        } else {
+            $get_action = get_request_via_users($request, $request->request);
             $renderHtml .= '<tr>';
             $renderHtml .= $get_action['user'];
             $renderHtml .= $get_action['project'];

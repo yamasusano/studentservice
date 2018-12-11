@@ -49,19 +49,17 @@ jQuery(function ($) {
             rejectRequest($(this));
         });
         $('body').on('click', 'button#reject-invite-request', function () {
-            $user_id = $(this).parent().find($('input#user-id')).val();
-            rejectInviteRequest($(this), $user_id);
+            rejectRequest($(this));
         });
         $('body').on('click', 'button#cancel-request-join-form', function () {
-            $form_id = $(this).parent().find($('input#user-id')).val();
-            rejectReuestBySelf($(this), $form_id);
+            rejectRequest($(this));
         });
         $('body').on('click', 'button#join-in-form', function () {
-            $form_id = $(this).parent().find($('input#user-id')).val();
+            $form_id = $(this).parent().find($('input#form-id')).val();
             access_request_via_user($(this), $form_id);
         });
         $('body').on('click', 'button#deny-join-in', function () {
-            $form_id = $(this).parent().find($('input#user-id')).val();
+            $form_id = $(this).parent().find($('input#form-id')).val();
             rejectReuestBySelf($(this), $form_id);
         });
         $('body').on('click', 'button#update-profile', function () {

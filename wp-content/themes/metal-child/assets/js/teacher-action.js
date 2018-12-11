@@ -115,6 +115,18 @@ jQuery(function ($) {
 
             });
         }
+        window.btn_back_other_form = function () {
+            $.ajax({
+                url: zozo_js_vars.zozo_ajax_url,
+                data: { 'action': 'btn_back_other_form', },
+                type: 'post',
+                success: function (result) {
+                    $('#btn-quick-link').html(result.btn);
+                },
+                errors: function (result) { }
+
+            });
+        }
         window.teacherFormAction = function (form_id) {
             $.ajax({
                 url: zozo_js_vars.zozo_ajax_url,
@@ -320,6 +332,30 @@ jQuery(function ($) {
                     } else {
                         $('div.member-message').html(result.message);
                     }
+                },
+                errors: function (result) { }
+
+            });
+        }
+        window.get_list_student_form = function () {
+            $.ajax({
+                url: zozo_js_vars.zozo_ajax_url,
+                data: { 'action': 'list_student_form_via_teacher' },
+                type: 'post',
+                success: function (result) {
+                    $('div#profile-contents').html(result.form_content);
+                },
+                errors: function (result) { }
+
+            });
+        };
+        window.get_student_form_detail = function (ID) {
+            $.ajax({
+                url: zozo_js_vars.zozo_ajax_url,
+                data: { 'action': 'student_form_detail_via_teacher', 'form-id': ID },
+                type: 'post',
+                success: function (result) {
+                    $('div#profile-contents').html(result.form_content);
                 },
                 errors: function (result) { }
 

@@ -28,12 +28,12 @@ function approve_request($form_id, $user_id, $type)
                         ]
                     );
             if ($approve_member) {
-                return array('result' => true, 'message' => 'Graduation !!! you have a new member');
+                return array('result' => true, 'message' => '<div class="message-success"> Graduation !!! you have a new member </div>');
             } else {
-                return array('result' => false, 'message' => 'approve user failed');
+                return array('result' => false, 'message' => '<div class="message-fail"> Approve user failed</div>');
             }
         } else {
-            return array('result' => false, 'message' => 'approve user failed');
+            return array('result' => false, 'message' => '<div class="message-fail">Approve user failed<div>');
         }
         break;
     }
@@ -138,7 +138,7 @@ function action_invite_user_via_teacher($user_id, $form_id)
         if ($check_request_exist) {
             $cancel_request = '<button id="cancel-invite-user-via-teacher" class="btn-danger btn btn-sm">Cancel</button>';
 
-            return array('result' => true, 'message' => '<div class="message-success">waiting <b>'.get_userdata($user_id)->user_login.' </b>confirm</div>', 'button' => $cancel_request);
+            return array('result' => true, 'message' => '<div class="message-success">Waiting <b>'.get_userdata($user_id)->user_login.' </b>confirm</div>', 'button' => $cancel_request);
         } else {
             if (userInformation('role', $user_id) == 'Student') {
                 $user_join_in = $wpdb->insert(
@@ -167,7 +167,7 @@ function action_invite_user_via_teacher($user_id, $form_id)
                     ]
                     );
             if ($user_join_in) {
-                $button_view = '<a href="'.home_url('user').'?>user-id='.$user_id.'" class="btn btn-info btn-sm">View</a>';
+                $button_view = '<a href="'.home_url('user').'?user-id='.$user_id.'" class="btn btn-info btn-sm">View</a>';
                 $message = '<a href="'.home_url('user').'?user-id='.$user_id.'" >'.get_userdata($user_id)->user_login.'</a> have send request to joined in group. 
                     <a href="'.home_url('user').'?user-id='.$user_id.'" >'.get_userdata($user_id)->user_login.'</a> will join in group now';
             }
@@ -186,7 +186,7 @@ function action_invite_user_via_teacher($user_id, $form_id)
         if ($make_request) {
             $cancel_request = '<button id="cancel-invite-user-via-teacher" class="btn-danger btn btn-sm">Cancel</button>';
 
-            return array('result' => true, 'message' => '<div class="message-success">waiting <b>'.get_userdata($user_id)->user_login.' </b>confirm</div>', 'button' => $cancel_request);
+            return array('result' => true, 'message' => '<div class="message-success">Waiting <b>'.get_userdata($user_id)->user_login.' </b>confirm</div>', 'button' => $cancel_request);
         } else {
             return array('result' => false, 'message' => 'invite user failed');
         }

@@ -56,3 +56,16 @@
 input#user-name, input#gender, input#major, input#user-level, textarea#address {
     padding-left: 10px;
 }
+
+p.title-form-other:hover {
+    cursor: pointer;
+    color: #FEB600;
+}
+
+.group-button-other {
+    margin-bottom: 10px;
+}
+
+.group-button-other button {
+    margin-right: 10px;
+}

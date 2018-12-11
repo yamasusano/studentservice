@@ -55,7 +55,6 @@ jQuery(function ($) {
             });
         }
         window.access_request_via_user = function (button, $form_id) {
-            var parents = button.parents().eq(1);
             var par = button.parents('tr');
             $.ajax({
                 url: zozo_js_vars.zozo_ajax_url,
@@ -75,7 +74,6 @@ jQuery(function ($) {
             });
         }
         window.rejectReuestBySelf = function (button, $form_id) {
-            var parents = button.parents().eq(1);
             var par = button.parents('tr');
             $.ajax({
                 url: zozo_js_vars.zozo_ajax_url,
@@ -94,30 +92,12 @@ jQuery(function ($) {
 
             });
         }
-
-        window.rejectInviteRequest = function (button, $user_id) {
-            var par = button.parents('tr');
-            $.ajax({
-                url: zozo_js_vars.zozo_ajax_url,
-                data: { 'action': 're_invite_user_join', 'user-id': $user_id },
-                type: 'post',
-                success: function (result) {
-                    if (result.check) {
-                        par.slideUp('slow', function () { par.remove(); });
-                    } else {
-                        par.slideUp('slow', function () { par.remove(); });
-                    }
-                },
-                errors: function (result) { }
-
-            });
-        }
         window.rejectRequest = function (button) {
             var par = button.parents('tr');
-            var user_id = button.parent().find('input#user-id').val();
+            var form_id = button.parent().find('input#form-id').val();
             $.ajax({
                 url: zozo_js_vars.zozo_ajax_url,
-                data: { 'action': 'reject_user_request', 'user-id': user_id },
+                data: { 'action': 'reject_user_request', 'form-id': form_id },
                 type: 'post',
                 success: function (result) {
                     if (result.results == true) {
@@ -134,9 +114,10 @@ jQuery(function ($) {
         window.requestHandle = function (button) {
             var par = button.parents('tr');
             var user_id = button.parent().find('input#user-id').val();
+            var form_id = button.parent().find('input#form-id').val();
             $.ajax({
                 url: zozo_js_vars.zozo_ajax_url,
-                data: { 'action': 'accept_request', 'user-id': user_id },
+                data: { 'action': 'accept_request', 'form-id': form_id, 'user-id': user_id },
                 type: 'post',
                 success: function (result) {
                     if (result.results == true) {
@@ -161,20 +142,22 @@ jQuery(function ($) {
                 success: function (result) {
                     var html = $.parseHTML(result.create_menu);
                     $('#profile-contents').html(html);
+                    $('#btn-view-list-other-group').remove();
                 },
                 errors: function (result) { }
 
             });
         }
-        window.teacher_form_detail = function () {
+        window.teacher_form_detail = function (form_id, form_title) {
             $.ajax({
                 url: zozo_js_vars.zozo_ajax_url,
                 data: { 'action': 'get_teacher_form_detail', 'ID': form_id },
                 type: 'post',
                 success: function (result) {
-                    $('.group-menu-item').html(result.groups);
-                    $('#group-contents').html(result.form);
-                    get_btn_back();
+                    $('.group-menu-items h4').append(' > ' + form_title);
+                    $('#group-contents').html(result.form_content);
+                    $('div.group-button-other').html(result.button);
+                    btn_back_other_form();
                 },
                 errors: function (result) { }
 
