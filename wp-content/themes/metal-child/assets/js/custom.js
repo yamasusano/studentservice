@@ -2,6 +2,7 @@ jQuery(function ($) {
     jQuery(document).ready(function () {
         $('div#home-view').on('click', function () {
             dataLink();
+            $('div#btn-quick-link').html('');
         });
         $('div#my-group').on('click', function () {
             setMenuGroup();

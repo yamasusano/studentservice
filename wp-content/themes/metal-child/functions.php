@@ -846,7 +846,7 @@ add_action('wp_ajax_list_student_form_via_teacher', 'list_student_form_via_teach
 function list_student_form_via_teacher()
 {
     $user_id = get_current_user_id();
-    $html = get_list_student_form_via_teacher($user_id);
+    $html = list_form_student($user_id);
     echo wp_send_json(['form_content' => $html]);
     die();
 }
@@ -854,6 +854,10 @@ add_action('wp_ajax_nopriv_student_form_detail_via_teacher', 'student_form_detai
 add_action('wp_ajax_student_form_detail_via_teacher', 'student_form_detail_via_teacher');
 function student_form_detail_via_teacher()
 {
-    echo wp_send_json(['form_content' => $html]);
+    $form_id = $_POST['ID'];
+    $html = form_teacher_detail($form_id);
+    $button_action = get_group_button();
+    $group_button = btn_view_list_student_group();
+    echo wp_send_json(['form_detail' => $html, 'button' => $group_button, 'group_button' => $button_action]);
     die();
 }

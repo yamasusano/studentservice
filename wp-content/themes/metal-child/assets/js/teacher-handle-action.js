@@ -3,6 +3,7 @@ jQuery(function ($) {
         var form_id;
         $('body').on('click', 'div#my-groups', function () {
             menuTeacherGroup();
+            $('div#btn-quick-link').html('');
         });
         $('body').on('click', '#btn-view-list-group', function () {
             menuTeacherGroup();

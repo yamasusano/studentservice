@@ -57,7 +57,7 @@ function list_form_teacher()
 {
     $renderHTML = '';
     $renderHTML .= '<div class="col-lg-12"><div class="row"><div class="menu-lists" style="padding:10px;">';
-    $renderHTML .= '<div class="group-menu-items"><h4>Teacher Groups</h4></div>';
+    $renderHTML .= '<div class="group-menu-items"><h4>Teacher List Form</h4></div>';
     $renderHTML .= '</div>';
     $renderHTML .= '<div class="group-button-other"></div>';
     $renderHTML .= '<div class="message-show"></div>';

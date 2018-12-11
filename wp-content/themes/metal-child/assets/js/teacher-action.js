@@ -352,10 +352,12 @@ jQuery(function ($) {
         window.get_student_form_detail = function (ID) {
             $.ajax({
                 url: zozo_js_vars.zozo_ajax_url,
-                data: { 'action': 'student_form_detail_via_teacher', 'form-id': ID },
+                data: { 'action': 'student_form_detail_via_teacher', 'ID': ID },
                 type: 'post',
                 success: function (result) {
-                    $('div#profile-contents').html(result.form_content);
+                    $('div#group-contents').html(result.form_detail);
+                    $('div.group-button-other').html(result.group_button);
+                    $('div#btn-quick-link').html(result.button);
                 },
                 errors: function (result) { }
 

@@ -202,7 +202,6 @@ function backgroundImage()
 
     return $backgroundImg[0];
 }
-
 function result_search($post_type, $semester, $major, $poster)
 {
     global $wpdb;
