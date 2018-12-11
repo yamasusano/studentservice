@@ -336,12 +336,12 @@ function get_member_list()
         $member_name = get_userdata($member_id->member_id)->user_login;
         $member_role = get_role_form($form_id, $member_id->member_id);
         $renderHTML .= '<tr class="member-item">';
-        $renderHTML .= '<input type="hidden" name="user-id" id="user-id" value="'.$member_id->member_id.'" />';
         $renderHTML .= '<td><a href="#">'.$member_name.'</a></td>';
         $renderHTML .= '<td>'.$member_role.'</td>';
         $renderHTML .= '<td class="method-action">';
         if ($is_leader) {
             if ($member_role == 'Member') {
+                $renderHTML .= '<input type="hidden" name="user-id" id="user-id" value="'.$member_id->member_id.'" />';
                 $renderHTML .= '<button id="change-admin" class="btn btn-info btn-sm" >set to leader</button>';
                 $renderHTML .= '<button id="kick-out" class="btn btn-danger btn-sm" >remove from group</button>';
             } elseif ($member_role == 'Supervisor') {
@@ -415,6 +415,17 @@ function set_new_leader($member_id)
                 'member_id' => $member_id,
             ]
         );
+    if ($remove_leader) {
+        $set_leader_form = $wpdb->update(
+                "{$wpdb->prefix}finder_form",
+                [
+                    'user_id' => $member_id,
+                ],
+                [
+                    'ID' => $form_id,
+                ]
+            );
+    }
     $member_name_leader = get_userdata($member_id)->user_login;
     if ($set_leader && $remove_leader) {
         return $member_name_leader.' become new leader in your group';

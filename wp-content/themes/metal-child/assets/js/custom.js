@@ -2,7 +2,6 @@ jQuery(function ($) {
     jQuery(document).ready(function () {
         $('div#home-view').on('click', function () {
             dataLink();
-            $('div#btn-quick-link').html('');
         });
         $('div#my-group').on('click', function () {
             setMenuGroup();
@@ -177,6 +176,7 @@ jQuery(function ($) {
             success: function (result) {
                 var html = $.parseHTML(result.view);
                 $('#profile-contents').html(html);
+                $('#btn-quick-link').html('');
                 $('button#edit-profile').on('click', function () {
                     $('div#profile-contents textarea,input').prop('disabled', false);
                     changeButton();

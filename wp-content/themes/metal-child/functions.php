@@ -857,7 +857,15 @@ function student_form_detail_via_teacher()
     $form_id = $_POST['ID'];
     $html = form_teacher_detail($form_id);
     $button_action = get_group_button();
+
+    echo wp_send_json(['form_content' => $html, 'group_button' => $button_action]);
+    die();
+}
+add_action('wp_ajax_nopriv_get_btn_back_student_form', 'get_btn_back_student_form');
+add_action('wp_ajax_get_btn_back_student_form', 'get_btn_back_student_form');
+function get_btn_back_student_form()
+{
     $group_button = btn_view_list_student_group();
-    echo wp_send_json(['form_detail' => $html, 'button' => $group_button, 'group_button' => $button_action]);
+    echo wp_send_json(['button' => $group_button]);
     die();
 }

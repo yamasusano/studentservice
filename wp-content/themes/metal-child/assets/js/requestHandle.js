@@ -48,9 +48,8 @@ jQuery(function ($) {
                 success: function (result) {
                     var html = $.parseHTML(result.notification);
                     $('#profile-contents').html(html);
-
+                    $('#btn-quick-link').html('');
                 },
-
                 errors: function (result) { }
             });
         }

@@ -8,6 +8,7 @@ jQuery(function ($) {
                 success: function (result) {
                     var html = $.parseHTML(result.overview);
                     $('#profile-contents').html(html);
+                    $('#btn-quick-link').html('');
                 },
                 errors: function (result) { }
             });
@@ -20,6 +21,7 @@ jQuery(function ($) {
                 success: function (result) {
                     var html = $.parseHTML(result.menu);
                     $('#profile-contents').html(html);
+                    $('#btn-quick-link').html('');
                 },
                 errors: function (result) { }
 

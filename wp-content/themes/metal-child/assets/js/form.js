@@ -136,8 +136,7 @@ jQuery(function ($) {
             });
         }
         window.setNewLeader = function (button) {
-            var parents = button.parents().eq(1);
-            var user_id = parents.find('input#user-id').val();
+            var user_id = button.parent().find('input#user-id').val();
             $.ajax({
                 url: zozo_js_vars.zozo_ajax_url,
                 data: { 'action': 'set_new_leader_in_group', 'user': user_id },
@@ -145,6 +144,7 @@ jQuery(function ($) {
                 success: function (result) {
                     $('div.member-message').html(result.message);
                     generateMember();
+                    window.location.reload();
                 },
                 errors: function (result) { }
 

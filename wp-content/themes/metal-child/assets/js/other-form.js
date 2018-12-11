@@ -23,12 +23,7 @@ jQuery(function ($) {
             get_list_student_form();
             $('div#btn-quick-link').html('');
         });
-        $('body').on('click', 'p#student-form-title', function () {
-            form_id = $(this).parent().find('input#student-form-id').val();
-            form_title = $(this).text();
-            $('.group-menu-items h4').append(' > ' + form_title);
-            get_student_form_detail(form_id);
-        });
+
 
     });
 })

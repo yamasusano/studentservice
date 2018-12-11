@@ -349,14 +349,27 @@ jQuery(function ($) {
 
             });
         };
-        window.get_student_form_detail = function (ID) {
+        window.get_student_form_content = function (ID, form_title) {
             $.ajax({
                 url: zozo_js_vars.zozo_ajax_url,
                 data: { 'action': 'student_form_detail_via_teacher', 'ID': ID },
                 type: 'post',
                 success: function (result) {
-                    $('div#group-contents').html(result.form_detail);
+                    $('.group-menu-items h4').append(' > ' + form_title);
+                    $('div#group-contents').html(result.form_content);
                     $('div.group-button-other').html(result.group_button);
+                    btn_leave_student_form_detail();
+                },
+                errors: function (result) { }
+
+            });
+        }
+        window.btn_leave_student_form_detail = function () {
+            $.ajax({
+                url: zozo_js_vars.zozo_ajax_url,
+                data: { 'action': 'get_btn_back_student_form' },
+                type: 'post',
+                success: function (result) {
                     $('div#btn-quick-link').html(result.button);
                 },
                 errors: function (result) { }

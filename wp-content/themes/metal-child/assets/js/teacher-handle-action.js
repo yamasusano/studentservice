@@ -66,6 +66,11 @@ jQuery(function ($) {
             re_action_intive_user_via_teacher($form_id, $(this));
             $(this).remove();
         });
+        $('body').on('click', 'p#student-form-title', function () {
+            form_id = $(this).parent().find('input#student-form-id').val();
+            form_title = $(this).text();
+            get_student_form_content(form_id, form_title);
+        });
 
     });
 });
