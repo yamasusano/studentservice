@@ -67,7 +67,6 @@ function admin_major_list()
         $HTML .= '</tr>';
     }
     $HTML .= '</table>';
-
     return $HTML;
 }
 
@@ -84,6 +83,7 @@ function get_major_status($status)
 
     return $HTML;
 }
+
 function action_major_item($major)
 {
     $HTML = '';
@@ -106,8 +106,40 @@ function query_major()
     SELECT * 
     FROM {$wpdb->prefix}major
     ");
-
     return $majors;
+}
+
+function get_major_before_update($major_id){
+    global $wpdb;
+    $major = $wpdb->get_var("
+    SELECT name 
+    FROM {$wpdb->prefix}major
+    WHERE ID = '".$major_id."'
+    ");
+    return $major;
+}
+
+function get_list_user_need_update($major_name){
+    global $wpdb;
+    $users = $wpdb->get_results("
+    SELECT * 
+    FROM {$wpdb->prefix}usermetaData
+    WHERE meta_key ='major' AND meta_value like '".$major_name."'
+    ");
+    return $users;
+}
+
+function update_major_usermetadata($id, $major_new_name){
+    global $wpdb;
+    $updated = $wpdb->update(
+        "{$wpdb->prefix}usermetaData",
+        [
+            'meta_value' => $major_new_name
+        ],
+        [
+            'ID' => $id,
+        ]
+    );
 }
 
 function update_major()
@@ -120,10 +152,17 @@ function update_major()
     $img_type = $_FILES['my_image_upload']['type'];
     $img_name = $_POST['major-name'].'_'.$_POST['major-code'].'_'.$_POST['major-id'].'.'.substr($img_type, 6);
     $image_name = $_POST['major-name'].'_'.$_POST['major-code'].'_'.$_POST['major-id'];
-
     if ($_FILES['my_image_upload']['size'] > $MAX_SIZE) {
         echo '<div class="message-error"> Image maximum size is 3Mb</div>';
     } else {
+        //update usermetadata
+        $major_before_update = get_major_before_update($_POST['major-id']);
+        $user = get_list_user_need_update($major_before_update);
+        foreach ($user as $user){
+            update_major_usermetadata($user->ID, $_POST['major-name']);
+        }
+
+        //update major
         if (!empty($img_path)) {
             $img_t = $wpdb->get_var("
             SELECT image_type 
@@ -167,13 +206,13 @@ function update_major()
                 );
             }
         }
-
         echo '<div class="message-success">Update major success</div>';
     }
 }
 
 add_action('wp_ajax_nopriv_select_major_status', 'select_major_status');
 add_action('wp_ajax_select_major_status', 'select_major_status');
+
 function select_major_status()
 {
     $major_status = $_POST['status'];
@@ -217,6 +256,5 @@ function get_image($image, $name, $code, $id)
     if ($image['size'] > $MAX_SIZE) {
         return array('result' => false, 'message' => '<div class="message-error"> Image maximum size is 3Mb</div>');
     }
-
     return array('result' => true);
 }
