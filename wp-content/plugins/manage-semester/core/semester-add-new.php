@@ -32,35 +32,62 @@ function createNewSemester()
     }
 }
 
+function get_end_date_current_semester(){
+    global $wpdb;
+    $end_date = $wpdb->get_var("
+    SELECT DATE_FORMAT(end, '%d-%m-%Y')
+    FROM {$wpdb->prefix}semester
+    WHERE status = 1
+    ");
+    return $end_date;
+}
+
+function is_over_end_date_current_semester(){
+    $today = date('Y-m-d');
+    $today = DateTime::createFromFormat('Y-m-d', $today);
+    $end_date = get_end_date_current_semester();
+    $end_date = new DateTime($end_date);
+    $diff = date_diff($end_date, $today);
+    $check = (int) $diff->format('%r%a');
+    return ($check > 0);
+}
+
 function form_semester_add()
 {
-    $semester = get_new_semester_name();
-    $HTML = '';
-    $HTML = '<div class="wrap"> ';
-    $HTML .= '<h1 class="wp-heading-inline">Add New Semester</h1>';
-    $HTML .= '<div class="message">';
-    $HTML .= submit_add_new_form();
-    $HTML .= '</div>';
-    $HTML .= '<div class="add-new-major">';
-    $HTML .= '<form id="form-add-semester" method="POST" enctype="multipart/form-data">';
-    $HTML .= '<div class="form-group">';
-    $HTML .= '<div class="col-md-4 title">Name</div>';
-    $HTML .= '<div class="col-md-8"><input id="semester-name" name="semester-name" value="'.$semester['semester-name'].'" type="text" readonly="readonly" /></div>';
-    $HTML .= '</div>';
-    $HTML .= '<div class="form-group">';
-    $HTML .= '<div class="col-md-4 title">Start</div>';
-    $HTML .= '<div class="col-md-8"><input id="semester-start-date" name="semester-start-date" value="'.$semester['semester-start-date'].'" type="text" readonly="readonly" /></div>';
-    $HTML .= '</div>';
-    $HTML .= '<div class="form-group">';
-    $HTML .= '<div class="col-md-4 title">End</div>';
-    $HTML .= '<div class="col-md-8"><input id="semester-end-date" name="semester-end-date" type="date" required/></div>';
-    $HTML .= '</div>';
-    $HTML .= '<div class="form-group-button">';
-    $HTML .= '<button type="submit" name="add-new">Publish</button>';
-    $HTML .= '</div>';
-    $HTML .= '</form>';
-    $HTML .= '</div>';
-    $HTML .= '</div>';
+    if(is_over_end_date_current_semester()){
+        $semester = get_new_semester_name();
+        $HTML = '';
+        $HTML = '<div class="wrap"> ';
+        $HTML .= '<h1 class="wp-heading-inline">Add New Semester</h1>';
+        $HTML .= '<div class="message">';
+        $HTML .= submit_add_new_form();
+        $HTML .= '</div>';
+        $HTML .= '<div class="add-new-major">';
+        $HTML .= '<form id="form-add-semester" method="POST" enctype="multipart/form-data">';
+        $HTML .= '<div class="form-group">';
+        $HTML .= '<div class="col-md-4 title">Name</div>';
+        $HTML .= '<div class="col-md-8"><input id="semester-name" name="semester-name" value="'.$semester['semester-name'].'" type="text" readonly="readonly" /></div>';
+        $HTML .= '</div>';
+        $HTML .= '<div class="form-group">';
+        $HTML .= '<div class="col-md-4 title">Start</div>';
+        $HTML .= '<div class="col-md-8"><input id="semester-start-date" name="semester-start-date" value="'.$semester['semester-start-date'].'" type="text" readonly="readonly" /></div>';
+        $HTML .= '</div>';
+        $HTML .= '<div class="form-group">';
+        $HTML .= '<div class="col-md-4 title">End</div>';
+        $HTML .= '<div class="col-md-8"><input id="semester-end-date" name="semester-end-date" type="date" required/></div>';
+        $HTML .= '</div>';
+        $HTML .= '<div class="form-group-button">';
+        $HTML .= '<button type="submit" name="add-new">Publish</button>';
+        $HTML .= '</div>';
+        $HTML .= '</form>';
+        $HTML .= '</div>';
+        $HTML .= '</div>';
+    } else {
+        $HTML = '';
+        $HTML .= '<div class = message>';
+        echo 'The current semester is not finished. You only create new semester after '.get_end_date_current_semester();
+        $HTML .= '</div>';
+    }
     echo $HTML;
 }
 
@@ -94,7 +121,7 @@ function get_new_semester_name(){
         break;
     }
     return array('semester-name' => $new_semester_name, 'semester-start-date' => $semester_start_date);
-}    
+}
 
 function submit_add_new_form()
 {
