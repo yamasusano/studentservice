@@ -9,6 +9,9 @@ Text Domain: zozothemes
 */
 
 @media only screen and (-webkit-min-device-pixel-ratio: 0) and (min-device-width: 1025px) {
+  .box-chat-content::-webkit-scrollbar {
+    width: 10px;
+  }
   ::-webkit-scrollbar {
     width: 0px;
     height: 10px;
@@ -508,54 +511,8 @@ div.group-menu-item .add-title button#create-title {
   margin-right: 5px;
 }
 
-div.dropdown-profile-bar {
-  position: relative;
-  display: inline-block;
-  padding-right: 20px;
-}
-
 .prefix-icon {
   margin-right: 30px;
-}
-
-div.dropdown-profile-bar .dropbtn a {
-  padding: 10px 80px;
-  font-size: 16px;
-  border-left: 1px solid grey;
-}
-
-div.dropdown-profile-bar div.dropdown-content {
-  position: fixed;
-  display: none;
-  right: 20px;
-  top: 60px;
-  background-color: #f1f1f1;
-  min-width: 215px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-}
-
-div.dropdown-profile-bar div.dropdown-content a {
-  color: black;
-  text-decoration: none;
-  display: block;
-  height: 40px;
-  line-height: 40px;
-  padding-left: 10px;
-}
-
-div.dropdown-profile-bar div.dropdown-content a:last-child {
-  border-top: 1px solid grey;
-}
-
-div.dropdown-profile-bar div.dropdown-content a:hover {
-  color: green;
-  background: #DCDCDC;
-  padding-left: 15px;
-}
-
-div.dropdown-profile-bar:hover div.dropdown-content {
-  display: block;
 }
 
 div.home-filter {
@@ -915,22 +872,6 @@ select#type-value option::first-letter {
 .finder-posted-time {
   font-weight: bold;
   font-size: 8pt;
-}
-
-.my-menu-right a:first-child {
-  color: #00b9f2;
-}
-
-.my-menu-right a:first-child :hover {
-  color: #2e6da4 !important;
-}
-
-.my-menu-right a:nth-child(2) {
-  color: #FEB600;
-}
-
-.my-menu-right a:nth-child(2) :hover {
-  color: #2e6da4 !important;
 }
 
 .pagination a {

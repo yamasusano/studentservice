@@ -27,9 +27,7 @@ jQuery(function ($) {
         $('body').on('click', 'button#search-users', function () {
             resultSearch();
         });
-        $('body').on('click', 'button#group-chat', function () {
-            getChatForm();
-        });
+
         $('body').on('click', 'button#action-invite-student', function () {
             $user_id = $(this).parent().find($('input#user-id')).val();
             $current_action = $(this).parents('tr').index();
@@ -136,19 +134,7 @@ jQuery(function ($) {
         }
     });
 
-    function getChatForm() {
-        $.ajax({
-            url: zozo_js_vars.zozo_ajax_url,
-            data: { 'action': 'get_chat_form' },
-            type: 'post',
-            success: function (result) {
-                var html = $.parseHTML(result.chat_form);
-                $('div#group-contents').html(html);
-            },
-            errors: function (result) { }
 
-        });
-    }
 
     function changeButton() {
         $('div#profile-contents textarea,input').prop('disabled', false);

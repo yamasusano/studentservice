@@ -25,6 +25,7 @@ function groupMenu()
     $is_leader = is_leader(check_student_form());
     $renderHTML .= '<div class="col-lg-12"><div class="row">';
     $renderHTML .= '<div class="menu-lists"><div class="group-menu-item">';
+    $renderHTML .= '<input type="hidden" id="form-id" value="'.$form.'" />';
     if (!$form) {
         $renderHTML .= '<button id="finder-form" class="btn btn-info">Finder Form</button>';
     } else {

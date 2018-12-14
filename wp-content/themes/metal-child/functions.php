@@ -2,23 +2,26 @@
 /* =========================================
  * Enqueues parent theme stylesheet
  * ========================================= */
-
+//profle
 include 'includes/core/profile/gpf-register.php';
 include 'includes/core/profile/gpf-profile.php';
 include 'includes/core/profile/teacher-profile.php';
 include 'includes/core/profile/teacher-form.php';
 include 'includes/core/profile/manage-teacher-request.php';
 include 'includes/core/profile/members-list.php';
-
+//Finder-FORM
 include 'includes/core/group/menu-group.php';
 include 'includes/core/group/finder-form-action.php';
 include 'includes/core/group/finder-form-insert.php';
-
+//other group
 include 'includes/core/other-groups/student.php';
 include 'includes/core/other-groups/teacher.php';
-
+//notification
+include 'includes/core/notify/menu-notication.php';
+//user chat
 include 'includes/core/chat-group/chat-form.php';
 include 'includes/core/entity.php';
+include 'includes/core/user_activitive.php';
 include 'validate.php';
 
 add_action('wp_enqueue_scripts', 'zozo_enqueue_child_theme_styles');
@@ -33,6 +36,9 @@ function zozo_enqueue_child_theme_styles()
     wp_enqueue_style('teacher', get_stylesheet_directory_uri().'/assets/css/teacher.css');
     wp_enqueue_style('user-view', get_stylesheet_directory_uri().'/assets/css/user-view.css');
     wp_enqueue_style('datatables', get_stylesheet_directory_uri().'/assets/css/datatables.css');
+    wp_enqueue_style('notification', get_stylesheet_directory_uri().'/assets/css/notification.css');
+    wp_enqueue_style('animation-load', get_stylesheet_directory_uri().'/assets/css/animation-load.css');
+
     //js
     wp_enqueue_script('jquery-v2.2.4.min', get_stylesheet_directory_uri().'/assets/js/jquery.min.js', array('jquery'), null, true);
     wp_enqueue_script('mark.min', get_stylesheet_directory_uri().'/assets/js/mark.min.js', array('jquery'), null, true);
@@ -52,6 +58,9 @@ function zozo_enqueue_child_theme_styles()
     wp_enqueue_script('teacher-action', get_stylesheet_directory_uri().'/assets/js/teacher-action.js', array('jquery'), null, true);
     wp_enqueue_script('teacher-handle', get_stylesheet_directory_uri().'/assets/js/teacher-handle-action.js', array('jquery'), null, true);
     wp_enqueue_script('other-form', get_stylesheet_directory_uri().'/assets/js/other-form.js', array('jquery'), null, true);
+    //chat
+    wp_enqueue_script('chat', get_stylesheet_directory_uri().'/assets/js/chat.js', array('jquery'), null, true);
+    wp_enqueue_script('action-chat', get_stylesheet_directory_uri().'/assets/js/action-chat.js', array('jquery'), null, true);
 }
 //start session to login.
 add_action('init', 'my_session', 1);
@@ -98,30 +107,11 @@ function wpse_136058_remove_menu_pages()
 // }
   /*-----------------------------------------------------------------------------------*/
 //ADD button login and logout on menu.
-function menu_bar_profile()
-{
-    $renderHTML = '';
-    $user_id = get_current_user_id();
-    $user_name = explode(' ', info('username'));
-    $last_name = end($user_name);
-    $renderHTML .= '<a href="#" class="prefix-icon"><i class="fa fa-bell" aria-hidden="true"></i></a>';
-    $renderHTML .= '<a href="#" class="prefix-icon"><i class="fa fa-lg fa-comments-o" aria-hidden="true"></i></a>';
-    $renderHTML .= '<div class="dropdown-profile-bar">
-    <div class="dropbtn" id="profile-bar"><a href="'.home_url('profile').'" >hi,'.$last_name.'</a></div>
-      <div class="dropdown-content">
-        <a href="'.home_url('profile').'" ><i class="fa fa-user" aria-hidden="true"></i> &nbsp;Profile</a>
-        <a href="'.home_url('profile').'?mode=view"><i class="fa fa-users" aria-hidden="true"></i> &nbsp;Groups</a>
-        <a href="'.wp_logout_url($_SERVER['REQUEST_URI'], false).'"><i class="fa fa-sign-out" aria-hidden="true"></i> &nbsp;Log Out</a>
-      </div>
-    </div>';
 
-    return $renderHTML;
-}
 add_filter('wp_nav_menu_items', 'add_login_logout_link', 10, 2);
 function add_login_logout_link($items)
 {
     ob_start();
-    // $loginoutlink = '<a href="'.home_url('search-form').'" class="prefix-icon"><i class="fa fa-search" aria-hidden="true"></i></a>';
     if (is_user_logged_in()) {
         $loginoutlink .= menu_bar_profile();
     } else {
@@ -130,7 +120,7 @@ function add_login_logout_link($items)
         Log In</a>';
     }
     ob_end_clean();
-    $items .= '<ul class="navbar-right my-menu-right">'.$loginoutlink.'</ul>';
+    $items = '<ul class="nav navbar-nav navbar-right my-menu-right">'.$loginoutlink.'</ul>';
 
     return $items;
 }
@@ -141,6 +131,7 @@ function userLogIn()
 {
     if (!is_admin()) {
         if (isset($_SESSION['access_token'])) {
+            action_user_online();
             $email = $_SESSION['email'];
             $account = getAccountName($email);
             $result = username_exists($account);
@@ -172,6 +163,7 @@ function loggIn($account)
 add_action('wp_logout', 'endSession');
 function endSession()
 {
+    action_user_offline();
     unset($_SESSION['access_token']);
     session_destroy();
 }
@@ -625,7 +617,8 @@ add_action('wp_ajax_nopriv_get_chat_form', 'get_chat_form');
 add_action('wp_ajax_get_chat_form', 'get_chat_form');
 function get_chat_form()
 {
-    echo wp_send_json(['chat_form' => get_form_chat()]);
+    $form_id = $_POST['ID'];
+    echo wp_send_json(['chat_form' => get_form_chat($form_id)]);
     die();
 }
 add_action('wp_ajax_nopriv_create_new_form', 'create_new_form');
@@ -894,5 +887,48 @@ function get_btn_back_student_form()
 {
     $group_button = btn_view_list_student_group();
     echo wp_send_json(['button' => $group_button]);
+    die();
+}
+add_action('wp_ajax_nopriv_actionListenerUserLog', 'actionListenerUserLog');
+add_action('wp_ajax_actionListenerUserLog', 'actionListenerUserLog');
+function actionListenerUserLog()
+{
+    $user_id = $_POST['user-id'];
+    $class = '';
+    $check = is_user_online($user_id);
+    echo wp_send_json(['check' => $check]);
+    die();
+}
+add_action('wp_ajax_nopriv_create_chat_box', 'create_chat_box');
+add_action('wp_ajax_create_chat_box', 'create_chat_box');
+function create_chat_box()
+{
+    $user_id = $_POST['user_id'];
+    $user_name = get_user_by('ID', $user_id)->user_login;
+    $current_user_id = get_current_user_id();
+    $history = history_chat_user($user_id, $current_user_id);
+    $check = is_user_online($user_id);
+    $box = box_chat($user_id);
+    echo wp_send_json(['box_chat' => $box, 'name' => $user_name, 'check' => $check, 'history_chat' => $history]);
+    die();
+}
+add_action('wp_ajax_nopriv_generate_content_chat', 'generate_content_chat');
+add_action('wp_ajax_generate_content_chat', 'generate_content_chat');
+function generate_content_chat()
+{
+    $user_id = $_POST['user_id'];
+    $message = stripslashes_deep($_POST['message']);
+    $current_user_id = get_current_user_id();
+    $message_sending = create_user_chat($user_id, $current_user_id, $message);
+    echo wp_send_json(['message' => $message_sending]);
+    die();
+}
+add_action('wp_ajax_nopriv_notification_chat', 'notification_chat');
+add_action('wp_ajax_notification_chat', 'notification_chat');
+function notification_chat()
+{
+    $current_user_id = get_current_user_id();
+    $chat = get_box_chat($current_user_id);
+    echo wp_send_json(['message' => $chat]);
     die();
 }

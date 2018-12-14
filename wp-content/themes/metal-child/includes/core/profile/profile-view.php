@@ -40,6 +40,7 @@ AND meta_key = '".$meta_key."'
         $renderHTML .= '</div></div>';
         $renderHTML .= '<div class="btn-chatting-block">';
         $renderHTML .= '<button id="chat-with-user" class="btn btn-primary">Chat me</button>';
+        $renderHTML .= '<input type="hidden" id="user-id" value="'.$user_id.'" />';
         $renderHTML .= '</div>';
 
         return $renderHTML;

@@ -207,7 +207,6 @@ function result_search($post_type, $semester, $major, $poster)
     global $wpdb;
     $get_results = $wpdb->get_results("
         SELECT f.* FROM {$wpdb->prefix}finder_form as f
-        WHERE f.special = 0
         JOIN {$wpdb->prefix}users as u
         ON f.user_id = u.ID
         JOIN 
@@ -222,7 +221,7 @@ function result_search($post_type, $semester, $major, $poster)
         ON umd.user_id = f.user_id
         WHERE f.semester LIKE '%".$semester."%' 
         AND f.title LIKE '%".$poster."%' 
-        
+        AND f.special = 0 
         ORDER BY f.created_date DESC
 
         ");
@@ -344,7 +343,7 @@ function result_search_check($post_type, $semester, $major, $poster)
     $start = ($paged - 1) * 10;
     $get_results = $wpdb->get_results("
         SELECT f.* FROM {$wpdb->prefix}finder_form as f
-        WHERE f.special = 0
+        
         JOIN {$wpdb->prefix}users as u
         ON f.user_id = u.ID
         JOIN 
@@ -359,6 +358,7 @@ function result_search_check($post_type, $semester, $major, $poster)
         ON umd.user_id = f.user_id
         WHERE f.semester LIKE '%".$semester."%' 
         AND f.title LIKE '%".$poster."%' 
+        AND f.special = 0
         ORDER BY f.created_date DESC
         LIMIT $start , 10");
 

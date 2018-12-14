@@ -31,7 +31,6 @@
 /* ======================================
  * Page Loader
  * ====================================== */
-
 if (!function_exists('zozo_page_loader')) {
     function zozo_page_loader()
     {
