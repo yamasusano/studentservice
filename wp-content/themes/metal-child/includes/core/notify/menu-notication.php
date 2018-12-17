@@ -37,8 +37,26 @@ function get_menu_chat()
 {
     $renderHTML .= '<div id="chat-bar" class="dropdown-notification">';
     $renderHTML .= '<div class="dropbtn"><a href="#" class="prefix-icon"><i class="fa fa-lg fa-comments-o" aria-hidden="true"></i></a></div>';
-    $renderHTML .= '<div id="wait"><div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>';
     $renderHTML .= '<div class="dropdown-content col-lg-3">';
+    $renderHTML .= '<div class="notice-chat">Group Chat</div>';
+    $renderHTML .= '<div class="list-notice-chat">';
+    $renderHTML .= '<div id="wait">
+        <div class="sk-circle">
+        <div class="sk-circle1 sk-child"></div>
+        <div class="sk-circle2 sk-child"></div>
+        <div class="sk-circle3 sk-child"></div>
+        <div class="sk-circle4 sk-child"></div>
+        <div class="sk-circle5 sk-child"></div>
+        <div class="sk-circle6 sk-child"></div>
+        <div class="sk-circle7 sk-child"></div>
+        <div class="sk-circle8 sk-child"></div>
+        <div class="sk-circle9 sk-child"></div>
+        <div class="sk-circle10 sk-child"></div>
+        <div class="sk-circle11 sk-child"></div>
+        <div class="sk-circle12 sk-child"></div>
+        </div>
+      </div>';
+    $renderHTML .= '</div>';
     $renderHTML .= '</div>';
     $renderHTML .= '</div>';
 
@@ -52,9 +70,29 @@ function get_box_chat($current_user_id)
     foreach ($list as $chat) {
         $chat_id = $chat->ID;
         if ($current_user_id == $chat->user_send) {
-            $renderHTML .= generate_content_notification($chat_id, $chat->user_recevive);
-        } elseif ($current_user_id != $chat->user_send) {
-            $renderHTML .= generate_content_notification($chat_id, $chat->user_send);
+            $message = get_user_message($chat_id);
+            $renderHTML .= '<div class="get-chat"> ';
+            $renderHTML .= '<input type="hidden" id="user-name" value="'.get_name_of_user($chat->user_recevive).'" /> ';
+            $renderHTML .= '<input type="hidden" id="user-send-id" value="'.$chat->user_send.'" /> ';
+            $renderHTML .= '<input type="hidden" id="user-receive-id" value="'.$chat->user_recevive.'" /> ';
+            $renderHTML .= '<div class="col-lg-2">';
+            $renderHTML .= '<div class="get-user-receive">'.get_avatar($chat->user_recevive, 32).'</div>';
+            $renderHTML .= '</div>';
+            $renderHTML .= '<div class="col-lg-10"><b>'.get_name_of_user($chat->user_recevive).'</b>';
+            $renderHTML .= '<p>'.$message.'</p></div>';
+            $renderHTML .= '</div>';
+        } elseif ($current_user_id == $chat->user_recevive) {
+            $message = get_user_message($chat_id);
+            $renderHTML .= '<div class="get-chat"> ';
+            $renderHTML .= '<input type="hidden" id="user-name" value="'.get_name_of_user($chat->user_send).'" /> ';
+            $renderHTML .= '<input type="hidden" id="user-send-id" value="'.$chat->user_send.'" /> ';
+            $renderHTML .= '<input type="hidden" id="user-receive-id" value="'.$chat->user_recevive.'" /> ';
+            $renderHTML .= '<div class="col-lg-2">';
+            $renderHTML .= '<div class="get-user-receive">'.get_avatar($chat->user_send, 32).'</div>';
+            $renderHTML .= '</div>';
+            $renderHTML .= '<div class="col-lg-10"><b>'.get_name_of_user($chat->user_send).'</b>';
+            $renderHTML .= '<p>'.$message.'</p></div>';
+            $renderHTML .= '</div>';
         }
     }
 
@@ -65,17 +103,4 @@ function get_name_of_user($user_id)
     $name = get_user_by('ID', $user_id)->user_login;
 
     return $name;
-}
-function generate_content_notification($chat_id, $user_id)
-{
-    $message = get_user_message($chat_id, $user_id);
-    $renderHTML .= '<div class="get-chat"> ';
-    $renderHTML .= '<div class="col-lg-2">';
-    $renderHTML .= '<div class="get-user-receive">'.get_avatar($user_id, 32).'</div>';
-    $renderHTML .= '</div>';
-    $renderHTML .= '<div class="col-lg-10"><b>'.get_name_of_user($user_id).'</b>';
-    $renderHTML .= '<p>'.$message.'</p></div>';
-    $renderHTML .= '</div>';
-
-    return $renderHTML;
 }

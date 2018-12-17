@@ -22,9 +22,9 @@ function generate_box_chat($user_id)
     $renderHTML .= '<input type="hidden" name="user-id" value="'.$user_id.'" class="user-id" />';
     $check = is_user_online($user_id);
     if ($check) {
-        $renderHTML .= '<span name="user-status" class="dot user-active"></span>';
+        $renderHTML .= '<span id="user-status" class="dot user-active"></span>';
     } else {
-        $renderHTML .= '<span name="user-status" class="dot"></span>';
+        $renderHTML .= '<span id="user-status" class="dot"></span>';
     }
     $renderHTML .= '<b class="user-chat-name">'.get_members_info($user_id, 'account').'</b>';
     $renderHTML .= '<span id="close-box-chat" class="close">&times;</span>';
@@ -40,6 +40,33 @@ function generate_box_chat($user_id)
 
     return $renderHTML;
 }
+function generate_box_chat2($user_id, $user_name)
+{
+    $renderHTML = '';
+    $renderHTML .= '<div class="box-chat">';
+    $renderHTML .= '<div class="box-chat-title">';
+    $renderHTML .= '<input type="hidden" name="user-id" value="'.$user_id.'" class="user-id" />';
+    $check = is_user_online($user_id);
+    if ($check) {
+        $renderHTML .= '<span id="user-status" class="dot user-active"></span>';
+    } else {
+        $renderHTML .= '<span id="user-status" class="dot"></span>';
+    }
+    $renderHTML .= '<b class="user-chat-name">'.$user_name.'</b>';
+    $renderHTML .= '<span id="close-box-chat" class="close">&times;</span>';
+    $renderHTML .= '</div>';
+    $renderHTML .= '<div class="group-box-chat">';
+    $renderHTML .= '<div class="box-chat-content">';
+    $renderHTML .= '</div>';
+    $renderHTML .= '<div class="box-chat-send">';
+    $renderHTML .= '<div name="box-chat-text" id="box-chat-text" contenteditable="true" data-placeholder="Type a message..."></div>';
+    $renderHTML .= '</div>';
+    $renderHTML .= '</div>';
+    $renderHTML .= '</div>';
+
+    return $renderHTML;
+}
+
 function get_user_status_activitive($user_id)
 {
     $renderHTML .= '<a href="'.home_url('user?user-id='.$user_id.' ').'" class="btn btn-sm">';
@@ -47,9 +74,9 @@ function get_user_status_activitive($user_id)
     $renderHTML .= '<b class="user-chat-name">'.get_members_info($user_id, 'account').'</b>';
     $check = is_user_online($user_id);
     if ($check) {
-        $renderHTML .= '<span name="user-status" class="dot user-active"></span>';
+        $renderHTML .= '<span id="user-status" class="dot user-active"></span>';
     } else {
-        $renderHTML .= '<span name="user-status" class="dot"></span>';
+        $renderHTML .= '<span id="user-status" class="dot"></span>';
     }
     $renderHTML .= '</a>';
 

@@ -57,41 +57,13 @@ function get_history_chat($user_id, $current_user_id)
         $contents = $wpdb->get_results("
         SELECT * FROM {$wpdb->prefix}chat_user 
         WHERE chat_id = '".$chat_id."'
+        
         ");
     }
 
     return $contents;
 }
 
-function insert_content_chat($chat_id, $user_id, $message)
-{
-    global $wpdb;
-    $insert = $wpdb->insert(
-                "{$wpdb->prefix}chat_user",
-                [
-                'chat_id' => $chat_id,
-                'sender' => $user_id,
-                'message' => $message,
-                ]
-           );
-}
-
-function insert_user_chat($user_id, $current_user_id)
-{
-    global $wpdb;
-    $insert = $wpdb->insert(
-        "{$wpdb->prefix}user_chat",
-        [
-            'user_send' => $current_user_id,
-            'user_recevive' => $user_id,
-        ]
-   );
-    if ($insert) {
-        return true;
-    } else {
-        return false;
-    }
-}
 function get_chat_list($current_user_id)
 {
     global $wpdb;
@@ -104,16 +76,19 @@ function get_chat_list($current_user_id)
     return $result;
 }
 
-function get_user_message($chat_id, $user_id)
+function get_user_message($chat_id)
 {
     global $wpdb;
     $message = $wpdb->get_var("
     SELECT message FROM {$wpdb->prefix}chat_user  
     WHERE chat_id = '".$chat_id."' 
-    AND sender = '".$user_id."' 
     order by create_date DESC 
     LIMIT 1
     ");
 
     return $message;
+}
+function have_new_message()
+{
+    global $wpdb;
 }

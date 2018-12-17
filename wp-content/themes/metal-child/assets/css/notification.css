@@ -15,10 +15,10 @@ div.dropdown-profile-bar .dropbtn a {
 div.dropdown-content {
     position: fixed;
     display: none;
+    padding: 0;
     top: 71px;
-    background-color: #f1f1f1;
+    background-color: #ffffff;
     min-width: 215px;
-    border-top: 1px solid;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
     min-height: 40px;
@@ -112,4 +112,15 @@ div.dropdown-profile-bar {
 
 #wait {
     display: none;
+}
+
+.notice-chat {
+    padding-left: 10px;
+    border-bottom: 1px solid;
+    font-weight: bold;
+}
+
+.list-notice-chat {
+    margin-right: 30px;
+    padding-left: 10px;
 }

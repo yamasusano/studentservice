@@ -113,7 +113,7 @@ table.chat-form-input td:last-child {
     transform: translate(0%, -50%);
 }
 
-.box-chat-title>span[name] {
+.box-chat-title>span#user-status {
     top: 40%;
     margin: 0px 3px 1px 3px;
 }
@@ -137,13 +137,14 @@ table.chat-form-input td:last-child {
 
 .box-chat-send {
     overflow-y: scroll;
+    position: relative;
     border-top-width: 0;
     cursor: text;
     font-size: 13px;
     max-height: 90px;
     min-height: 16px;
     padding: 10px 8px 10px;
-    position: relative;
+    background: #fff;
 }
 
 #box-chat-text {
@@ -163,22 +164,34 @@ table.chat-form-input td:last-child {
     height: auto !important;
 }
 
+div.other_user {
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+div.other_user .content-message {
+    float: left;
+    color: black;
+    background-color: #f5f5f5;
+}
+
 div.current_user {
     overflow: hidden;
     margin-top: 10px;
 }
 
 .content-message {
-    border: 1px solid;
+    /* border: 1px solid; */
     padding: 5px;
-    color: #fff;
-    border-radius: 16px;
     max-width: 75%;
     line-height: 1.28;
     text-align: justify;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
 div.current_user .content-message {
+    color: #fff;
     float: right;
     background-color: #3578e5;
 }

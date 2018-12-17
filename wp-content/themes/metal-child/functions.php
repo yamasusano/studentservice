@@ -23,7 +23,7 @@ include 'includes/core/chat-group/chat-form.php';
 include 'includes/core/entity.php';
 include 'includes/core/user_activitive.php';
 include 'validate.php';
-
+// include 'chat/index.php';
 add_action('wp_enqueue_scripts', 'zozo_enqueue_child_theme_styles');
 function zozo_enqueue_child_theme_styles()
 {
@@ -89,7 +89,7 @@ function wpse_136058_remove_menu_pages()
     remove_menu_page('metal');
     remove_menu_page('upload.php');                 //Media
     remove_menu_page('index.php');                 //Media
-    remove_menu_page('themes.php');                 //Appearance
+    // remove_menu_page('themes.php');                 //Appearance
     // remove_menu_page('plugins.php');                //Plugins
     remove_menu_page('tools.php');                  //Tools
     remove_menu_page('options-general.php');        //Settings
@@ -120,7 +120,7 @@ function add_login_logout_link($items)
         Log In</a>';
     }
     ob_end_clean();
-    $items = '<ul class="nav navbar-nav navbar-right my-menu-right">'.$loginoutlink.'</ul>';
+    $items .= '<ul class="nav navbar-nav navbar-right my-menu-right">'.$loginoutlink.'</ul>';
 
     return $items;
 }
@@ -249,10 +249,10 @@ function post_finder_form()
                 $insert_group_table = insert_group($form_id, $group_type);
                 $insert_skill_table = insert_skill($form_id, $skill);
 
-                $message = '<div class="message-success">Post success</div>';
+                $message = '<div class="message-success">Publish success</div>';
                 $type = 1;
             } else {
-                $message = '<div class="message-fail">Post failed</div>';
+                $message = '<div class="message-fail">Publish failed</div>';
             }
         } else {
             $message = $form_validate;
@@ -912,17 +912,25 @@ function create_chat_box()
     echo wp_send_json(['box_chat' => $box, 'name' => $user_name, 'check' => $check, 'history_chat' => $history]);
     die();
 }
-add_action('wp_ajax_nopriv_generate_content_chat', 'generate_content_chat');
-add_action('wp_ajax_generate_content_chat', 'generate_content_chat');
-function generate_content_chat()
+add_action('wp_ajax_nopriv_create_chat_box2', 'create_chat_box2');
+add_action('wp_ajax_create_chat_box2', 'create_chat_box2');
+function create_chat_box2()
 {
-    $user_id = $_POST['user_id'];
-    $message = stripslashes_deep($_POST['message']);
+    $sender_id = $_POST['sender_id'];
+    $receiver_id = $_POST['receiver_id'];
     $current_user_id = get_current_user_id();
-    $message_sending = create_user_chat($user_id, $current_user_id, $message);
-    echo wp_send_json(['message' => $message_sending]);
+    if ($sender_id == $current_user_id) {
+        $user_id = $receiver_id;
+    } elseif ($receiver_id == $current_user_id) {
+        $user_id = $sender_id;
+    }
+    $history = history_chat_user($user_id, $current_user_id);
+    $check = is_user_online($user_id);
+    $box = box_chat($user_id);
+    echo wp_send_json(['box_chat' => $box, 'name' => $user_name, 'check' => $check, 'history_chat' => $history]);
     die();
 }
+
 add_action('wp_ajax_nopriv_notification_chat', 'notification_chat');
 add_action('wp_ajax_notification_chat', 'notification_chat');
 function notification_chat()

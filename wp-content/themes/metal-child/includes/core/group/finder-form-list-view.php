@@ -324,8 +324,8 @@ function member_in_form_counting($form_id)
     SELECT COUNT(*)
     FROM {$wpdb->prefix}members
     WHERE form_id = '".$form_id."'
-    AND member_role = 0
-    OR member_role = 1
+    AND member_role != 2
+    
     ");
 
     return $count;

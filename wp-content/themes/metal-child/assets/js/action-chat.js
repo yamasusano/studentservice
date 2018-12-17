@@ -1,5 +1,6 @@
 jQuery(function ($) {
     jQuery(document).ready(function () {
+        var conn;
         setInterval(function () {
             var el = $('#list-member-chat').find('a');
             var box_title = $('.box-chat-title');
@@ -11,7 +12,7 @@ jQuery(function ($) {
         function listUserID(el) {
             for (let index = 0; index < el.length; index++) {
                 var user_id = $(el[index]).find('input.user-id').val();
-                var span = $(el[index]).find('span');
+                var span = $(el[index]).find('span#user-status');
                 listenUser(span, user_id);
             }
         }
@@ -52,7 +53,7 @@ jQuery(function ($) {
                 type: 'post',
                 success: function (result) {
                     $check = $('body').find('b.user-chat-name').text();
-                    if ($check == result.name) {
+                    if ($($check).length) {
                         $('#box-chat-text').focus();
                     } else {
                         $('body').append(result.box_chat);
@@ -64,44 +65,66 @@ jQuery(function ($) {
 
             });
         }
-        window.generate_content_chat = function (user_id, message) {
-
+        window.create_chat_box2 = function (sender_id, receiver_id) {
             $.ajax({
                 url: zozo_js_vars.zozo_ajax_url,
-                data: { 'action': 'generate_content_chat', 'user_id': user_id, 'message': message },
+                data: { 'action': 'create_chat_box2', 'sender_id': sender_id, 'receiver_id': receiver_id },
                 type: 'post',
                 success: function (result) {
-                    $('div.box-chat-content').append(result.message);
+                    $check = $('body').find('b.user-chat-name').text();
+                    if ($($check).length) {
+                        $('#box-chat-text').focus();
+                    } else {
+                        $('body').append(result.box_chat);
+                        $('body div.box-chat-content').html(result.history_chat);
+                        $('#box-chat-text').focus();
+                    }
                 },
                 errors: function (result) { }
 
             });
         }
+
+        window.generate_content_chat = function (current_user_id, user_id, message) {
+            var data = {
+                sender: current_user_id,
+                recievier: user_id,
+                msg: message,
+            };
+            var text_message = '<div class="current_user"><div class="content-message"><span>' + message + '</span></div></div>';
+            $('div.box-chat-content').append(text_message);
+            conn.send(JSON.stringify(data));
+
+        }
+        window.get_port_chat = function (current_user_id, user_id) {
+            conn = new WebSocket('ws://localhost:8080');
+            conn.onopen = function (e) {
+                console.log("Connection established!");
+            };
+            conn.onmessage = function (e) {
+                var data = JSON.parse(e.data);
+                if (current_user_id == data.recievier && user_id == data.sender) {
+                    var text_message = '<div class="other_user"><div class="content-message"><span>' + data.msg + '</span></div></div>';
+                    $('div.box-chat-content').append(text_message);
+                }
+            };
+        }
+
         window.notification_chat = function (el) {
-            // var loading = $(el).find('#wait');
+            $('.list-notice-chat>#wait').show();
             $.ajax({
                 url: zozo_js_vars.zozo_ajax_url,
-                // beforeSend: function () { $(loading).show(); },
-                // complete: function () { $(loading).hide(); },
                 data: { 'action': 'notification_chat' },
                 type: 'post',
                 success: function (result) {
-                    $result = $(el).find('div.active-noti');
+                    $('.notice-chat>#wait').hide();
+                    $result = $(el).find('div.list-notice-chat');
                     $($result).html(result.message);
                 },
                 errors: function (result) { }
 
             });
         }
-        //     function refreshToHomePage3(waitime){
-        //         var handle = setInterval(function () {  
-        //                        alert("called after waitime");
-        //                        clearInterval(handle);   
-        //                      }, waitime);
-        //         return handle;
-        //    }   
-
-        //    var handle = refreshToHomePage3(5000);
 
     });
 
