@@ -25,7 +25,7 @@ get_header();
 											</div>
 										</div>
 									</div>
-									<div class="col-lg-12">
+									<div class="col-lg-12">								
 										<div class="list-view-items">
 											<div class="row">
 											<?php echo form_by_major(); ?>

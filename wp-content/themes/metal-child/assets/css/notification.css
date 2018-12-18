@@ -1,0 +1,126 @@
+div.dropdown-notification {
+    position: relative;
+    display: inline-block;
+}
+
+.dropbtn a {
+    font-size: 16px;
+}
+
+div.dropdown-profile-bar .dropbtn a {
+    padding: 10px 80px;
+    border-left: 1px solid grey;
+}
+
+div.dropdown-content {
+    position: fixed;
+    display: none;
+    padding: 0;
+    top: 71px;
+    background-color: #ffffff;
+    min-width: 215px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    min-height: 40px;
+    line-height: 3;
+}
+
+div.dropdown-profile-bar:hover div.dropdown-content {
+    display: block;
+}
+
+#notification-bar div.dropdown-content {
+    right: 320px;
+}
+
+#chat-bar div.dropdown-content {
+    right: 265px;
+}
+
+div.dropdown-profile-bar div.dropdown-content {
+    right: 20px;
+}
+
+div.dropdown-content a {
+    color: black;
+    text-decoration: none;
+    display: block;
+    height: 40px;
+    line-height: 40px;
+    padding-left: 10px;
+}
+
+.div.dropdown-profile-bar div.dropdown-content a:last-child {
+    border-top: 1px solid grey;
+}
+
+div.dropdown-content a:hover {
+    color: green;
+    background: #DCDCDC;
+    padding-left: 15px;
+}
+
+div.dropdown-chat {
+    position: relative;
+    display: inline-block;
+}
+
+div.dropdown-profile-bar {
+    position: relative;
+    display: inline-block;
+    padding-right: 20px;
+}
+
+.my-menu-right .dropdown-content a {
+    color: black;
+}
+
+.my-menu-right>div a {
+    color: #2e6da4;
+}
+
+.my-menu-right .dropdown-content a:hover {
+    color: #2e6da4 !important;
+}
+
+.active-noti {
+    display: block !important;
+}
+
+.get-chat:hover {
+    cursor: pointer;
+}
+
+.get-chat {
+    overflow: hidden;
+    margin: 5px 0px;
+    border-bottom: 1px dotted;
+}
+
+.get-chat .col-lg-2 {
+    padding: 0;
+}
+
+.get-chat .col-lg-10 {
+    line-height: 1.8;
+}
+
+.get-user-receive img {
+    max-width: unset !important;
+    border-radius: 50%;
+}
+
+#wait {
+    display: none;
+}
+
+.notice-chat {
+    padding-left: 10px;
+    border-bottom: 1px solid;
+    font-weight: bold;
+}
+
+.list-notice-chat {
+    margin-right: 30px;
+    padding-left: 10px;
+}

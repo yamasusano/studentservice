@@ -40,6 +40,8 @@ AND meta_key = '".$meta_key."'
         $renderHTML .= '</div></div>';
         $renderHTML .= '<div class="btn-chatting-block">';
         $renderHTML .= '<button id="chat-with-user" class="btn btn-primary">Chat me</button>';
+        $renderHTML .= '<input type="hidden" id="user-id" value="'.$user_id.'" />';
+        $renderHTML .= '<input type="hidden" id="current-user-id" value="'.get_current_user_id().'" />';
         $renderHTML .= '</div>';
 
         return $renderHTML;
@@ -81,7 +83,7 @@ function user_view_block_tail_left($user_id)
     $renderHTML .= '<div class="col-lg-4">Gender</div>';
     $renderHTML .= '<div class="col-lg-8">'.userInfo('gender', $user_id).'</div>';
     $renderHTML .= '</div>';
-    if (define_major($user_id) == 'Student') {
+    if (define_major($user_id) == '1') {
         $renderHTML .= '<div class="form-groups">';
         $renderHTML .= '<div class="col-lg-4">Batch</div>';
         $renderHTML .= '<div class="col-lg-8">'.userInfo('phone', $user_id).'</div>';
@@ -163,9 +165,9 @@ function define_major($user_id)
 
     $major = $wpdb->get_var("
     SELECT meta_value
-    FROM {$wpdb->prefix}usermetaDate 
+    FROM {$wpdb->prefix}usermetaData 
     WHERE user_id = '".$user_id."' 
-    AND meta_key = 'major'
+    AND meta_key = 'role'
     ");
 
     return $major;

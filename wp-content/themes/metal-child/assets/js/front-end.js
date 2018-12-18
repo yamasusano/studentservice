@@ -27,5 +27,19 @@ jQuery(function ($) {
             $(self).siblings().removeClass('active');
             $(self).siblings().find('.sub-menu-items').removeClass('active');
         }
+        // window.onscroll = function (e) {
+        //     // called when the window is scrolled.  
+        //     $('div.dropdown-content').css({ 'top': '61px' });
+        // }
+        var scrollPos = 0;
+        window.addEventListener('scroll', function () {
+            // detects new state and compares it with the new one
+            if ((document.body.getBoundingClientRect()).top > scrollPos)
+                $('div.dropdown-content').css({ 'top': '71px' });
+            else
+                $('div.dropdown-content').css({ 'top': '61px' });
+            // saves the new position for iteration.
+            scrollPos = (document.body.getBoundingClientRect()).top;
+        });
     });
 })

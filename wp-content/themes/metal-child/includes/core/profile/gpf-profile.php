@@ -197,6 +197,7 @@ function selectGender()
 function selectMajor()
 {
     global $wpdb;
+    $has_form = user_have_form_exist();
     $majors = $wpdb->get_results("
     SELECT * 
     FROM {$wpdb->prefix}major
@@ -204,21 +205,26 @@ function selectMajor()
     );
     $is_major = info('major');
     $renderHTML = '';
-    $renderHTML .= '<select name="major" id="major" required>';
-    if (!empty($is_major)) {
-        $renderHTML .= '<option value="'.$is_major.'" selected="selected" >'.$is_major.'</option>';
-        foreach ($majors as $major) {
-            if ($major->name != $is_major) {
+    if (!$has_form) {
+        $renderHTML .= '<input type="text" name="major" id="major" value="'.$is_major.'" disabled>';
+    } else {
+        $renderHTML .= '<select name="major" id="major" required>';
+        if (!empty($is_major)) {
+            $renderHTML .= '<option value="'.$is_major.'" selected="selected" >'.$is_major.'</option>';
+            foreach ($majors as $major) {
+                if ($major->name != $is_major) {
+                    $renderHTML .= '<option value="'.$major->name.'">'.$major->name.'</option>';
+                }
+            }
+        } else {
+            $renderHTML .= '<option value="" disabled selected>Select a major</option>';
+            foreach ($majors as $major) {
                 $renderHTML .= '<option value="'.$major->name.'">'.$major->name.'</option>';
             }
         }
-    } else {
-        $renderHTML .= '<option value="" disabled selected>Select a major</option>';
-        foreach ($majors as $major) {
-            $renderHTML .= '<option value="'.$major->name.'">'.$major->name.'</option>';
-        }
+
+        $renderHTML .= '</select>';
     }
-    $renderHTML .= '</select>';
 
     return $renderHTML;
 }
@@ -280,7 +286,22 @@ function check_student_form()
 
     return $form_id;
 }
+function user_have_form_exist()
+{
+    global $wpdb;
+    $form_id = $wpdb->get_var("
+    SELECT m.form_id
+    FROM {$wpdb->prefix}members as m
+    INNER JOIN {$wpdb->prefix}finder_form as g
+    ON m.form_id = g.form_id
+    WHERE member_id = '".get_current_user_id()."'
+    ");
+    if ($form_id) {
+        return true;
+    }
 
+    return false;
+}
 function getSemester()
 {
     global $wpdb;
