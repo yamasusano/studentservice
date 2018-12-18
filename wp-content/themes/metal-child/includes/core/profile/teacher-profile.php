@@ -50,7 +50,7 @@ function get_list_form_teacher($teacher_id)
 function teacher_forms($form)
 {
     $renderHTML .= '<tr>';
-    $renderHTML .= '<td><p class="title-group-teacher" >'.$form->title.'</p></td>';
+    $renderHTML .= '<td><p id="title-form-teacher" class="title-group-teacher" >'.$form->title.'</p></td>';
     $renderHTML .= '<td><div class="delete-form-group">';
     $renderHTML .= '<button id="delete-form-teacher" class="btn btn-danger btn-sm">Delete</button>';
     $renderHTML .= '<input type="hidden" id="teacher-form-id" value="'.$form->ID.'" /> ';
