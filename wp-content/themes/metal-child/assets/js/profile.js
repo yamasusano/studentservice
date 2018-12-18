@@ -8,7 +8,7 @@ jQuery(function ($) {
                 success: function (result) {
                     var html = $.parseHTML(result.overview);
                     $('#profile-contents').html(html);
-                    $('#btn-quick-link').html('');
+                    $('#btn-quick-link').hide();
                 },
                 errors: function (result) { }
             });
@@ -21,7 +21,7 @@ jQuery(function ($) {
                 success: function (result) {
                     var html = $.parseHTML(result.menu);
                     $('#profile-contents').html(html);
-                    $('#btn-quick-link').html('');
+                    $('#btn-quick-link').hide();
                 },
                 errors: function (result) { }
 
@@ -75,16 +75,59 @@ jQuery(function ($) {
                 errors: function (result) { }
             });
         }
-
         window.actionStudentLeaveGroup = function () {
             $.ajax({
                 url: zozo_js_vars.zozo_ajax_url,
                 data: { 'action': 'action_student_leave_group' },
                 type: 'post',
                 success: function (result) {
-                    window.location.reload();
+                    $.confirm({
+                        title: 'Leave group successful!',
+                        buttons: {
+                            OK: function () {
+                                window.location.reload();
+                            }
+                        }
+                    });
                 },
                 errors: function (result) { }
+            });
+        }
+        window.comfirmLeaveGroupTeacher = function (ID, title) {
+            $.confirm({
+                title: 'Do you want leave <b>' + title + '</b> group ?',
+                content: '',
+                buttons: {
+                    confirm: function () {
+                        $.ajax({
+                            url: zozo_js_vars.zozo_ajax_url,
+                            data: { 'action': 'leave_group_teacher', 'ID': ID },
+                            type: 'post',
+                            success: function (result) {
+                                if (result.check == true) {
+                                    $.confirm({
+                                        title: 'Leave group successful!',
+                                        buttons: {
+                                            OK: function () {
+                                                get_teacher_group_list();
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    $.alert({
+                                        title: 'Leave group fail'
+                                    });
+                                }
+
+                            },
+                            errors: function (result) { }
+                        });
+                    },
+                    cancel: function () {
+                    }
+                },
+                theme: 'my-theme',
+                animation: 'none'
             });
         }
         window.updateProfile = function (name, gender, biograph, phone, address, major) {

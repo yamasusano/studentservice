@@ -35,7 +35,7 @@ jQuery(function ($) {
                 success: function (result) {
                     var html = $.parseHTML(result.create_menu);
                     $('#profile-contents').html(html);
-                    $('#btn-view-list-group').remove();
+                    $('#btn-quick-link').hide();
                 },
                 errors: function (result) { }
 
@@ -59,7 +59,7 @@ jQuery(function ($) {
                             $('div.message-show').slideUp('slow', function () {
                                 $('div.message-show').html('');
                             });
-                        }, 3000);
+                        }, 5000);
                     }
                 },
                 errors: function (result) { }
@@ -95,37 +95,13 @@ jQuery(function ($) {
                 success: function (result) {
                     $('.group-menu-item').html(result.groups);
                     $('#group-contents').html(result.form);
-                    get_btn_back();
                     form_invite_student();
+                    $('#btn-quick-link').show();
                 },
                 errors: function (result) { }
 
             });
 
-        }
-        window.get_btn_back = function () {
-            $.ajax({
-                url: zozo_js_vars.zozo_ajax_url,
-                data: { 'action': 'get_btn_back', },
-                type: 'post',
-                success: function (result) {
-                    $('#btn-quick-link').html(result.btn);
-                },
-                errors: function (result) { }
-
-            });
-        }
-        window.btn_back_other_form = function () {
-            $.ajax({
-                url: zozo_js_vars.zozo_ajax_url,
-                data: { 'action': 'btn_back_other_form', },
-                type: 'post',
-                success: function (result) {
-                    $('#btn-quick-link').html(result.btn);
-                },
-                errors: function (result) { }
-
-            });
         }
         window.teacherFormAction = function (form_id) {
             $.ajax({
@@ -344,6 +320,7 @@ jQuery(function ($) {
                 type: 'post',
                 success: function (result) {
                     $('div#profile-contents').html(result.form_content);
+                    $('div#btn-quick-link').hide();
                 },
                 errors: function (result) { }
 
@@ -356,21 +333,9 @@ jQuery(function ($) {
                 type: 'post',
                 success: function (result) {
                     $('.group-menu-items h4').append(' > ' + form_title);
-                    $('div#group-contents').html(result.form_content);
                     $('div.group-button-other').html(result.group_button);
-                    btn_leave_student_form_detail();
-                },
-                errors: function (result) { }
-
-            });
-        }
-        window.btn_leave_student_form_detail = function () {
-            $.ajax({
-                url: zozo_js_vars.zozo_ajax_url,
-                data: { 'action': 'get_btn_back_student_form' },
-                type: 'post',
-                success: function (result) {
-                    $('div#btn-quick-link').html(result.button);
+                    $('div#group-contents').html(result.form_content);
+                    $('#btn-quick-link').show();
                 },
                 errors: function (result) { }
 

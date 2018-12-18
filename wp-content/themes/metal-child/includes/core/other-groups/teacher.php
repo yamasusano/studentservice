@@ -59,10 +59,3 @@ function list_student_form($form)
 
     return $renderHTML;
 }
-
-function btn_view_list_student_group()
-{
-    $renderHTML .= '<div class="button-back"><button id="btn-view-list-student-form" class="btn btn-danger">Back</button></div> ';
-
-    return $renderHTML;
-}

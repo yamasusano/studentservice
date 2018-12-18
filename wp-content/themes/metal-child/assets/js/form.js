@@ -170,10 +170,9 @@ jQuery(function ($) {
             });
 
             $('.mutliSelect input[type="checkbox"]').on('click', function () {
-
                 var title = $(this).closest('.mutliSelect').find('input[type="checkbox"]').val(),
                     title = $(this).val() + ",";
-
+                console.log($(this).length);
                 if ($(this).is(':checked')) {
                     var html = '<span title="' + title + '">' + title + '</span>';
                     $('.multiSel').append(html);

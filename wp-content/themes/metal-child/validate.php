@@ -5,11 +5,8 @@ function titleCheck($title)
 {
     $title = formatText($title);
     $is_empty = validEmptyField($title);
-    $is_over_length = validMaxLength($title, constant('MAX_LENGTH_TITLE'));
     if (!$is_empty['result']) {
         return array('result' => false, 'message' => 'Title'.$is_empty['message']);
-    } elseif (!$is_over_length['result']) {
-        return array('result' => false, 'message' => 'Title'.$is_over_length['message']);
     }
 
     return array('result' => true);

@@ -98,16 +98,25 @@ function form_teacher_view_detail($form_id)
         $renderHTML .= '<div class="skill-set"><div class="col-lg-3">Skill Set</div><div class="col-lg-9">'.get_skill_teacher_form($form_id).'</div></div>';
         $renderHTML .= '<div class="Others"><div class="col-lg-3">Others</div><div class="col-lg-9">'.get_form_teacher_info($form_id, 'other_skill').'</div></div>';
         $renderHTML .= '<div class="status"><div class="col-lg-3">Status</div><div class="col-lg-9">'.(($status == 1) ? 'Opening' : 'Closed').'</div></div>';
-
         $renderHTML .= '</div></div>';
+        $renderHTML .= '<button id="leave-group-teacher" class="btn btn-danger">Leave</button>';
     }
 
     return $renderHTML;
 }
-
-function btn_view_list_other_group()
+function leave_teacher_group($form_id, $user_id)
 {
-    $renderHTML .= '<div class="button-back"><button id="btn-view-list-other-group" class="btn btn-danger">Back</button></div> ';
+    global $wpdb;
+    $leave_group = $wpdb->delete(
+        "{$wpdb->prefix}members",
+        [
+            'form_id' => $form_id,
+            'member_id' => $user_id,
+        ]
+);
+    if ($leave_group) {
+        return true;
+    }
 
-    return $renderHTML;
+    return false;
 }

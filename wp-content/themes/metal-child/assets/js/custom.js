@@ -63,6 +63,9 @@ jQuery(function ($) {
         $('body').on('click', 'button#update-profile', function () {
             var gender = $('select#gender').val();
             var major = $('select#major').val();
+            if (typeof (major) == 'undefined') {
+                major = $('input#major').val();
+            }
             var name = $('input#user-name').val();
             var biograph = $('textarea#user-description').val();
             var phone = $('select#user-level').val();
@@ -162,7 +165,7 @@ jQuery(function ($) {
             success: function (result) {
                 var html = $.parseHTML(result.view);
                 $('#profile-contents').html(html);
-                $('#btn-quick-link').html('');
+                $('#btn-quick-link').hide();
                 $('button#edit-profile').on('click', function () {
                     $('div#profile-contents textarea,input').prop('disabled', false);
                     changeButton();

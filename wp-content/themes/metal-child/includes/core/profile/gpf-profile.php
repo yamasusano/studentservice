@@ -181,14 +181,14 @@ function selectGender()
     $renderHTML .= '<select name="gender" id="gender">';
     if (!empty($gender)) {
         $renderHTML .= '<option value="'.$gender.'" selected="selected" >'.$gender.'</option>';
-        if ($gender == 'Male') {
-            $renderHTML .= '<option value="female">Female</option>';
+        if ($gender == 'male') {
+            $renderHTML .= '<option value="female">female</option>';
         } else {
-            $renderHTML .= '<option value="male">Male</option>';
+            $renderHTML .= '<option value="male">male</option>';
         }
     } else {
-        $renderHTML .= '<option value="Male">Male</option>
-        <option value="Female">Female</option>';
+        $renderHTML .= '<option value="male">male</option>
+        <option value="female">female</option>';
     }
     $renderHTML .= '</select>';
 
@@ -280,7 +280,7 @@ function check_student_form()
     FROM {$wpdb->prefix}members as m
     INNER JOIN {$wpdb->prefix}groups as g
     ON m.form_id = g.form_id
-    WHERE member_id = '".get_current_user_id()."'
+    WHERE m.member_id = '".get_current_user_id()."'
     AND g.type = 'Student'
     ");
 
@@ -292,7 +292,7 @@ function user_have_form_exist()
     $form_id = $wpdb->get_var("
     SELECT m.form_id
     FROM {$wpdb->prefix}members as m
-    INNER JOIN {$wpdb->prefix}finder_form as g
+    INNER JOIN {$wpdb->prefix}groups as g
     ON m.form_id = g.form_id
     WHERE m.member_id = '".get_current_user_id()."'
     ");
