@@ -10,34 +10,55 @@
     }
 }
 
-table.semester-view {
-    margin-top: 50px;
+table.batch-view {
+    margin-top:10px;
 }
 
-table.semester-view input {
+#form-add-new-batch h2{
+   float: right; 
+}
+
+#form-add-new-batch div{
+    float: right;
+}
+
+#form-add-new-batch 
+{
+    overflow: hidden;
+}
+
+#form-add-new-batch {
+    padding-left:10px;
+    padding-bottom:20px;
+    width: 37.5%;
+}
+
+table.batch-view input {
     padding-left: 0px !important;
 }
 
-table.semester-view th {
+table.batch-view th {
     border-bottom: 1px solid;
 }
 
-table.semester-view th:nth-child(1) {
-    width: 30%;
+table.batch-view th:nth-child(1) {
+    width: 10%;
 }
 
-table.semester-view th:nth-child(2) {
+table.batch-view th:nth-child(2) {
     width: 20%;
 }
 
-table.semester-view th:nth-child(3) {
-    width: 20%;
+table.batch-view th:nth-child(3) {
+    width: 70%;
 }
 
-table.semester-view th:nth-child(4) {
-    width: 15%;
+#form-add-new-batch{
+    display: none;
 }
-
+.active{
+    display: block !important;
+}
 input.editable-major {
     width: 100%;
     border: none;

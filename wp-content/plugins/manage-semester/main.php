@@ -45,6 +45,7 @@ function call_ajax_via_admin(){
     $HTML .= '</script>';
     return $HTML;
 }
+
 function admin_semester_list()
 {
     $HTML = '';

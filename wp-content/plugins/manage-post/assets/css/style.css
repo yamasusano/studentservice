@@ -10,32 +10,32 @@
     }
 }
 
-table.semester-view {
+table.post-view {
     margin-top: 50px;
 }
 
-table.semester-view input {
+table.post-view input {
     padding-left: 0px !important;
 }
 
-table.semester-view th {
+table.post-view th {
     border-bottom: 1px solid;
 }
 
-table.semester-view th:nth-child(1) {
+table.post-view th:nth-child(1) {
     width: 30%;
 }
 
-table.semester-view th:nth-child(2) {
+table.post-view th:nth-child(2) {
     width: 20%;
 }
 
-table.semester-view th:nth-child(3) {
-    width: 20%;
-}
-
-table.semester-view th:nth-child(4) {
+table.post-view th:nth-child(3) {
     width: 15%;
+}
+
+table.post-view th:nth-child(4) {
+    width: 12%;
 }
 
 input.editable-major {
@@ -131,3 +131,4 @@ form#form-add-semester .form-group {
 .form-group input#semester-end-date {
     width: 20%;
 }
+
