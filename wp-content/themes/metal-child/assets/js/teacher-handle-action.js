@@ -17,7 +17,7 @@ jQuery(function ($) {
             deleteTeacherForm($row, $form_id, $title);
         });
 
-        $('body').on('click', 'p.title-group-teacher', function () {
+        $('body').on('click', 'p.title-form-other', function () {
             $par = $(this).parents('tr');
             $form_id = $par.find('input#teacher-form-id').val();
             form_id = $form_id;
