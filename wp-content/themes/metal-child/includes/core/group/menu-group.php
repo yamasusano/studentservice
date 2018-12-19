@@ -269,12 +269,26 @@ function get_suppervisor($form_id)
 function get_members_to_form($form_id)
 {
     global $wpdb;
-    $get_member = $wpdb->get_results("
-    SELECT member_id
-    FROM {$wpdb->prefix}members
+    $form_type = $wpdb->get_var("
+    SELECT type
+    FROM {$wpdb->prefix}groups
     WHERE form_id = '".$form_id."' 
-    AND member_role = 1
     ");
+    if ($form_type == 'Student') {
+        $get_member = $wpdb->get_results("
+        SELECT member_id
+        FROM {$wpdb->prefix}members
+        WHERE form_id = '".$form_id."' 
+        AND member_role != 2
+        ");
+    } else {
+        $get_member = $wpdb->get_results("
+        SELECT member_id
+        FROM {$wpdb->prefix}members
+        WHERE form_id = '".$form_id."' 
+        AND member_role = 1
+        ");
+    }
 
     return $get_member;
 }
@@ -311,26 +325,39 @@ function actionLeaveGroup()
 function studentLeaveGroup($form_id, $user_id)
 {
     global $wpdb;
-    $delete_members = $wpdb->delete(
+    $is_leader = is_leader($form_id);
+    if ($is_leader) {
+        $delete_members = $wpdb->delete(
         "{$wpdb->prefix}members",
         [
             'form_id' => $form_id,
             'member_id' => $user_id,
         ]
         );
-    $delete_groups = $wpdb->delete(
-        "{$wpdb->prefix}groups",
-        [
-            'form_id' => $form_id,
-        ]
-        );
-    $delete_skill = $wpdb->delete(
+        if ($delete_members) {
+            $delete_groups = $wpdb->delete(
+                "{$wpdb->prefix}groups",
+                [
+                    'form_id' => $form_id,
+                ]
+                );
+        }
+        if ($delete_groups) {
+            $delete_skill = $wpdb->delete(
         "{$wpdb->prefix}form_skill",
         [
             'form_id' => $form_id,
         ]
         );
-    if (isset($delete_groups) && isset($delete_members) && isset($delete_skill)) {
+        }
+        if ($delete_skill) {
+            $delete_request = $wpdb->delete(
+        "{$wpdb->prefix}request",
+        [
+            'form_id' => $form_id,
+        ]
+        );
+        }
         $delete_form = $wpdb->delete(
             "{$wpdb->prefix}finder_form",
            [
@@ -338,6 +365,14 @@ function studentLeaveGroup($form_id, $user_id)
             'user_id' => $user_id,
            ]
         );
+    } else {
+        $delete_members = $wpdb->delete(
+            "{$wpdb->prefix}members",
+            [
+                'form_id' => $form_id,
+                'member_id' => $user_id,
+            ]
+            );
     }
 }
 

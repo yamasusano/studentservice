@@ -48,7 +48,7 @@ jQuery(function ($) {
                 success: function (result) {
                     var html = $.parseHTML(result.notification);
                     $('#profile-contents').html(html);
-                    $('#btn-quick-link').html('');
+                    $('#btn-quick-link').hide();
                 },
                 errors: function (result) { }
             });
@@ -60,13 +60,11 @@ jQuery(function ($) {
                 data: { 'action': 'accept_request_via_user', 'form-id': $form_id },
                 type: 'post',
                 success: function (result) {
-                    if (result.check) {
-                        par.slideUp('slow', function () { par.remove(); });
-                        $('div.member-message').html(result.message);
-                    } else {
-                        par.slideUp('slow', function () { par.remove(); });
-                        $('div.member-message').html(result.message);
-                    }
+                    par.remove();
+                    $('div.member-message').html(result.message);
+                    setTimeout(() => {
+                        $('div.member-message').html('');
+                    }, 3000);
                 },
                 errors: function (result) { }
 
@@ -79,13 +77,11 @@ jQuery(function ($) {
                 data: { 'action': 'reject_request_form', 'form-id': $form_id },
                 type: 'post',
                 success: function (result) {
-                    if (result.check) {
-                        par.slideUp('slow', function () { par.remove(); });
-                        $('div.member-message').html(result.message);
-                    } else {
-                        par.slideUp('slow', function () { par.remove(); });
-                        $('div.member-message').html(result.message);
-                    }
+                    par.remove();
+                    $('div.member-message').html(result.message);
+                    setTimeout(() => {
+                        $('div.member-message').html('');
+                    }, 3000);
                 },
                 errors: function (result) { }
 
@@ -99,12 +95,7 @@ jQuery(function ($) {
                 data: { 'action': 'reject_user_request', 'form-id': form_id },
                 type: 'post',
                 success: function (result) {
-                    if (result.results == true) {
-                        par.slideUp('slow', function () { par.remove(); });
-                    } else {
-                        par.slideUp('slow', function () { par.remove(); });
-                    }
-
+                    par.remove();
                 },
                 errors: function (result) { }
 
@@ -119,15 +110,11 @@ jQuery(function ($) {
                 data: { 'action': 'accept_request', 'form-id': form_id, 'user-id': user_id },
                 type: 'post',
                 success: function (result) {
-                    if (result.results == true) {
-                        $('div.noti-message').html(result.message);
-                        par.slideUp('slow', function () { par.remove(); });
-                    } else {
-                        $('div.noti-message').html(result.message);
-                        par.slideUp('slow', function () { par.remove(); });
-
-                    }
-
+                    par.remove();
+                    $('div.member-message').html(result.message);
+                    setTimeout(() => {
+                        $('div.member-message').html('');
+                    }, 3000);
                 },
                 errors: function (result) { }
 
@@ -156,7 +143,7 @@ jQuery(function ($) {
                     $('.group-menu-items h4').append(' > ' + form_title);
                     $('#group-contents').html(result.form_content);
                     $('div.group-button-other').html(result.button);
-                    btn_back_other_form();
+                    $('div#btn-quick-link').show();
                 },
                 errors: function (result) { }
 

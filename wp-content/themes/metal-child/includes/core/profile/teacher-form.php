@@ -275,12 +275,7 @@ function teacher_form_view($form_id)
 
     return $renderHTML;
 }
-function btn_view_list_group()
-{
-    $renderHTML .= '<div class="button-back"><button id="btn-view-list-group" class="btn btn-danger">Back</button></div> ';
 
-    return $renderHTML;
-}
 function closeFormTeach($form_id)
 {
     global $wpdb;
@@ -332,7 +327,7 @@ function get_request_list()
 {
     global $wpdb;
     $renderHtml = '';
-    $renderHtml .= '<div class="noti-message"></div>';
+    $renderHtml .= '<div class="member-message"></div>';
     $renderHtml .= '<table class="table-striped">';
     $renderHtml .= '<tr><th>Receiver/Sender</th> <th>Project Name</th> <th>Message</th> <th>Date Created</th> <th>Status</th></tr>';
     $get_request = get_request_form_id();

@@ -139,7 +139,7 @@ function sendRequest($form_id, $leader_id, $request_message)
             AND request = 1
             ");
             if (isset($get_request)) {
-                $message = 'Thanks for joining us, we contact you soon .';
+                $message = 'Thanks for joining us, we will contact you soon .';
             } else {
                 $user_join_in = $wpdb->insert(
                     "{$wpdb->prefix}members",
@@ -171,7 +171,7 @@ function sendRequest($form_id, $leader_id, $request_message)
                 ]
             );
             if ($user_set_request) {
-                $message = 'Thanks for joining us, we contact you soon .';
+                $message = 'Thanks for joining us, we will contact you soon .';
             }
         }
     }
@@ -208,13 +208,14 @@ function limitRequest($form_id)
 
     return false;
 }
-
 function actionJoinForm($form_id, $user_id)
 {
     $form_major = user_metadata('major', $user_id);
     $is_major = info('major');
     $status = checkStatusForm($form_id);
+    $has_form = check_student_form();
     $message = '';
+    $form_type = is_form_type($form_id);
     if (!$status) {
         $message = 'Sorry! Form closed. You can not join to this form.';
 
@@ -224,7 +225,11 @@ function actionJoinForm($form_id, $user_id)
 
         return array('result' => false, 'message' => $message);
     } elseif ($is_major !== $form_major) {
-        $message = 'Your major have not the same major form.';
+        $message = 'Your major must be the same major form.';
+
+        return array('result' => false, 'message' => $message);
+    } elseif ($has_form && $form_type == 'Student') {
+        $message = 'Your have already joined in student group.';
 
         return array('result' => false, 'message' => $message);
     }
@@ -246,7 +251,17 @@ WHERE ID = '".$form_id."'
 
     return false;
 }
+function is_form_type($form_id)
+{
+    global $wpdb;
+    $type = $wpdb->get_var("
+    SELECT type  
+    FROM {$wpdb->prefix}groups 
+    WHERE form_id = '".$form_id."'
+    ");
 
+    return $type;
+}
 function user_metadata($meta_key, $user_id)
 {
     global $wpdb;

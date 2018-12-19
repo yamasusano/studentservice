@@ -168,8 +168,8 @@ function action_invite_user_via_teacher($user_id, $form_id)
                     );
             if ($user_join_in) {
                 $button_view = '<a href="'.home_url('user').'?user-id='.$user_id.'" class="btn btn-info btn-sm">View</a>';
-                $message = '<a href="'.home_url('user').'?user-id='.$user_id.'" >'.get_userdata($user_id)->user_login.'</a> have send request to joined in group. 
-                    <a href="'.home_url('user').'?user-id='.$user_id.'" >'.get_userdata($user_id)->user_login.'</a> will join in group now';
+                $message = '<div class="message-success"><a href="'.home_url('user').'?user-id='.$user_id.'" >'.get_userdata($user_id)->user_login.'</a> have send request to joined in group. 
+                    <a href="'.home_url('user').'?user-id='.$user_id.'" >'.get_userdata($user_id)->user_login.'</a> will join in group now</div>';
             }
 
             return array('result' => true, 'message' => $message, 'button' => $button_view);

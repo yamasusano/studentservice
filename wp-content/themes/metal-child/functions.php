@@ -38,6 +38,7 @@ function zozo_enqueue_child_theme_styles()
     wp_enqueue_style('datatables', get_stylesheet_directory_uri().'/assets/css/datatables.css');
     wp_enqueue_style('notification', get_stylesheet_directory_uri().'/assets/css/notification.css');
     wp_enqueue_style('animation-load', get_stylesheet_directory_uri().'/assets/css/animation-load.css');
+    wp_enqueue_style('group', get_stylesheet_directory_uri().'/assets/css/group.css');
 
     //js
     wp_enqueue_script('jquery-v2.2.4.min', get_stylesheet_directory_uri().'/assets/js/jquery.min.js', array('jquery'), null, true);
@@ -240,7 +241,7 @@ function post_finder_form()
     $is_major = has_major();
     if ($is_major['result']) {
         $form_validate = validFormFinder($title, $description);
-        if (isset($form_validate)) {
+        if ($form_validate['result']) {
             $insert_finder_table = insert_finder_form($semester, $title, $description, $other, $contact, $user_id);
             $suppervisor_id = get_user_by('login', $supervisor)->ID;
             if ($insert_finder_table) {
@@ -255,7 +256,7 @@ function post_finder_form()
                 $message = '<div class="message-fail">Publish failed</div>';
             }
         } else {
-            $message = $form_validate;
+            $message = '<div class="message-fail">'.$form_validate['message'].'</div>';
         }
     } else {
         $message = $is_major['message'];
@@ -284,7 +285,7 @@ add_action('wp_ajax_reopen_form_finder', 'reopen_form_finder');
 function reopen_form_finder()
 {
     reopenFinderForm();
-    $message = 'Form re-open. ';
+    $message = '<div class="message-success">Form re-open.</div>';
     echo wp_send_json(['message' => $message]);
     die();
 }
@@ -346,14 +347,10 @@ function reject_request_form()
     removeRequest($form_id, $user_id);
     $check = false;
     if (removeRequest($form_id, $user_id)) {
-        $renderHTML = '<div class="message-success"> ';
-        $message = 'reject request success!';
-        $renderHTML .= '</div>';
+        $message = '<div class="message-success">Reject request success!</div>';
         $check = true;
     } else {
-        $renderHTML = '<div class="message-fail"> ';
-        $message = 'Request have been rejected!';
-        $renderHTML .= '</div>';
+        $message = '<div class="message-fail">Request have been rejected!</div>';
     }
     echo wp_send_json(['check' => $check, 'notification' => $message]);
     die();
@@ -377,10 +374,10 @@ function accept_request()
         $message = '';
         $result;
         if ($action['result']) {
-            $message = $action['message'];
+            $message = '<div class="message-success">'.$action['message'].'</div>';
             $result = $action['result'];
         } else {
-            $message = $action['message'];
+            $message = '<div class="message-fail">'.$action['message'].'</div>';
             $result = $action['result'];
         }
     }
@@ -395,7 +392,13 @@ function reject_user_request()
     if (isset($_POST['form-id'])) {
         $form_id = $_POST['form-id'];
     }
-    echo wp_send_json(['message' => rejectRequest($form_id)]);
+
+    if (rejectRequest($form_id)) {
+        $message = '<div class="message-success">Request has been rejected</div>';
+    } else {
+        $message = '<div class="message-fail">Request is not exist</div>';
+    }
+    echo wp_send_json(['message' => $message]);
     die();
 }
 add_action('wp_ajax_nopriv_accept_request_via_user', 'accept_request_via_user');
@@ -407,10 +410,10 @@ function accept_request_via_user()
     $message = '';
     $result;
     if ($action['result']) {
-        $message = $action['message'];
+        $message = '<div class="message-success">'.$action['message'].'</div>';
         $result = $action['result'];
     } else {
-        $message = $action['message'];
+        $message = '<div class="message-fail">'.$action['message'].'</div>';
         $result = $action['result'];
     }
 
@@ -426,7 +429,12 @@ function reject_request_via_user()
         $user_name = $_POST['request-user'];
         $user_id = get_userdatabylogin($user_name)->ID;
     }
-    echo wp_send_json(['message' => rejectRequest($user_id)]);
+    if (rejectRequest($form_id)) {
+        $message = '<div class="message-success">Request has been rejected</div>';
+    } else {
+        $message = '<div class="message-fail">Request is not exist</div>';
+    }
+    echo wp_send_json(['message' => $message]);
     die();
 }
 
@@ -587,10 +595,10 @@ function invite_user_join()
     $message = '';
     $button_cancel = '';
     if ($check['result']) {
-        $message = $check['message'];
+        $message = '<div class="message-success">'.$check['message'].'</div>';
         $button_cancel = $check['button'];
     } else {
-        $message = $check['message'];
+        $message = '<div class="message-fail">'.$check['message'].'</div>';
     }
     echo wp_send_json(['check' => $check['result'], 'message' => $message, 'button' => $button_cancel]);
     die();
@@ -640,26 +648,11 @@ add_action('wp_ajax_teacher_menu_group', 'teacher_menu_group');
 function teacher_menu_group()
 {
     $create_menu = teacherGroupMenu();
-    $back_btn = btn_view_list_group();
-    echo wp_send_json(['create_menu' => $create_menu, 'btn' => $back_btn]);
+
+    echo wp_send_json(['create_menu' => $create_menu]);
     die();
 }
-add_action('wp_ajax_nopriv_get_btn_back', 'get_btn_back');
-add_action('wp_ajax_get_btn_back', 'get_btn_back');
-function get_btn_back()
-{
-    $back_btn = get_teacher_list();
-    echo wp_send_json(['btn' => $back_btn]);
-    die();
-}
-add_action('wp_ajax_nopriv_btn_back_other_form', 'btn_back_other_form');
-add_action('wp_ajax_btn_back_other_form', 'btn_back_other_form');
-function btn_back_other_form()
-{
-    $back_btn = btn_view_list_other_group();
-    echo wp_send_json(['btn' => $back_btn]);
-    die();
-}
+
 add_action('wp_ajax_nopriv_delete_teach_form', 'delete_teach_form');
 add_action('wp_ajax_delete_teach_form', 'delete_teach_form');
 function delete_teach_form()
@@ -881,14 +874,7 @@ function student_form_detail_via_teacher()
     echo wp_send_json(['form_content' => $html, 'group_button' => $button_action]);
     die();
 }
-add_action('wp_ajax_nopriv_get_btn_back_student_form', 'get_btn_back_student_form');
-add_action('wp_ajax_get_btn_back_student_form', 'get_btn_back_student_form');
-function get_btn_back_student_form()
-{
-    $group_button = btn_view_list_student_group();
-    echo wp_send_json(['button' => $group_button]);
-    die();
-}
+
 add_action('wp_ajax_nopriv_actionListenerUserLog', 'actionListenerUserLog');
 add_action('wp_ajax_actionListenerUserLog', 'actionListenerUserLog');
 function actionListenerUserLog()
@@ -938,5 +924,15 @@ function notification_chat()
     $current_user_id = get_current_user_id();
     $chat = get_box_chat($current_user_id);
     echo wp_send_json(['message' => $chat]);
+    die();
+}
+add_action('wp_ajax_nopriv_leave_group_teacher', 'leave_group_teacher');
+add_action('wp_ajax_leave_group_teacher', 'leave_group_teacher');
+function leave_group_teacher()
+{
+    $form_id = $_POST['ID'];
+    $user_id = get_current_user_id();
+    $leave = leave_teacher_group($form_id, $user_id);
+    echo wp_send_json(['check' => $leave]);
     die();
 }

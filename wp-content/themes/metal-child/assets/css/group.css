@@ -1,0 +1,9 @@
+div#btn-quick-link {
+    text-align: center;
+}
+
+button#leave-group-teacher {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}

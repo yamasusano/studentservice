@@ -13,10 +13,10 @@ function check_form_exist($user_id)
     ");
 
     if ($form_id) {
-        return false;
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 function is_member_in_group($form_id, $user_id)

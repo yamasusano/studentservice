@@ -97,7 +97,7 @@ function manageRequest()
 {
     global $wpdb;
     $renderHtml = '';
-    $renderHtml .= '<div class="noti-message"></div>';
+    $renderHtml .= '<div class="member-message"></div>';
     $renderHtml .= '<table class="table-striped">';
     $renderHtml .= '<tr><th>Receiver/Sender</th> <th>Project Name</th> <th>Message</th> <th>Date Created</th> <th>Status</th></tr>';
     $get_request = get_list_request();
@@ -165,8 +165,9 @@ function accessRequest($form_id, $user_id)
     $user_name = get_userdata($user_id)->user_login;
     $remove_request = removeRequest($form_id, $user_id);
     $form_exist = isFormExist($user_id);
+    $form_type = checkFormType($form_id);
     if ($remove_request) {
-        if ($form_exist) {
+        if ($form_exist && $form_type == 'Student') {
             return array('result' => false, 'message' => $user_name.' have already team.Reject request!!');
         } else {
             $approve_member = $wpdb->insert(
@@ -178,7 +179,7 @@ function accessRequest($form_id, $user_id)
                     ]
                 );
             if ($approve_member) {
-                return array('result' => true, 'message' => '<div class="message-success"> Graduation !!! you have a new member </div>');
+                return array('result' => true, 'message' => '<div class="message-success"> congratulation !!! you have a new member </div>');
             } else {
                 return array('result' => false, 'message' => '<div class="message-fail"> Approve user failed</div>');
             }
@@ -221,13 +222,12 @@ function user_access_request($form_id)
     $user_id = get_current_user_id();
     $form_exist = isFormExist($user_id);
     $form_type = checkFormType($form_id);
-    if ($form_type == 'Student') {
-        if ($form_exist) {
-            return array('result' => false, 'message' => 'You have already team.Reject request!!');
-        } else {
-            if (removeRequest($form_id, $user_id)) {
-                if (user_metadata('role', $user_id) == '1') {
-                    $approve_member = $wpdb->insert(
+    if ($form_exist && $form_type == 'Student') {
+        return array('result' => false, 'message' => 'You have already team.Reject request!!');
+    } else {
+        if (removeRequest($form_id, $user_id)) {
+            if (user_metadata('role', $user_id) == '1') {
+                $approve_member = $wpdb->insert(
                     "{$wpdb->prefix}members",
                     [
                         'form_id' => $form_id,
@@ -235,8 +235,8 @@ function user_access_request($form_id)
                         'member_role' => 1,
                     ]
                 );
-                } else {
-                    $approve_member = $wpdb->insert(
+            } else {
+                $approve_member = $wpdb->insert(
                     "{$wpdb->prefix}members",
                     [
                         'form_id' => $form_id,
@@ -244,44 +244,13 @@ function user_access_request($form_id)
                         'member_role' => 2,
                     ]
                 );
-                }
-            } else {
-                return array('result' => false, 'message' => 'join in  failed');
-            }
-
-            if ($approve_member) {
-                return array('result' => true, 'message' => 'Join in success');
-            } else {
-                return array('result' => false, 'message' => 'join in  failed');
-            }
-        }
-    } else {
-        if (removeRequest($form_id, $user_id)) {
-            if (user_metadata('role', $user_id) == '1') {
-                $approve_member = $wpdb->insert(
-                "{$wpdb->prefix}members",
-                [
-                    'form_id' => $form_id,
-                    'member_id' => $user_id,
-                    'member_role' => 1,
-                ]
-            );
-            } else {
-                $approve_member = $wpdb->insert(
-                "{$wpdb->prefix}members",
-                [
-                    'form_id' => $form_id,
-                    'member_id' => $user_id,
-                    'member_role' => 2,
-                ]
-            );
             }
         } else {
             return array('result' => false, 'message' => 'join in  failed');
         }
 
         if ($approve_member) {
-            return array('result' => true, 'message' => 'Join in success');
+            return array('result' => true, 'message' => 'Join in successfully');
         } else {
             return array('result' => false, 'message' => 'join in  failed');
         }
@@ -428,9 +397,9 @@ function set_new_leader($member_id)
     }
     $member_name_leader = get_userdata($member_id)->user_login;
     if ($set_leader && $remove_leader) {
-        return $member_name_leader.' become new leader in your group';
+        return '<div class="message-success">'.$member_name_leader.' become new leader in your group</div>';
     } else {
-        return 'Set new leader false!';
+        return '<div class="message-fail">Set new leader false!</div>';
     }
 }
 
@@ -459,9 +428,9 @@ function remove_member($member_id)
     ");
     $member_name_remove = get_userdata($member_id)->user_login;
     if ($remove_member) {
-        return 'Removed '.$member_name_remove.' successful!';
+        return '<div class="message-success">Removed '.$member_name_remove.' successful!</div>';
     } else {
-        return 'Removed false!';
+        return '<div class="message-fail">Removed false!</div>';
     }
 }
 
@@ -715,7 +684,7 @@ function action_invite_user($user_id)
             if ($check_request_exist) {
                 $cancel_request = '<button id="cancel-invite-user" class="btn-danger btn btn-sm">Cancel</button>';
 
-                return array('result' => true, 'message' => '<div class="message-success">Waiting <b>'.get_userdata($user_id)->user_login.' </b>confirm</div>', 'button' => $cancel_request);
+                return array('result' => true, 'message' => 'Waiting <b>'.get_userdata($user_id)->user_login.' </b>confirm', 'button' => $cancel_request);
             } else {
                 if (userInformation('role', $user_id) == 'Student') {
                     $user_join_in = $wpdb->insert(
@@ -763,7 +732,7 @@ function action_invite_user($user_id)
             if ($make_request) {
                 $cancel_request = '<button id="cancel-invite-user" class="btn-danger btn btn-sm">Cancel</button>';
 
-                return array('result' => true, 'message' => '<div class="message-success">Waiting <b>'.get_userdata($user_id)->user_login.' </b>confirm</div>', 'button' => $cancel_request);
+                return array('result' => true, 'message' => 'Waiting <b>'.get_userdata($user_id)->user_login.' </b>confirm', 'button' => $cancel_request);
             } else {
                 return array('result' => false, 'message' => 'invite user failed');
             }

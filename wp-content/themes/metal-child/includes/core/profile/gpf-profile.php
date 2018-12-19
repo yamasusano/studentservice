@@ -70,7 +70,7 @@ function info($meta_key)
             return $user_info;
     }
 }
-function get_user_bio()
+function get_user_bio($disabled)
 {
     $renderHTML .= '<div class="col-lg-12 desciption"><div class="row"><div class="biography">';
     $renderHTML .= '<textarea name="user-description" id="user-description" rows="10" placeholder="about me..." '.$disabled.' >'.info('biography').'</textarea>';
@@ -78,7 +78,7 @@ function get_user_bio()
 
     return $renderHTML;
 }
-function get_user_group_name()
+function get_user_group_name($disabled)
 {
     $renderHTML .= '<div class="col-lg-12"><div class="row">';
     $renderHTML .= '<div class="col-lg-6"><div class="row">';
@@ -93,8 +93,9 @@ function get_user_group_name()
 
     return $renderHTML;
 }
-function get_user_group_mail()
+function get_user_group_mail($disabled)
 {
+    $value = checkGender(info('major'), 'Select your major');
     $renderHTML .= '<div class="col-lg-12"><div class="row">';
     $renderHTML .= '<div class="col-lg-6"><div class="row">';
     $renderHTML .= '<div class="col-lg-2" style="padding:0"><label for="email">Email</label></div>';
@@ -102,7 +103,7 @@ function get_user_group_mail()
     $renderHTML .= '</div>';
     $renderHTML .= '<div class="col-lg-6"><div class="row">';
     $renderHTML .= '<div class="col-lg-2" style="padding:0"><label for="name">Major</label></div>';
-    $renderHTML .= '<div class="col-lg-10"><div class="major"><input type="text" name="major" id="major" value="'.checkGender(info('major'), 'Select your major').'" '.$disabled.' ></div>';
+    $renderHTML .= '<div class="col-lg-10"><div class="major"><input type="text" name="major" id="major" value="'.$value.'" '.$disabled.' ></div>';
     $renderHTML .= '</div></div>';
     $renderHTML .= '</div>';
     $renderHTML .= '</div>';
@@ -111,7 +112,7 @@ function get_user_group_mail()
     return $renderHTML;
 }
 
-function get_student_block()
+function get_student_block($disabled)
 {
     $renderHTML .= '<div class="col-lg-12"><div class="row">';
     if (is_student()) {
@@ -140,10 +141,10 @@ function overView()
 {
     $disabled = 'disabled';
     $renderHTML = '';
-    $renderHTML .= get_user_bio();
-    $renderHTML .= get_user_group_name();
-    $renderHTML .= get_user_group_mail();
-    $renderHTML .= get_student_block();
+    $renderHTML .= get_user_bio($disabled);
+    $renderHTML .= get_user_group_name($disabled);
+    $renderHTML .= get_user_group_mail($disabled);
+    $renderHTML .= get_student_block($disabled);
     $renderHTML .= get_block_button();
 
     return $renderHTML;
@@ -181,14 +182,13 @@ function selectGender()
     if (!empty($gender)) {
         $renderHTML .= '<option value="'.$gender.'" selected="selected" >'.$gender.'</option>';
         if ($gender == 'male') {
-            $renderHTML .= '<option value="female">Female</option>';
+            $renderHTML .= '<option value="female">female</option>';
         } else {
-            $renderHTML .= '<option value="male">Male</option>';
+            $renderHTML .= '<option value="male">male</option>';
         }
     } else {
-        $renderHTML .=
-        '<option value="Male">Male</option>
-        <option value="Female">Female</option>';
+        $renderHTML .= '<option value="male">male</option>
+        <option value="female">female</option>';
     }
     $renderHTML .= '</select>';
 
@@ -205,7 +205,7 @@ function selectMajor()
     );
     $is_major = info('major');
     $renderHTML = '';
-    if (!$has_form) {
+    if ($has_form) {
         $renderHTML .= '<input type="text" name="major" id="major" value="'.$is_major.'" disabled>';
     } else {
         $renderHTML .= '<select name="major" id="major" required>';
@@ -280,7 +280,7 @@ function check_student_form()
     FROM {$wpdb->prefix}members as m
     INNER JOIN {$wpdb->prefix}groups as g
     ON m.form_id = g.form_id
-    WHERE member_id = '".get_current_user_id()."'
+    WHERE m.member_id = '".get_current_user_id()."'
     AND g.type = 'Student'
     ");
 
@@ -292,9 +292,9 @@ function user_have_form_exist()
     $form_id = $wpdb->get_var("
     SELECT m.form_id
     FROM {$wpdb->prefix}members as m
-    INNER JOIN {$wpdb->prefix}finder_form as g
+    INNER JOIN {$wpdb->prefix}groups as g
     ON m.form_id = g.form_id
-    WHERE member_id = '".get_current_user_id()."'
+    WHERE m.member_id = '".get_current_user_id()."'
     ");
     if ($form_id) {
         return true;
