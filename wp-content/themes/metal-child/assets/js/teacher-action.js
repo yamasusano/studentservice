@@ -93,9 +93,7 @@ jQuery(function ($) {
                 data: { 'action': 'get_teacher_form', 'ID': form_id },
                 type: 'post',
                 success: function (result) {
-                    $('.group-menu-item').html(result.groups);
-                    $('#group-contents').html(result.form);
-                    form_invite_student();
+                    $('#profile-contents').html(result.form);
                     $('#btn-quick-link').show();
                 },
                 errors: function (result) { }
@@ -258,19 +256,6 @@ jQuery(function ($) {
 
             });
         }
-        window.form_invite_student = function () {
-            $.ajax({
-                url: zozo_js_vars.zozo_ajax_url,
-                data: { 'action': 'get_form_invite' },
-                type: 'post',
-                success: function (result) {
-                    var html = $.parseHTML(result.render);
-                    $('div.invite-members').html(html);
-                },
-                errors: function (result) { }
-
-            });
-        }
         window.invite_student_via_teacher = function (ID, button) {
             var user_id = button.parent().find($('input#user-id')).val();
             $current_action = button.parents('tr').index();
@@ -336,6 +321,7 @@ jQuery(function ($) {
                     $('div.group-button-other').html(result.group_button);
                     $('div#group-contents').html(result.form_content);
                     $('#btn-quick-link').show();
+                    $('div#btn-quick-link').html('<button id="btn-view-list-student-form" class="btn btn-primary">Back</button>');
                 },
                 errors: function (result) { }
 

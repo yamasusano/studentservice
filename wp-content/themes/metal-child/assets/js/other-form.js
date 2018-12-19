@@ -8,14 +8,11 @@ jQuery(function ($) {
             form_id = $form_id;
             form_title = $(this).text();
             teacher_form_detail($form_id, form_title);
-            $('div#btn-quick-link').html('<button id="btn-view-list-other-group" class="btn btn-primary">Back</button>');
         });
         $('body').on('click', 'p#student-form-title', function () {
             form_id = $(this).parent().find('input#student-form-id').val();
             form_title = $(this).text();
             get_student_form_content(form_id, form_title);
-            $('div#btn-quick-link').html('<button id="btn-view-list-student-form" class="btn btn-primary">Back</button>');
-
         });
         $('body').on('click', '#btn-view-list-other-group', function () {
             get_teacher_group_list();

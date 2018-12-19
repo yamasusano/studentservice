@@ -21,6 +21,9 @@ function get_action_form_teacher($form_id)
 {
     $renderHTML = '';
     $is_leader = is_teacher($form_id);
+    $renderHTML .= '<div class="col-lg-12"><div class="row"><div id="teacher-menu-lists" class="menu-lists">';
+    $renderHTML .= '<div class="group-menu-item" style="width:100%">';
+
     $renderHTML .= '<h5 style="text-transform:uppercase";>'.get_form_teacher_info($form_id, 'title').'</h5>';
     $renderHTML .= '<div class="menu-lists">';
     $renderHTML .= '<div class="group-menu-item">';
@@ -30,7 +33,14 @@ function get_action_form_teacher($form_id)
     }
     $renderHTML .= '<button id="group-chat" class="btn btn-info">Chating</button>';
     $renderHTML .= '<button id="members-list" class="btn btn-info">Members</button>';
-    $renderHTML .= '</div></div>';
+    $renderHTML .= '</div></div></div>';
+
+    $renderHTML .= '<div class="invite-members">';
+    $renderHTML .= '<input type="text" name="student-name" id="student-name"  placeholder="search student here...">';
+    $renderHTML .= '<button class="btn btn-info" name="search-students" id="search-students" >Search</button>';
+    $renderHTML .= '</div>';
+    $renderHTML .= '<div class="message-show"></div></div>';
+    $renderHTML .= '<div id="group-contents">'.teacher_form_view($form_id).'</div></div></div>';
 
     return $renderHTML;
 }
@@ -83,19 +93,40 @@ function genarate_members($form_id)
 
     return $renderHTML;
 }
-function genarate_skill()
+function genarate_skill($form_id)
 {
+    $get_skill = set_responsibilities_form($form_id);
     $skills = major_skill();
+    $check = false;
+    foreach ($get_skill as $key => $value) {
+        if ($value == 2) {
+            $check = true;
+        }
+    }
     $renderHTML .= '<div class="skill-form">';
     $renderHTML .= '<div class="col-lg-3"><label for="title">Responsibilities</label></div>';
     $renderHTML .= '<div class="col-lg-9"><dl class="dropdown">';
-    $renderHTML .= '<dt><a id="skill"><span class="hida">Select Skill</span><p class="multiSel"></p></a></dt>';
-    $renderHTML .= '<dd><div class="mutliSelect"><ul>';
-    foreach ($skills as $skill) {
-        $renderHTML .= ' <li><input type="checkbox" value="'.$skill->name.'"/>'.$skill->name.'</li>';
+    $renderHTML .= '<dt><a id="skill"><p class="multiSel">';
+    if (!$check) {
+        $renderHTML .= '<span class="hida">Select Skill</span>';
+    } else {
+        foreach ($get_skill as $key => $value) {
+            if ($value == 2) {
+                $renderHTML .= '<span title="'.$key.',">'.$key.',</span>';
+            }
+        }
     }
-    $renderHTML .= '</ul></div></dd></dl>';
-    $renderHTML .= '</div></div>';
+    $renderHTML .= '</p></a></dt>';
+    $renderHTML .= '<dd><div class="mutliSelect"><ul>';
+    foreach ($get_skill as $key => $value) {
+        if ($value == 2) {
+            $renderHTML .= ' <li><input type="checkbox" value="'.$key.'" checked/>'.$key.'</li>';
+        } else {
+            $renderHTML .= ' <li><input type="checkbox" value="'.$key.'"/>'.$key.'</li>';
+        }
+    }
+
+    $renderHTML .= '</ul></div></dd></dl></div></div>';
 
     return $renderHTML;
 }
@@ -123,7 +154,7 @@ function generate_teacher_form($form_id)
     $renderHTML .= genarate_title($form_id);
     $renderHTML .= genarate_desc($form_id);
     $renderHTML .= genarate_members($form_id);
-    $renderHTML .= genarate_skill();
+    $renderHTML .= genarate_skill($form_id);
     $renderHTML .= genarate_other_skill($form_id);
     $renderHTML .= genarate_message_form();
     $renderHTML .= genarate_group_button($form_id);

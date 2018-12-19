@@ -7,3 +7,44 @@ button#leave-group-teacher {
     bottom: 10px;
     right: 10px;
 }
+
+.invite-members {
+    display: grid;
+    min-width: 300px;
+}
+
+.invite-members button {
+    margin-top: 10px;
+}
+
+.invite-members input {
+    width: 300px;
+    padding: 0px 10px;
+}
+
+div.menu-lists {
+    display: flex;
+}
+
+#student-menu-lists {
+    justify-content: space-between;
+}
+
+#student-menu-lists {
+    margin-bottom: 5px;
+}
+
+#teacher-menu-lists {
+    justify-content: flex-start;
+    position: relative;
+    margin-bottom: 5px;
+}
+
+#teacher-menu-lists .group-menu-item .menu-lists {
+    position: absolute;
+    bottom: 0;
+}
+
+.members .col-lg-9 a {
+    margin-right: 5px;
+}

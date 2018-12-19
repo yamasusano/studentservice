@@ -267,6 +267,7 @@ function current_semster_form()
 function list_form_semester($form)
 {
     $major = user_metadata('major', $form->user_id);
+    $type = checkFormType($form->ID);
     $renderHTML .= '<div class="col-lg-12"><div class="form-item"> ';
     $renderHTML .= '<div class="col-lg-2" style="width:10%">';
     $renderHTML .= get_avatar(get_the_author_meta($form->user_id), 70).'<br>';
@@ -278,7 +279,7 @@ function list_form_semester($form)
     $renderHTML .= '<p>By <a href="'.home_url('user').'?user-id='.$form->user_id.'"> '.get_userdata($form->user_id)->user_login.'</a></p>&nbsp;&nbsp;&nbsp;';
     $renderHTML .= '<p> created at '.$form->created_date.'</p>';
     $renderHTML .= '</div>';
-    $renderHTML .= '<div class="form-content-members">Members: '.member_in_form_counting($form->ID).' / 6 </div>';
+    $renderHTML .= '<div class="form-content-members">Members: '.($type == 'Student' ? member_in_form_counting($form->ID).' / 6' : member_in_form_counting($form->ID)).' </div>';
     $renderHTML .= '<p class="form-content-description">'.wp_trim_words($form->description, 30, '..').'</p>';
     if ($form->status == 1) {
         $renderHTML .= '<button class="btn btn-warning btn-show-message">Openning</button>';

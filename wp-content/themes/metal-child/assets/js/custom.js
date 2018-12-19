@@ -5,6 +5,7 @@ jQuery(function ($) {
         });
         $('div#my-group').on('click', function () {
             setMenuGroup();
+            // $('.invite-members').show();
         });
         $('div#teacher-group').on('click', function () {
             get_teacher_group_list();

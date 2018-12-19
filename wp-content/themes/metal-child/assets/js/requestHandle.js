@@ -144,9 +144,9 @@ jQuery(function ($) {
                     $('#group-contents').html(result.form_content);
                     $('div.group-button-other').html(result.button);
                     $('div#btn-quick-link').show();
+                    $('div#btn-quick-link').html('<button id="btn-view-list-other-group" class="btn btn-primary">Back</button>');
                 },
                 errors: function (result) { }
-
             });
         }
     });

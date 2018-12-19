@@ -3,20 +3,14 @@
 function teacherGroupMenu()
 {
     $renderHTML = '';
-    $renderHTML .= '<div class="col-lg-12"><div class="row"><div class="menu-lists">';
-    $renderHTML .= '<div class="group-menu-item">';
+    $renderHTML .= '<div class="col-lg-12"><div class="row"><div id="teacher-menu-lists" class="menu-lists">';
+    $renderHTML .= '<div class="group-menu-item" style="width:100%">';
     $renderHTML .= '<button id="create-new-group" class="btn btn-info">Create</button></div>';
-    $renderHTML .= '<div class="invite-members"></div>';
+    $renderHTML .= '<div class="invite-members">';
+    $renderHTML .= '</div>';
     $renderHTML .= '</div>';
     $renderHTML .= '<div class="message-show"></div>';
     $renderHTML .= '<div id="group-contents">'.teacherListMenu().'</div></div></div>';
-
-    return $renderHTML;
-}
-function generate_invite_member()
-{
-    $renderHTML .= '<input type="text" name="student-name" id="student-name"  placeholder="search student here...">';
-    $renderHTML .= '<button class="btn btn-info" name="search-students" id="search-students" >Search</button>';
 
     return $renderHTML;
 }

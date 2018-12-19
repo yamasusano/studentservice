@@ -8,7 +8,7 @@ function check_form_exist($user_id)
     FROM {$wpdb->prefix}members as m
     INNER JOIN {$wpdb->prefix}groups as g
     ON m.form_id = g.form_id
-    WHERE member_id = '".$user_id."'
+    WHERE m.member_id = '".$user_id."'
     AND g.type = 'Student'
     ");
 

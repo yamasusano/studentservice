@@ -24,7 +24,7 @@ function groupMenu()
     $form = check_student_form();
     $is_leader = is_leader(check_student_form());
     $renderHTML .= '<div class="col-lg-12"><div class="row">';
-    $renderHTML .= '<div class="menu-lists"><div class="group-menu-item">';
+    $renderHTML .= '<div id="student-menu-lists" class="menu-lists"><div class="group-menu-item">';
     $renderHTML .= '<input type="hidden" id="form-id" value="'.$form.'" />';
     if (!$form) {
         $renderHTML .= '<button id="finder-form" class="btn btn-info">Finder Form</button>';
@@ -99,103 +99,129 @@ function finderFormView()
 
     return $renderHTML;
 }
+function get_project_semester()
+{
+    $renderHTML .= '<div class="project-semester">';
+    $renderHTML .= '<div class="col-lg-3"><label for="title">Semester</label></div>';
+    $renderHTML .= '<div class="col-lg-9"><select name="semester" id="semester">'.semesterSelect().'</select></div></div>';
+
+    return $renderHTML;
+}
+
+function get_leader_major()
+{
+    $major = info('major');
+    $renderHTML .= '<div class="leader-major">';
+    $renderHTML .= '<div class="col-lg-3"><label for="title">Major</label></div>';
+    $renderHTML .= '<div class="col-lg-9">'.(isset($major) ? $major : 'unset').'</div></div>';
+
+    return $renderHTML;
+}
+function get_title_form($finder_form)
+{
+    $renderHTML .= '<div class="title-form">';
+    $renderHTML .= '<div class="col-lg-3"><label for="title">Title</label></div>';
+    $renderHTML .= '<div class="col-lg-9"><input type="text" id="title" value="'.($finder_form ? form_data('title') : '').'" ></div></div>';
+
+    return $renderHTML;
+}
+function get_description_of_form($finder_form)
+{
+    $renderHTML .= '<div class="description-form">';
+    $renderHTML .= '<div class="col-lg-3"><label for="title">Description</label></div>';
+    $renderHTML .= '<div class="col-lg-9"><textarea name="description" id="description" rows="6" cols=107>'.($finder_form ? form_data('description') : '').'</textarea>';
+
+    return $renderHTML;
+}
+function get_member_avaiable_form($finder_form)
+{
+    $renderHTML .= '</div></div>';
+    $renderHTML .= '<div class="member-avaiable-form">';
+    $renderHTML .= '<div class="col-lg-3"><label for="title">Members</label></div>';
+    $renderHTML .= '<div class="col-lg-9">'.($finder_form ? set_member_to_form($finder_form) : '').'</div></div>';
+
+    return $renderHTML;
+}
+function set_responsibilities_form($form_id)
+{
+    global $wpdb;
+    $skills = major_skill();
+    $get_skill = $wpdb->get_results("
+    SELECT sm.name FROM {$wpdb->prefix}skill_major as sm
+    INNER JOIN {$wpdb->prefix}form_skill as fs
+    ON sm.ID = fs.skill_id
+    WHERE fs.form_id = '".$form_id."'
+    ");
+    $select_skill = array();
+    foreach (array_merge($skills, $get_skill) as $val) {
+        array_push($select_skill, $val->name);
+    }
+    $select_skill = array_count_values($select_skill);
+
+    return $select_skill;
+}
+function get_responsibilities_form($form_id)
+{
+    $get_skill = set_responsibilities_form($form_id);
+    $skills = major_skill();
+    $check = false;
+    foreach ($get_skill as $key => $value) {
+        if ($value == 2) {
+            $check = true;
+        }
+    }
+    $renderHTML .= '<div class="skill-form">';
+    $renderHTML .= '<div class="col-lg-3"><label for="title">Responsibilities</label></div>';
+    $renderHTML .= '<div class="col-lg-9"><dl class="dropdown">';
+    $renderHTML .= '<dt><a id="skill"><p class="multiSel">';
+    if (!$check) {
+        $renderHTML .= '<span class="hida">Select Skill</span>';
+    } else {
+        foreach ($get_skill as $key => $value) {
+            if ($value == 2) {
+                $renderHTML .= '<span title="'.$key.',">'.$key.',</span>';
+            }
+        }
+    }
+    $renderHTML .= '</p></a></dt>';
+    $renderHTML .= '<dd><div class="mutliSelect"><ul>';
+    foreach ($get_skill as $key => $value) {
+        if ($value == 2) {
+            $renderHTML .= ' <li><input type="checkbox" value="'.$key.'" checked/>'.$key.'</li>';
+        } else {
+            $renderHTML .= ' <li><input type="checkbox" value="'.$key.'"/>'.$key.'</li>';
+        }
+    }
+
+    $renderHTML .= '</ul></div></dd></dl></div></div>';
+
+    return $renderHTML;
+}
+function get_skill_other_form($finder_form)
+{
+    $renderHTML .= '<div class="prefix-element"><div class="skill-other">';
+    $renderHTML .= '<div class="col-lg-3"><label for="title">Other requirements</label></div>';
+    $renderHTML .= '<div class="col-lg-9"><input type="text" id="skill-other" value="'.($finder_form ? form_data('other_skill') : '').'"></div></div>';
+    $renderHTML .= '<div class="supervisor-form">';
+    $renderHTML .= '<div class="col-lg-6"><div class="col-lg-6"><label for="title">Supervisor</label></div>';
+    $renderHTML .= '<div class="col-lg-6">'.get_suppervisor($finder_form).'</div>';
+    $renderHTML .= '</div></div></div></div>';
+
+    return $renderHTML;
+}
 function finderForm()
 {
-    $skills = major_skill();
-    $major = info('major');
     $finder_form = check_student_form();
-
-    $renderHTML = '<h3>Finder Form</h3><div class="finder-form">
-        <div class="row">
-            <div class="project-semester">
-                <div class="col-lg-3">
-                    <label for="title">Semester</label>
-                </div>
-                <div class="col-lg-9">
-                    <select name="semester" id="semester">
-                        '.semesterSelect().'
-                    </select>
-                </div>
-            </div>
-            <div class="leader-major">
-                <div class="col-lg-3">
-                    <label for="title">Major</label>
-                </div>
-                <div class="col-lg-9">
-                 '.(isset($major) ? $major : 'unset').'
-                </div>
-            </div>
-            <div class="title-form">
-                <div class="col-lg-3">
-                    <label for="title">Title</label>
-                </div>
-                <div class="col-lg-9">
-                    <input type="text" id="title" value="'.($finder_form ? form_data('title') : '').'" >
-                </div>
-            </div>
-            <div class="description-form">
-                <div class="col-lg-3">
-                    <label for="title">Description</label>
-                </div>
-                <div class="col-lg-9">
-                <textarea name="description" id="description" rows="6" cols=107>'.($finder_form ? form_data('description') : '').'</textarea>';
-    $renderHTML .= '</div>
-            </div>
-            <div class="member-avaiable-form">
-                <div class="col-lg-3">
-                    <label for="title">Members</label>
-                </div>
-                <div class="col-lg-9">'.($finder_form ? set_member_to_form($finder_form) : '').'</div>
-            </div>
-            <div class="skill-form">
-                <div class="col-lg-3">
-                    <label for="title">Responsibilities</label>
-                </div>
-                <div class="col-lg-9">
-                    <dl class="dropdown">
-                        <dt>
-                            <a id="skill">
-                            <span class="hida">Select Skill</span>
-                            <p class="multiSel"></p>
-                            </a>
-                        </dt>
-                        <dd>
-                            <div class="mutliSelect">
-                                <ul>';
-    foreach ($skills as $skill) {
-        $renderHTML .= ' <li>
-                                        <input type="checkbox" value="'.$skill->name.'"/>'.$skill->name.'</li>';
-    }
-    $renderHTML .= '</ul>
-                            </div>
-                        </dd>
-                    </dl>
-                </div>
-            </div>
-            <div class="prefix-element">
-                <div class="skill-other">
-                    <div class="col-lg-3">
-                        <label for="title">Other requirements</label>
-                    </div>
-                    <div class="col-lg-9">
-                        <input type="text" id="skill-other" value="'.($finder_form ? form_data('other_skill') : '').'">
-                    </div>
-                </div>
-                <div class="supervisor-form">
-                    <div class="col-lg-6">
-                        <div class="col-lg-6">
-                            <label for="title">Supervisor</label>
-                        </div>
-                        <div class="col-lg-6">
-                        '.get_suppervisor($finder_form).'
-                        </div>
-                    </div>  
-                </div>
-             </div>
-        </div>
-        <div id="group-message">
-        </div>
-        <div class="col-lg-12  form-btn">';
+    $renderHTML = '<h3>Finder Form</h3><div class="finder-form"><div class="row">';
+    $renderHTML .= get_project_semester();
+    $renderHTML .= get_leader_major();
+    $renderHTML .= get_title_form($finder_form);
+    $renderHTML .= get_description_of_form($finder_form);
+    $renderHTML .= get_member_avaiable_form($finder_form);
+    $renderHTML .= get_responsibilities_form($finder_form);
+    $renderHTML .= get_skill_other_form($finder_form);
+    $renderHTML .= '<div id="group-message"></div>';
+    $renderHTML .= '<div class="col-lg-12  form-btn">';
     $renderHTML .= '<input type="hidden" name="get-description" id="get-description" /> ';
     $renderHTML .= is_form_exist();
     $renderHTML .= ' </div></div>';

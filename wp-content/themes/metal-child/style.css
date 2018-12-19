@@ -273,12 +273,6 @@ label[for="address"] {
   margin-top: 10px;
 }
 
-div.menu-lists {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 5px;
-}
-
 #group-contents {
   overflow: hidden;
   min-height: 560px;
@@ -476,19 +470,9 @@ td.method-action button, div.button-request button {
   margin-right: 10px;
 }
 
-.invite-members input {
-  width: 300px;
-  padding-left: 5px;
-  margin-right: 5px;
-}
-
 div.group-menu-item button {
   margin-right: 5px;
 }
-
-/* div.group-menu-item {
-  width: 50%;
-} */
 
 div.group-menu-item input {
   margin-top: 5px;

@@ -674,9 +674,8 @@ add_action('wp_ajax_get_teacher_form', 'get_teacher_form');
 function get_teacher_form()
 {
     $form_id = $_POST['ID'];
-    $button_menu = get_action_form_teacher($form_id);
-    $form_view = teacher_form_view($form_id);
-    echo wp_send_json(['groups' => $button_menu, 'form' => $form_view]);
+    $form_view = get_action_form_teacher($form_id);
+    echo wp_send_json(['form' => $form_view]);
     die();
 }
 add_action('wp_ajax_nopriv_get_teacher_form_action', 'get_teacher_form_action');
@@ -779,13 +778,7 @@ function find_student_partner()
     echo wp_send_json(['render' => search_student_via_teacher($keyword, $form_id)]);
     die();
 }
-add_action('wp_ajax_nopriv_get_form_invite', 'get_form_invite');
-add_action('wp_ajax_get_form_invite', 'get_form_invite');
-function get_form_invite()
-{
-    echo wp_send_json(['render' => generate_invite_member()]);
-    die();
-}
+
 add_action('wp_ajax_nopriv_kick_out_member', 'kick_out_member');
 add_action('wp_ajax_kick_out_member', 'kick_out_member');
 function kick_out_member()
