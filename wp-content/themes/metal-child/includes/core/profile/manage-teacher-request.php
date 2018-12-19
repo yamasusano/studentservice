@@ -61,10 +61,7 @@ function search_student_via_teacher($keyword, $form_id)
         $renderHTML .= '<table id="result_list_users" class="table-striped">';
         $renderHTML .= '<tr><th>Role_ID</th><th>User name</th><th>Major</th><th>Action</th></tr>';
         foreach ($results as $result) {
-            $user_name = $wpdb->get_var("
-            SELECT meta_value FROM {$wpdb->prefix}usermetaData 
-            WHERE meta_key = 'username' AND user_id = '".$result->ID."'
-            ");
+            $user_name = get_user_link($result->ID);
             $user_major = userInformation('major', $result->ID);
             $user_role = userInformation('role', $result->ID);
             $renderHTML .= '<tr><td>'.get_userdata($result->ID)->user_login.'</td><td>'.$user_name.'</td><td>'.$user_major.'</td>';

@@ -365,12 +365,12 @@ function get_member_list()
     $renderHTML = '';
     $get_member = get_all_member($form_id);
     $renderHTML .= '<div class="member-message"></div>';
-    $renderHTML .= '<table class=""><tr><th>Name</th><th>role</th><th>action</th></tr>';
+    $renderHTML .= '<table class="view-member-list"><tr><th>Name</th><th>role</th><th>action</th></tr>';
     foreach ($get_member as $member_id) {
-        $member_name = get_userdata($member_id->member_id)->user_login;
+        $member_name = get_user_link($member_id->member_id);
         $member_role = get_role_form($form_id, $member_id->member_id);
         $renderHTML .= '<tr class="member-item">';
-        $renderHTML .= '<td><a href="#">'.$member_name.'</a></td>';
+        $renderHTML .= '<td>'.$member_name.'</td>';
         $renderHTML .= '<td>'.$member_role.'</td>';
         $renderHTML .= '<td class="method-action">';
         if ($is_leader) {
@@ -621,7 +621,7 @@ function searchUsers($keyword)
         foreach ($results as $result) {
             $user_major = userInformation('major', $result->ID);
             $user_role = userInformation('role', $result->ID);
-            $renderHTML .= '<tr><td>'.$user_role.'</td><td>'.get_userdata($result->ID)->user_login.'</td><td>'.$user_major.'</td>';
+            $renderHTML .= '<tr><td>'.$user_role.'</td><td>'.get_user_link($result->ID).'</td><td>'.$user_major.'</td>';
             $renderHTML .= '<td><div class="btn-group-invite">'.get_view_action_search($result->ID).'<input type="hidden" id="user-id" value="'.$result->ID.'" /></div></td>';
             $renderHTML .= '</tr>';
         }

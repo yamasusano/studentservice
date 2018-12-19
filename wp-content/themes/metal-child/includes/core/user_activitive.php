@@ -68,3 +68,11 @@ function is_user_online($user_id)
 
     return false;
 }
+
+function get_user_link($user_id)
+{
+    $user_name = userInformation('username', $user_id);
+    $renderHTML .= '<a href="'.home_url('user').'?user-id='.$user_id.'" >'.$user_name.'</a>';
+
+    return $renderHTML;
+}

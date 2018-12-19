@@ -5,6 +5,7 @@
 require 'includes/core/group/form-view.php';
 get_header();
 $form_id = $_GET['form-id'];
+$check = form_exception($form_id);
 ?>
 <div class="container">
 	<div id="main-wrapper" class="zozo-row row">
@@ -12,6 +13,8 @@ $form_id = $_GET['form-id'];
 			<div class="zozo-row row">	
 				<div id="primary" class="content-area <?php zozo_primary_content_classes(); ?>">
 					<div id="content" class="site-content">
+						<?php if ($check) {
+    ?>
 						<div class="my-container">
                             <div class="row">
 								<form id="send-request" action="#" method="POST">
@@ -38,6 +41,10 @@ $form_id = $_GET['form-id'];
 								</div>
 							</div>
 						</div>
+						<?php
+} else {
+        form_not_found();
+    } ?>
 					</div><!-- #content -->
 				</div><!-- #primary -->
 				<?php get_sidebar(); ?>

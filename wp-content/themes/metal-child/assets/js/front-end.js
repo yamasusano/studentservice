@@ -31,10 +31,10 @@ jQuery(function ($) {
         window.onscroll = function (e) {
             $check = $('#main-menu').height();
             if ($check == 70) {
-                $('div.dropdown-content').css({ 'top': '71px' });
+                $('div.dropdown-content').css({ 'top': '70px' });
 
             } else {
-                $('div.dropdown-content').css({ 'top': '61px' });
+                $('div.dropdown-content').css({ 'top': '60px' });
 
             }
         }

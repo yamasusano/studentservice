@@ -172,3 +172,28 @@ function define_major($user_id)
 
     return $major;
 }
+
+function user_exception($user_id)
+{
+    global $wpdb;
+
+    $count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->users WHERE ID = %d", $user_id));
+
+    if ($count == 1) {
+        return true;
+    } else {
+        return false;
+    }
+}
+function user_not_found()
+{
+    $renderHTML .= '<div id="post-404" class="post post-404">';
+    $renderHTML .= '<div class="entry-content">';
+    $renderHTML .= '<div class="content-404page">';
+    $renderHTML .= '<h2 class="title-one">Oops! User Not Found</h2>';
+    $renderHTML .= '<h3 class="title-two">404</h3>';
+    $renderHTML .= '<span class="404icon"><i class="fa fa-thumbs-down"></i></span>';
+    $renderHTML .= '<h5 class="title-three">Sorry!! The user you are looking for does not exist</h5>';
+    $renderHTML .= '</div></div></div>';
+    echo $renderHTML;
+}

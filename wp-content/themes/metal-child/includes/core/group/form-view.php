@@ -320,3 +320,30 @@ function related_semester($form_id)
 
     return $renderHTML;
 }
+
+function form_exception($form_id)
+{
+    global $wpdb;
+    $form = $wpdb->get_var("
+    SELECT *
+    FROM {$wpdb->prefix}finder_form
+    WHERE ID = '".$form_id."'
+    ");
+    if ($form) {
+        return true;
+    } else {
+        return false;
+    }
+}
+function form_not_found()
+{
+    $renderHTML .= '<div id="post-404" class="post post-404">';
+    $renderHTML .= '<div class="entry-content">';
+    $renderHTML .= '<div class="content-404page">';
+    $renderHTML .= '<h2 class="title-one">Oops! Form Not Found</h2>';
+    $renderHTML .= '<h3 class="title-two">404</h3>';
+    $renderHTML .= '<span class="404icon"><i class="fa fa-thumbs-down"></i></span>';
+    $renderHTML .= '<h5 class="title-three">Sorry!! The form you are looking for does not exist</h5>';
+    $renderHTML .= '</div></div></div>';
+    echo $renderHTML;
+}

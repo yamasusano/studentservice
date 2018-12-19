@@ -8,9 +8,9 @@ function get_member_list_via_teacher($form_id)
     $renderHTML = '';
     $get_member = get_all_member($form_id);
     $renderHTML .= '<div class="member-message"></div>';
-    $renderHTML .= '<table class=""><tr><th>Name</th><th>role</th><th>action</th></tr>';
+    $renderHTML .= '<table><tr><th>Name</th><th>role</th><th>action</th></tr>';
     foreach ($get_member as $member) {
-        $member_name = get_userdata($member->member_id)->user_login;
+        $member_name = get_user_link($member->member_id);
         $member_role = get_role_form($form_id, $member->member_id);
         $renderHTML .= '<tr class="member-item">';
         $renderHTML .= '<input type="hidden" name="user-id" id="user-id" value="'.$member->member_id.'" />';

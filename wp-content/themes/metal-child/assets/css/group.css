@@ -48,3 +48,15 @@ div.menu-lists {
 .members .col-lg-9 a {
     margin-right: 5px;
 }
+
+table.view-member-list tr th:nth-child(1) {
+    width: 50%;
+}
+
+table.view-member-list tr th:nth-child(2) {
+    width: 15%;
+}
+
+button#kick-out, button#change-admin, button#infor-view {
+    width: 130px;
+}
