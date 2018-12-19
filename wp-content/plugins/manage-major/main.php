@@ -61,7 +61,7 @@ function admin_major_list()
         } else {
             $HTML .= '<td id="major-comment">'.$major->comment.'</td>';
         }
-        $HTML .= '<td>'.$major->date_created.'</td>';
+        $HTML .= '<td>'.$major->format_date_created.'</td>';
         $HTML .= '<td id="'.$major->status.'" >'.get_major_status($major->status).'</td>';
         $HTML .= '<td>'.action_major_item($major).'</td>';
         $HTML .= '</tr>';
@@ -103,7 +103,7 @@ function query_major()
 {
     global $wpdb;
     $majors = $wpdb->get_results("
-    SELECT * 
+    SELECT *, DATE_FORMAT(date_created, '%d-%m-%Y') as format_date_created
     FROM {$wpdb->prefix}major
     ");
     return $majors;
@@ -112,7 +112,7 @@ function query_major()
 function get_major_before_update($major_id){
     global $wpdb;
     $major = $wpdb->get_var("
-    SELECT name 
+    SELECT name
     FROM {$wpdb->prefix}major
     WHERE ID = '".$major_id."'
     ");
