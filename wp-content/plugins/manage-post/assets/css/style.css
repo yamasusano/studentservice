@@ -38,7 +38,7 @@ table.post-view th:nth-child(4) {
     width: 12%;
 }
 
-input.editable-major {
+input.editable-major {                            
     width: 100%;
     border: none;
     box-shadow: unset;
@@ -108,6 +108,18 @@ table.add-new-major th:nth-child(3),table.add-new-major th:nth-child(5){
 table.add-new-major input,
 table.add-new-major textarea {
     width: 100%;
+}
+
+table.major-view textarea{
+    width: 100%;
+}
+
+table.major-view img{
+    width: 100%;
+    max-height: 45px;
+}
+table.major-view>tr td:nth-child(3) {
+    padding: 10px 0px 0px 0px;
 }
 
 form#form-add-new {
