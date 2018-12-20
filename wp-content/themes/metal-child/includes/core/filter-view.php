@@ -228,11 +228,36 @@ function result_search($post_type, $semester, $major, $poster)
 
     return $get_results;
 }
+function checkFormType_search_side($form_id)
+{
+    global $wpdb;
+    $type = $wpdb->get_var("
+    SELECT type 
+    FROM {$wpdb->prefix}groups
+    WHERE form_id = '".$form_id."'
+    ");
+
+    return $type;
+}
+function members_in_form_counting($form_id)
+{
+    global $wpdb;
+    $count = $wpdb->get_var("
+    SELECT COUNT(*)
+    FROM {$wpdb->prefix}members
+    WHERE form_id = '".$form_id."'
+    AND member_role != 2
+    
+    ");
+
+    return $count;
+}
 function result_form_content($post_type, $semester, $major, $poster)
 {
     $renderHTML = '<div class="finder-form-list-item">';
     $list_form_detail = result_search_check($post_type, $semester, $major, $poster);
     foreach ($list_form_detail as $form) {
+        $type = checkFormType_search_side($form->ID);
         $major = user_metadata('major', $form->user_id);
         $renderHTML .= '<div class="finder-form-items">';
         $renderHTML .= '<div class="col-lg-2"><div class="finder-poster-box">';
@@ -245,7 +270,7 @@ function result_form_content($post_type, $semester, $major, $poster)
         $renderHTML .= '<div class="form-content-author">';
         $renderHTML .= '<p>By <a href="'.home_url('user').'?user-id='.$form->user_id.'"> '.get_userdata($form->user_id)->user_login.'</a></p>&nbsp;&nbsp;&nbsp;';
         $renderHTML .= '<p><b>created at :</b> '.$form->created_date.'</p> </div>';
-        $renderHTML .= '<div class="form-content-members">Members: '.count_member_in_form($form->ID).' / 6 </div>';
+        $renderHTML .= '<div class="form-content-members">Members: '.($type == 'Student' ? members_in_form_counting($form->ID).' / 6' : members_in_form_counting($form->ID)).' </div>';
         $renderHTML .= '<div class="finder-post-content"><p>'.wp_trim_words($form->description, 20, '..').'</p></div> ';
         $renderHTML .= '</div>';
         $renderHTML .= '</div>';

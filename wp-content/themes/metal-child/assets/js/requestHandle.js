@@ -105,9 +105,10 @@ jQuery(function ($) {
             var par = button.parents('tr');
             var user_id = button.parent().find('input#user-id').val();
             var form_id = button.parent().find('input#form-id').val();
+            var postion = par.find('p#postion-require').text();
             $.ajax({
                 url: zozo_js_vars.zozo_ajax_url,
-                data: { 'action': 'accept_request', 'form-id': form_id, 'user-id': user_id },
+                data: { 'action': 'accept_request', 'form-id': form_id, 'user-id': user_id, 'pos': postion },
                 type: 'post',
                 success: function (result) {
                     par.remove();

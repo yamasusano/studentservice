@@ -220,7 +220,13 @@ function get_list_member($form_id)
     AND member_role = 1
     ");
     foreach ($members_id as $members) {
-        $renderHTML .= '<a href="'.home_url('user').'?user-id='.$members->member_id.'" class="btn btn-info btn-sm">'.get_userdata($members->member_id)->user_login.'</a><br>';
+        $pos = get_member_postion($form_id, $members->member_id);
+        $member_name = get_userdata($members->member_id)->user_login;
+        if (is_null($pos)) {
+            $renderHTML .= '<a href="'.home_url('user').'?user-id='.$members->member_id.'" class="btn btn-sm btn-info" >'.$member_name.'</a>';
+        } else {
+            $renderHTML .= '<a href="'.home_url('user').'?user-id='.$members->member_id.'" class="btn btn-sm btn-info" >'.$member_name.' - '.$pos.'</a>';
+        }
     }
 
     return $renderHTML;
@@ -347,3 +353,30 @@ function form_not_found()
     $renderHTML .= '</div></div></div>';
     echo $renderHTML;
 }
+
+function member_select_position($form_id)
+{
+    global $wpdb;
+    $skills = $wpdb->get_results("
+    SELECT s.name
+    FROM {$wpdb->prefix}skill_major as s
+    INNER JOIN {$wpdb->prefix}form_skill as f
+    ON f.skill_id = s.ID
+    WHERE f.form_id = '".$form_id."'
+    ");
+    if ($skills) {
+        $renderHTML .= '<select name="postion" id="select-postion">';
+        $renderHTML .= '<option value="">N/A</option>';
+        foreach ($skills as $skill) {
+            $renderHTML .= '<option value="'.$skill->name.'">'.$skill->name.'</option>';
+        }
+        $renderHTML .= '</select>';
+    } else {
+        $renderHTML .= '<select name="postion" id="select-postion">';
+        $renderHTML .= '<option value="">N/A</option>';
+        $renderHTML .= '</select>';
+    }
+
+    return $renderHTML;
+}?>
+

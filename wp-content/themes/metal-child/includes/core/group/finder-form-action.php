@@ -22,6 +22,7 @@ function get_request_via_leader($get_request, $request)
         $user_name = '<td>'.get_url('user', $get_request->member_id).$user_name.'</a></td>';
         $project = '<td><b>'.form_meta('title', $get_request->form_id).'</b></td>';
         $message = '<td><p>'.$get_request->message.'</p></td>';
+        $postion = '<td><p id="postion-require">N/A</p></td>';
         $created = '<td>'.$get_request->time_request.'</td>';
         $button = '<td><div class="button-request"><button type="submit" id="reject-invite-request" class="btn btn-sm btn-danger btn-sm">Cancel</button>';
         $button .= '<input type="hidden" id="form-id" value="'.$get_request->form_id.'" /></div></td>';
@@ -30,6 +31,7 @@ function get_request_via_leader($get_request, $request)
         $user_name = '<td>'.get_url('user', $get_request->member_id).$user_name.'</a></td>';
         $project = '<td><b>'.form_meta('title', $get_request->form_id).'</b></td>';
         $message = '<td><p>'.$get_request->message.'</p></td>';
+        $postion = '<td><p id="postion-require">'.$get_request->postion.'</td></p>';
         $created = '<td>'.$get_request->time_request.'</td>';
         $button = '<td><div class="button-request"><button type="submit" id="acxept-user" class="btn btn-sm btn-info btn-sm">Accept</button>';
         $button .= '<button type="submit" id="deny-user" class="btn btn-sm btn-danger btn-sm">Deny</button>';
@@ -40,7 +42,7 @@ function get_request_via_leader($get_request, $request)
         break;
     }
 
-    return array('message' => $message, 'button' => $button, 'user' => $user_name, 'project' => $project, 'created' => $created);
+    return array('message' => $message, 'pos' => $postion, 'button' => $button, 'user' => $user_name, 'project' => $project, 'created' => $created);
 }
 
 function get_request_via_users($get_request, $request)
@@ -53,6 +55,7 @@ function get_request_via_users($get_request, $request)
         $user_name = '<td>'.get_url('user', form_meta('user_id', $get_request->form_id)).get_userdata(form_meta('user_id', $get_request->form_id))->user_login.'</a></td>';
         $project = '<td><b>'.get_url('form-detail', $get_request->form_id).form_meta('title', $get_request->form_id).'</a></b></td>';
         $message = '<td><p>'.$get_request->message.'</p></td>';
+        $postion = '<td><p id="postion-require">N/A</p></td>';
         $created = '<td>'.$get_request->time_request.'</td>';
         $button = '<td><div class="button-request"><button type="submit" id="join-in-form" class="btn btn-sm btn-info btn-sm">Join in</button>';
         $button .= '<button type="submit" id="deny-join-in" class="btn btn-sm btn-danger btn-sm">Deny</button>';
@@ -62,7 +65,9 @@ function get_request_via_users($get_request, $request)
         $user_name = '<td>'.get_url('user', form_meta('user_id', $get_request->form_id)).get_userdata(form_meta('user_id', $get_request->form_id))->user_login.'</a></td>';
         $project = '<td><b>'.get_url('form-detail', $get_request->form_id).form_meta('title', $get_request->form_id).'</a></b></td>';
         $message = '<td><p>'.$get_request->message.'</p></td>';
+        $postion = '<td><p id="postion-require">N/A</p></td>';
         $created = '<td>'.$get_request->time_request.'</td>';
+
         $button = '<td><div class="button-request"><button type="submit" id="cancel-request-join-form" class="btn btn-sm btn-danger btn-sm">Cancel</button>';
         $button .= '<input type="hidden" id="form-id" value="'.$get_request->form_id.'" /> </div></td>';
         break;
@@ -70,7 +75,7 @@ function get_request_via_users($get_request, $request)
         break;
     }
 
-    return array('message' => $message, 'button' => $button, 'user' => $user_name, 'project' => $project, 'created' => $created);
+    return array('message' => $message, 'pos' => $postion, 'button' => $button, 'user' => $user_name, 'project' => $project, 'created' => $created);
 }
 function get_list_request()
 {
@@ -99,7 +104,7 @@ function manageRequest()
     $renderHtml = '';
     $renderHtml .= '<div class="member-message"></div>';
     $renderHtml .= '<table class="table-striped">';
-    $renderHtml .= '<tr><th>Receiver/Sender</th> <th>Project Name</th> <th>Message</th> <th>Date Created</th> <th>Status</th></tr>';
+    $renderHtml .= '<tr><th>Receiver/Sender</th> <th>Project Name</th> <th>Message</th><th>Postion</th> <th>Date Created</th> <th>Status</th> </tr>';
     $get_request = get_list_request();
     foreach ($get_request as $request) {
         $is_leader = is_leader($request->ID);
@@ -109,6 +114,7 @@ function manageRequest()
             $renderHtml .= $get_action['user'];
             $renderHtml .= $get_action['project'];
             $renderHtml .= $get_action['message'];
+            $renderHtml .= $get_action['pos'];
             $renderHtml .= $get_action['created'];
             $renderHtml .= $get_action['button'];
             $renderHtml .= '</tr>';
@@ -118,6 +124,7 @@ function manageRequest()
             $renderHtml .= $get_action['user'];
             $renderHtml .= $get_action['project'];
             $renderHtml .= $get_action['message'];
+            $renderHtml .= $get_action['pos'];
             $renderHtml .= $get_action['created'];
             $renderHtml .= $get_action['button'];
             $renderHtml .= '</tr>';
@@ -158,7 +165,7 @@ function is_leader($form_id)
 //HUYLV
 // 23/10 leader still access user although user have already joined in other form.
 
-function accessRequest($form_id, $user_id)
+function accessRequest($form_id, $user_id, $pos)
 {
     global $wpdb;
     $message = '';
@@ -180,6 +187,7 @@ function accessRequest($form_id, $user_id)
                     'form_id' => $form_id,
                     'member_id' => $user_id,
                     'member_role' => 1,
+                    'postion' => $pos,
                 ]
             );
                 if ($approve_member) {
@@ -610,14 +618,17 @@ function searchUsers($keyword)
     AND ID != '".get_current_user_id()."'
     AND ID != 1 
     ");
-    $renderHTML .= '<div class="result-search">';
     if (empty($results)) {
+        $renderHTML .= '<div class="member-message"><div class="message-fail">';
         $renderHTML .= '<p>User <b>'.$keyword.'</b> doesn\'t exist !!!</p>';
+        $renderHTML .= '</div><div>';
     } else {
         $renderHTML .= '<div class="member-message"></div>';
+        $renderHTML .= '<table class="table-striped prefix-table">';
+        $renderHTML .= '<tr><th>Role_ID</th><th>User name</th><th>Major</th><th>Action</th></tr>';
+        $renderHTML .= '</table>';
+        $renderHTML .= '<div class="result-search">';
         $renderHTML .= '<table id="result_list_users">';
-        $renderHTML .= '<tr><th>Role</th><th>User name</th><th>Major</th><th>Action</th></tr>';
-
         foreach ($results as $result) {
             $user_major = userInformation('major', $result->ID);
             $user_role = userInformation('role', $result->ID);

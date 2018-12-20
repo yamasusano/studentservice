@@ -95,7 +95,7 @@ function form_teacher_view_detail($form_id)
         $renderHTML .= '<div class="form-view-detail">';
         $renderHTML .= '<div class="desc-view"><div class="col-lg-3 col">Description</div><div class="col-lg-9 col">'.get_form_teacher_info($form_id, 'description').'</div></div>';
         $renderHTML .= '<div class="members"><div class="col-lg-3 col">Members</div><div class="col-lg-9 col">'.$members.'</div></div>';
-        $renderHTML .= '<div class="skill-set"><div class="col-lg-3">Skill Set</div><div class="col-lg-9">'.get_skill_teacher_form($form_id).'</div></div>';
+        $renderHTML .= '<div class="skill-set"><div class="col-lg-3">Responsibilities</div><div class="col-lg-9">'.get_skill_teacher_form($form_id).'</div></div>';
         $renderHTML .= '<div class="Others"><div class="col-lg-3">Others</div><div class="col-lg-9">'.get_form_teacher_info($form_id, 'other_skill').'</div></div>';
         $renderHTML .= '<div class="status"><div class="col-lg-3">Status</div><div class="col-lg-9">'.(($status == 1) ? 'Opening' : 'Closed').'</div></div>';
         $renderHTML .= '</div></div>';

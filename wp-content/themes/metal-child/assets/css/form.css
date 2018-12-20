@@ -134,7 +134,7 @@ div.form-view {
     top: 50%;
     left: 50%;
     width: 35em;
-    height: 19em;
+    height: auto;
     margin-top: -9em;
     margin-left: -15em;
     display: none;
@@ -182,4 +182,23 @@ div.form-view {
 
 .form-detail-desciption {
     text-align: justify;
+}
+
+.postion-apply-request {
+    margin: 20px 0px 5px 5px;
+    overflow: hidden
+}
+
+.postion-apply-request span {
+    padding-top: 4px;
+    margin-right: 5px;
+}
+
+.postion-apply-request select, .postion-apply-request span {
+    float: left;
+}
+
+select#select-postion {
+    width: auto;
+    height: 30px;
 }

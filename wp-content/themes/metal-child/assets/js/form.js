@@ -175,7 +175,7 @@ jQuery(function ($) {
                 if ($(this).is(':checked')) {
                     var html = '<span title="' + title + '">' + title + '</span>';
                     $('.multiSel').append(html);
-                    $(".hida").hide();
+                    $(".hida").remove();
                 } else {
                     $('span[title="' + title + '"]').remove();
                     var ret = $(".hida");

@@ -53,13 +53,17 @@ function search_student_via_teacher($keyword, $form_id)
     ON user.ID = u.user_id
     WHERE user.user_login LIKE '%".$keyword."%' 
     ");
-    $renderHTML .= '<div class="result-search">';
     if (empty($results)) {
+        $renderHTML .= '<div class="member-message"><div class="message-fail">';
         $renderHTML .= '<p>User <b>'.$keyword.'</b> doesn\'t exist !!!</p>';
+        $renderHTML .= '</div><div>';
     } else {
         $renderHTML .= '<div class="member-message"></div>';
-        $renderHTML .= '<table id="result_list_users" class="table-striped">';
+        $renderHTML .= '<table class="table-striped prefix-table">';
         $renderHTML .= '<tr><th>Role_ID</th><th>User name</th><th>Major</th><th>Action</th></tr>';
+        $renderHTML .= '</table>';
+        $renderHTML .= '<div class="result-search">';
+        $renderHTML .= '<table id="result_list_users" class="table-striped">';
         foreach ($results as $result) {
             $user_name = get_user_link($result->ID);
             $user_major = userInformation('major', $result->ID);

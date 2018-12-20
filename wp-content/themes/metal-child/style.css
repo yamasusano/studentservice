@@ -9,6 +9,9 @@ Text Domain: zozothemes
 */
 
 @media only screen and (-webkit-min-device-pixel-ratio: 0) and (min-device-width: 1025px) {
+  #group-contents .result-search::-webkit-scrollbar {
+    width: 5px;
+  }
   .box-chat-content::-webkit-scrollbar {
     width: 10px;
   }
@@ -21,16 +24,16 @@ Text Domain: zozothemes
     height: 10px;
   }
   ::-webkit-scrollbar-button:vertical:increment {
-    background-color: #fff;
+    height: 0;
   }
   ::-webkit-scrollbar-track-piece {
-    background-color: #eee;
-    -webkit-border-radius: 3px;
+    background-color: #ccc;
+    -webkit-border-radius: 2px;
   }
   ::-webkit-scrollbar-thumb:vertical {
     height: 50px;
-    background-color: #ccc;
-    -webkit-border-radius: 3px;
+    background-color: #fec105;
+    -webkit-border-radius: 2px;
   }
   ::-webkit-scrollbar-thumb:horizontal {
     width: 50px;
@@ -291,6 +294,10 @@ label[for="address"] {
   overflow: hidden;
 }
 
+#group-contents .member-avaiable-form>.col-lg-9 button a {
+  margin: 0px 5px 0px 0px;
+}
+
 #group-contents .form-group input {
   width: 79%;
 }
@@ -303,8 +310,10 @@ label[for="address"] {
 }
 
 #group-contents .result-search {
+  overflow-y: scroll;
   margin: 10px 20px;
   font-size: 15px;
+  max-height: 409px;
 }
 
 /* 

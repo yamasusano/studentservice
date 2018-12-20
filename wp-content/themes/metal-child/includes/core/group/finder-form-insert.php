@@ -123,7 +123,7 @@ function form_info($field, $form_id)
     return $value;
 }
 
-function sendRequest($form_id, $leader_id, $request_message)
+function sendRequest($form_id, $leader_id, $request_message, $postion)
 {
     global $wpdb;
     $message = '';
@@ -168,6 +168,7 @@ function sendRequest($form_id, $leader_id, $request_message)
                     'member_id' => get_current_user_id(),
                     'request' => 1,
                     'message' => $request_message,
+                    'postion' => $postion,
                 ]
             );
             if ($user_set_request) {

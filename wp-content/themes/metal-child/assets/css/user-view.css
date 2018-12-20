@@ -69,3 +69,25 @@ p.title-form-other:hover {
 .group-button-other button {
     margin-right: 10px;
 }
+
+.profile-userpic {
+    text-align: center;
+}
+
+.action-photo label {
+    cursor: pointer;
+    border: 1px solid gainsboro;
+    padding: 5px 12px;
+    background: lightgrey;
+    margin: 0 5px;
+}
+
+.action-photo button {
+    margin: 0 5px;
+}
+
+.action-photo #upload-photo {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+}

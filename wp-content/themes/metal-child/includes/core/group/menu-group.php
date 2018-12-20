@@ -270,11 +270,28 @@ function set_member_to_form($form_id)
     $renderHTML = '';
     $members = get_members_to_form($form_id);
     foreach ($members as $member) {
+        $pos = get_member_postion($form_id, $member->member_id);
         $member_name = get_userdata($member->member_id)->user_login;
-        $renderHTML .= '<a href="'.home_url('user').'?user-id='.$member->member_id.'" class="btn btn-sm btn-info" >'.$member_name.'</a>';
+        if (is_null($pos)) {
+            $renderHTML .= '<a href="'.home_url('user').'?user-id='.$member->member_id.'" class="btn btn-sm btn-info" >'.$member_name.'</a>';
+        } else {
+            $renderHTML .= '<a href="'.home_url('user').'?user-id='.$member->member_id.'" class="btn btn-sm btn-info" >'.$member_name.' - '.$pos.'</a>';
+        }
     }
 
     return $renderHTML;
+}
+function get_member_postion($form_id, $member_id)
+{
+    global $wpdb;
+    $pos = $wpdb->get_var("
+    SELECT postion
+    FROM {$wpdb->prefix}members
+    WHERE form_id = '".$form_id."' 
+    AND member_id = '".$member_id."'
+    ");
+
+    return $pos;
 }
 function get_suppervisor($form_id)
 {

@@ -20,6 +20,7 @@ get_header();
                                         <!-- SIDEBAR USERPIC -->
                                         <div class="profile-userpic">
                                             <?php echo get_avatar($current_user->user_email); ?>
+                                            <?php echo custom_update_avatar(); ?>
                                         </div>
                                         <!-- END SIDEBAR USERPIC -->
                                         <!-- SIDEBAR USER TITLE -->

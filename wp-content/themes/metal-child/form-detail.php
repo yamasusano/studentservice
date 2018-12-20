@@ -22,6 +22,9 @@ $check = form_exception($form_id);
 									<?php handle_request_form($form_id); ?>
 									<div class="submit-request">
 									<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+									<div class="postion-apply-request">
+										<span>Apply for a postion</span><?php echo member_select_position($form_id); ?>	
+									</div>
 									<textarea name="message" id="request-message" maxlength="200" cols="58" rows="4" placeholder="Send something here for leader ..."></textarea>
 									<div style="float:right"><span id="chars">200 </span>characters remaining.</div>
 									<div class="button-box"><?php echo get_btn_case('join'); ?></div>
