@@ -3,11 +3,25 @@ table#teacher-list-group {
 }
 
 table#teacher-list-group tr>th:nth-child(1) {
-    width: 90%;
+    width: 15%;
 }
 
-table#teacher-lists tr>th:nth-child(1) {
-    width: 20%;
+table#teacher-list-group tr>th:nth-child(2) {
+    width: 75%;
+}
+
+#list-group-student-via-teacher {}
+
+table#list-group-student-via-teacher tr>th:nth-child(1) {
+    width: 15%;
+}
+
+table#list-group-student-via-teacher tr>th:nth-child(2) {
+    width: 45%;
+}
+
+table#tlist-group-student-via-teacher tr>th:nth-child(3) {
+    width: 25%;
 }
 
 input#title-form {

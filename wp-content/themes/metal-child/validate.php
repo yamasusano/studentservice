@@ -21,20 +21,6 @@ function descriptionCheck($description)
 
     return array('result' => true);
 }
-function closeDateCheck($close_date)
-{
-    $close_date = new DateTime($close_date);
-    $today = new DateTime(date('Y-m-d'));
-
-    $diff = date_diff($today, $close_date);
-    $check = (int) $diff->format('%r%a');
-    if ($check < 2) {
-        return array('result' => false, 'message' => 'Due Date must close at least 2 day from today.');
-    }
-
-    return array('result' => true);
-}
-
 function check_end_semester($close_date)
 {
     $close_date = new DateTime($close_date);
@@ -43,6 +29,28 @@ function check_end_semester($close_date)
     $check = (int) $diff->format('%r%a');
     if ($check < 0) {
         return array('result' => false, 'message' => 'Due Date must close before '.$deadline.'');
+    }
+
+    return array('result' => true);
+}
+function get_time_close_form($semester)
+{
+    global $wpdb;
+    $time_close = $wpdb->get_var("
+    SELECT close_form FROM {$wpdb->prefix}semester
+    WHERE status = 0
+    ");
+    $semester_check = $wpdb->get_var("
+    SELECT * FROM {$wpdb->prefix}semester
+    WHERE status = 1
+    AND name = '".$semester."'
+    ");
+    $close_date = new DateTime(date());
+    $deadline = new DateTime($time_close);
+    $diff = date_diff($deadline, $close_date);
+    $check = (int) $diff->format('%r%a');
+    if ($semester_check) {
+        return array('result' => false, 'message' => 'Semester &nbsp;<b>'.$semester.'</b>&nbsp; started.You can\'t publish or edit group.');
     }
 
     return array('result' => true);

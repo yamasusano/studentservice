@@ -8,6 +8,9 @@
     .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9 {
         float: left;
     }
+    .col-md-6 {
+        width: 50%;
+    }
 }
 
 table.major-view {
@@ -108,4 +111,73 @@ form#form-add-new .form-group {
 
 .form-group textarea {
     width: 80%;
+}
+
+form#major-edit {
+    overflow: hidden;
+    padding: 10px 15px;
+}
+
+form#major-edit .form-group {
+    overflow: hidden;
+    margin: 15px 0px;
+}
+
+.form-group-button {
+    text-align: center;
+}
+
+#major-status {
+    width: 50%;
+}
+
+#skill-list {
+    width: 100%;
+}
+
+#skill-list tr th:nth-child(1) {
+    width: 25%;
+}
+
+#skill-list tr th:nth-child(3) {
+    width: 15%;
+}
+
+table#skill-list th {
+    border-bottom: 1px solid;
+}
+
+#skill-list input {
+    width: 100%;
+}
+
+#skill-list tr:last-child {
+    text-align: center;
+}
+
+.major-content {
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.edit-new-major {
+    overflow: hidden;
+    border-right: 1px solid;
+}
+
+.major-skill-list {
+    margin-right: 15px;
+}
+
+button#add-new-skill {
+    width: 50px;
+    height: 20px;
+}
+
+#skill-list button:hover {
+    cursor: pointer;
+}
+
+.btn {
+    margin: 4px 4px;
 }

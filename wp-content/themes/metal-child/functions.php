@@ -702,20 +702,26 @@ function update_form_finder_teacher()
         $semester = $_POST['semester'];
         $skill = $_POST['skill'];
         $is_major = teacher_has_major();
-        if ($is_major['result']) {
-            $form_validate = validFormFinder($title, $description);
-            if ($form_validate['result']) {
-                $message = updateFinderFormTeacher($form_id, $title, $description, $other, $contact, $semester, $skill);
-                $check = true;
+        $time_check = get_time_close_form($semester);
+        if ($time_check['result']) {
+            if ($is_major['result']) {
+                $form_validate = validFormFinder($title, $description);
+                if ($form_validate['result']) {
+                    $message = updateFinderFormTeacher($form_id, $title, $description, $other, $contact, $semester, $skill);
+                    $check = true;
+                } else {
+                    $message = '<div class="message-fail">'.$form_validate['message'].'</div> ';
+                }
             } else {
-                $message = '<div class="message-fail">'.$form_validate['message'].'</div> ';
+                $message = '<div class="message-fail">'.$is_major['message'].'</div>';
             }
         } else {
-            $message = $is_major['message'];
+            $message = '<div class="message-fail">'.$time_check['message'].'</div>';
         }
-        echo wp_send_json(['message' => $message, 'url_profile' => home_url('profile/?mode=view'), 'check' => $check]);
-        die();
     }
+
+    echo wp_send_json(['message' => $message, 'url_profile' => home_url('profile/?mode=view'), 'check' => $check]);
+    die();
 }
 add_action('wp_ajax_nopriv_close_form_finderTeacher', 'close_form_finderTeacher');
 add_action('wp_ajax_close_form_finderTeacher', 'close_form_finderTeacher');

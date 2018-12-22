@@ -1,8 +1,5 @@
 <?php
 
-function major_info($major_id)
-{
-}
 function createNewMajor()
 {
     global $wpdb;

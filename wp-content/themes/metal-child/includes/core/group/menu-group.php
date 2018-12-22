@@ -51,7 +51,7 @@ function semesterSelect()
     $semsters = $wpdb->get_results("
     SELECT name 
     FROM {$wpdb->prefix}semester 
-    ORDER BY start ASC
+    WHERE status != 0
     ");
     $renderHTML = '';
     foreach ($semsters as $semster) {

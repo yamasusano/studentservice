@@ -202,3 +202,7 @@ select#select-postion {
     width: auto;
     height: 30px;
 }
+
+.form-detail-members a {
+    margin: 5px 10px;
+}

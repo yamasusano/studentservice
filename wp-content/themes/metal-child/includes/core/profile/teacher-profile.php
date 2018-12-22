@@ -19,7 +19,7 @@ function teacherListMenu()
 {
     $renderHTML = '';
     $renderHTML .= '<table id="teacher-list-group"> ';
-    $renderHTML .= '<tr> <th>Name</th> <th>Status</th> </tr>';
+    $renderHTML .= '<tr><th>Semester</th> <th>Name</th> <th>Status</th> </tr>';
     $renderHTML .= get_list_form_teacher(get_current_user_id());
     $renderHTML .= '</table>';
 
@@ -44,6 +44,7 @@ function get_list_form_teacher($teacher_id)
 function teacher_forms($form)
 {
     $renderHTML .= '<tr>';
+    $renderHTML .= '<td><b>'.$form->semester.'</b></td>';
     $renderHTML .= '<td><p id="title-form-teacher" class="title-group-teacher" >'.$form->title.'</p></td>';
     $renderHTML .= '<td><div class="delete-form-group">';
     $renderHTML .= '<button id="delete-form-teacher" class="btn btn-danger btn-sm">Delete</button>';

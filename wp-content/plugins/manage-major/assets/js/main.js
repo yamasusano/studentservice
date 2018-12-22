@@ -1,75 +1,121 @@
 jQuery(function ($) {
     jQuery(document).ready(function () {
-        var major_status;
-        $('button#edit-major').on('click', function () {
-            $grandPar = $(this).parents('tr');
-            $get_comment = $grandPar.find($('td#major-comment')).text();
-            $input = $grandPar.find('input');
-            $input.prop('disabled', false);
-            $input.addClass('enable-major');
-            $par = $(this).parent();
-            $(this).remove();
-            $('textarea#major-comment-edit').val($get_comment);
-            $major_comment = '<textarea name="major-comment" id="major-comment" cols="65" rows="5">' + $get_comment + '</textarea>';
-            $par.append('<input type="file" name="my_image_upload" id="my_image_upload" accept="image/*" multiple="false" style="margin-bottom:10px;"/>');
-            $par.append('<button type="submit" name="save-major" class="btn btn-sm edit-major" style="margin-right:10px;">Save</button>');
-            $par.append('<button type="button" id="cancel-edit-major" class="btn btn-sm edit-major">Cancel</button>');
-            $comment = $grandPar.find('td:nth-child(4)');
-            $comment.html($major_comment);
-            $('button#cancel-edit-major').on('click', function () {
-                window.location.reload();
-            });
-            $('input#code-view').change(function () {
-                $('input#major-code').val($('input#code-view').val());
-            });
-            $('input#name-view').change(function () {
-                $('input#major-name').val($('input#name-view').val());
-            });
-
-            $('textarea#major-comment').change(function () {
-                $('textarea#major-comment-edit').val($('textarea#major-comment').val());
-            });
-
-            major_status = $grandPar.find('td:nth-child(6)');
-            optionSelectMajor(major_status);
-        });
-        var check = $('div.message-success').text();
-        if (check != '') {
-            setTimeout(function () { window.location.reload(); }, 1500);
+        window.$_GET = new URLSearchParams(location.search);
+        var major_id = $_GET.get('major-id');
+        var check = document.getElementById('my_image_upload');
+        if (check != null) {
+            loadImg();
         }
+        $('button#add-new-skill').click(function () {
+            $render = '<tr><td><input type="text" class="skill-code" value="" required/></td>' +
+                '<td><input type="text" class="skill-name" value=""/></td>' +
+                '<td><button name="add" class="add-skill-major btn"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></td></tr>';
+            $code = $('#skill-list tr:last').prev().find('input.skill-code');
+            $name = $('#skill-list tr:last').prev().find('input.skill-name');
 
-        window.optionSelectMajor = function (el) {
-            $par = el.parents('tr');
-            $status = el.attr('id');
+            if ($code.val() == '') {
+                $code.focus();
+            } else if ($name.val() == '') {
+                $name.focus();
+            } else {
+                $(this).closest('table').find('tr:last').prev().after($render);
+            }
+        });
+        $('button.save-skill').on('click', function () {
+            update_skill($(this));
+            var r = '<div class="message-success"> update responsibility success</div>';
+            $('div#message').html(r);
+            setTimeout(function () {
+                $('div#message').html('');
+                window.location.reload();
+            }, 3000);
+        })
+        $('body').on('click', '.add-skill-major', function () {
+            $code = $(this).parents('tr').find('input.skill-code');
+            $name = $(this).parents('tr').find('input.skill-name');
+            if ($code.val() == '') {
+                $code.focus();
+            } else if ($name.val() == '') {
+                $name.focus();
+            } else {
+                add_new_skill($code.val(), $name.val());
+                window.location.reload(true);
+            }
+        })
+        $('button.remove-skill').click(function () {
+            var cf = confirm("DO you want delete this responsibility ?");
+            $(document).keydown(function (e) {
+                if (e.keyCode == 27) {
+                    cf = false;
+                }
+            });
+            if (cf == true) {
+                remove_skill($(this));
+                $par = $(this).parents('tr');
+                $par.remove();
+            }
+        });
+        window.update_skill = function (button) {
+            $type = $(button).attr('name');
+            $par = $(button).parents('tr');
+            $id = $par.find('input.skill-id').val();
+            $code = $par.find('input.skill-code').val();
+            $name = $par.find('input.skill-name').val();
+            set_action_skill($type, $id, $code, $name);
+        };
+
+        window.remove_skill = function (button) {
+            $type = $(button).attr('name');
+            $par = $(button).parents('tr');
+            $id = $par.find('input.skill-id').val();
+            $code = $par.find('input.skill-code').val();
+            $name = $par.find('input.skill-name').val();
+            set_action_skill($type, $id, $code, $name);
+        }
+        window.set_action_skill = function (type, id, code, name) {
             $.ajax({
                 url: ajaxurl,
-                data: { 'action': 'select_major_status', 'status': $status },
+                data: { 'action': 'get_action_skill', 'type': type, 'id': id, 'code': code, 'name': name },
                 type: 'post',
                 success: function (result) {
-                    el.html(result.content);
-                    $stats = el.find('select#major-status');
-                    $input_major = $par.find('input#major-status-value');
-                    $('body').on('click', $stats, function () {
-                        $input_major.val($stats.val());
-                    });
+                    $('div#message').html(result.message);
+                    console.log('ok');
                 },
-                errors: function (result) { }
+                errors: function (result) {
+                    console.log('ok');
+                }
 
             });
-        };
-        window.addNewMajor = function () {
+        }
+        window.add_new_skill = function (code, name) {
             $.ajax({
                 url: ajaxurl,
-                data: { 'action': 'add_new_major' },
+                data: { 'action': 'add_new_skill_major', 'major-id': major_id, 'code': code, 'name': name },
                 type: 'post',
                 success: function (result) {
-                    $('div.form-add-new').html(result.content);
 
                 },
-                errors: function (result) { }
-            });
-        };
+                errors: function (result) {
+                    console.log('ok');
+                }
 
+            });
+        }
+        function loadImg() {
+            document.getElementById('my_image_upload').onchange = function (evt) {
+                var tgt = evt.target || window.event.srcElement,
+                    files = tgt.files;
+                if (FileReader && files && files.length) {
+                    var fr = new FileReader();
+                    fr.onload = function () {
+                        document.getElementById('img-view').src = fr.result;
+                    }
+                    fr.readAsDataURL(files[0]);
+                }
+            }
+        }
     });
-})
+
+
+});
 

@@ -34,8 +34,8 @@ function list_form_student($user_id)
 function get_list_student_form_via_teacher($user_id)
 {
     $renderHTML = '';
-    $renderHTML .= '<table id="teacher-list-group"> ';
-    $renderHTML .= '<tr> <th>Name</th> <th>Status</th> </tr>';
+    $renderHTML .= '<table id="list-group-student-via-teacher"> ';
+    $renderHTML .= '<tr><th>Semester</th> <th>Name</th> <th>Members</th><th>Status</th> </tr>';
     $renderHTML .= query_list_student_form_via_teacher($user_id);
     $renderHTML .= '</table>';
 
@@ -45,8 +45,10 @@ function get_list_student_form_via_teacher($user_id)
 function list_student_form($form)
 {
     $renderHTML .= '<tr>';
+    $renderHTML .= '<td><b>'.$form->semester.'</b></td>';
     $renderHTML .= '<td><p id="student-form-title" class="title-group-teacher" >'.$form->title.'</p>';
     $renderHTML .= '<input type="hidden" id="student-form-id" value="'.$form->ID.'" /></td>';
+    $renderHTML .= '<td>'.members_in_group_student($form->ID).'</td>';
     $renderHTML .= '<td><div class="delete-form-group">';
     if ($form->status == 0) {
         $renderHTML .= 'Closed';
@@ -58,4 +60,36 @@ function list_student_form($form)
     $renderHTML .= '</tr>';
 
     return $renderHTML;
+}
+function members_in_group_student($form_id)
+{
+    global $wpdb;
+    $members = $wpdb->get_results("
+    SELECT * FROM {$wpdb->prefix}members
+    WHERE member_role != 2 
+    AND form_id = '".$form_id."'
+    ");
+    foreach ($members as $member) {
+        $pos = member_pos($form_id, $member->member_id);
+        $member_name = get_userdata($member->member_id)->user_login;
+        if (is_null($pos)) {
+            $renderHTML .= '<p><a href="'.home_url('user').'?user-id='.$member->member_id.'" class="btn btn-sm btn-info" >'.$member_name.'</a></p>';
+        } else {
+            $renderHTML .= '<p><a href="'.home_url('user').'?user-id='.$member->member_id.'" class="btn btn-sm btn-info" >'.$member_name.' - '.$pos.'</a></p>';
+        }
+    }
+
+    return $renderHTML;
+}
+function member_pos($form_id, $member_id)
+{
+    global $wpdb;
+    $pos = $wpdb->get_var("
+    SELECT postion
+    FROM {$wpdb->prefix}members
+    WHERE form_id = '".$form_id."' 
+    AND member_id = '".$member_id."'
+    ");
+
+    return $pos;
 }
