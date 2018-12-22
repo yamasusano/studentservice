@@ -8,12 +8,12 @@ Author: Huy Le
 Author URI: www.facebook.com/huymasterle
  */
 include 'core/semester-add-new.php';
-// add_action('admin_init', 'manage_semester_style');
-// function manage_semester_style()
-// {
-//     wp_enqueue_style('semester-css', plugins_url('assets/css/style.css', __FILE__));
-//     wp_enqueue_script('manage-semester-js', plugins_url('assets/js/main.js', __FILE__), array('jquery'));
-// }
+add_action('admin_init', 'manage_semester_style');
+function manage_semester_style()
+{
+    wp_enqueue_style('semester-css', plugins_url('assets/css/style.css', __FILE__));
+    wp_enqueue_script('manage-semester-js', plugins_url('assets/js/main.js', __FILE__), array('jquery'));
+}
 
 add_action('admin_menu', 'manage_semester_plugin_menu');
 function manage_semester_plugin_menu()
