@@ -372,6 +372,7 @@ function get_member_list()
     $is_leader = is_leader($form_id);
     $renderHTML = '';
     $get_member = get_all_member($form_id);
+    $semester_check = set_status_form_finder_student($form);
     $renderHTML .= '<div class="member-message"></div>';
     $renderHTML .= '<table class="view-member-list"><tr><th>Name</th><th>role</th><th>action</th></tr>';
     foreach ($get_member as $member_id) {
@@ -382,12 +383,16 @@ function get_member_list()
         $renderHTML .= '<td>'.$member_role.'</td>';
         $renderHTML .= '<td class="method-action">';
         if ($is_leader) {
-            if ($member_role == 'Member') {
+            $user_id = $member_id->member_id;
+            if ($member_role == 'Member' && !$semester_check) {
                 $renderHTML .= '<input type="hidden" name="user-id" id="user-id" value="'.$member_id->member_id.'" />';
                 $renderHTML .= '<button id="change-admin" class="btn btn-info btn-sm" >set to leader</button>';
                 $renderHTML .= '<button id="kick-out" class="btn btn-danger btn-sm" >remove from group</button>';
             } elseif ($member_role == 'Supervisor') {
-                $renderHTML .= '<button id="infor-view" class="btn btn-info btn-sm" >View</button>';
+                // $renderHTML .= '<button id="infor-view" class="btn btn-info btn-sm" >View</button>';
+                $renderHTML .= '<a id="infor-view" href="'.home_url('user').'?user-id='.$user_id.'" class="btn btn-info btn-sm">View</a>';
+            } else {
+                $renderHTML .= '<a id="infor-view" href="'.home_url('user').'?user-id='.$user_id.'" class="btn btn-info btn-sm">View</a>';
             }
         } else {
             $renderHTML .= '<button id="infor-view" class="btn btn-info btn-sm" >View</button>';

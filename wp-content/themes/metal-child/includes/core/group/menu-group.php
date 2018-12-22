@@ -17,19 +17,38 @@ function get_groups()
 
     return $renderHTML;
 }
+function set_status_form_finder_student($form_id)
+{
+    global $wpdb;
+    $semester = $wpdb->get_var("
+    SELECT semester
+    FROM {$wpdb->prefix}finder_form
+    WHERE ID = '".$form_id."' 
+    ");
+    $check = $wpdb->get_var("
+    SELECT status
+    FROM {$wpdb->prefix}semester
+    WHERE name = '".$semester."'
+    ");
+    if ($check == 0) {
+        return true;
+    }
 
+    return false;
+}
 function groupMenu()
 {
     $renderHTML = '';
     $form = check_student_form();
     $is_leader = is_leader(check_student_form());
+    $semester_check = set_status_form_finder_student($form);
     $renderHTML .= '<div class="col-lg-12"><div class="row">';
     $renderHTML .= '<div id="student-menu-lists" class="menu-lists"><div class="group-menu-item">';
     $renderHTML .= '<input type="hidden" id="form-id" value="'.$form.'" />';
     if (!$form) {
         $renderHTML .= '<button id="finder-form" class="btn btn-info">Finder Form</button>';
     } else {
-        if ($is_leader) {
+        if ($is_leader && !$semester_check) {
             $renderHTML .= '<button id="finder-form" class="btn btn-info">Finder Form</button>';
         }
     }
@@ -40,7 +59,7 @@ function groupMenu()
     $renderHTML .= '<div class="col-lg-12"><div class="row"><div id="group-contents">';
     $renderHTML .= finderFormView();
     $renderHTML .= '</div></div></div>';
-    $renderHTML .= leaveGroup();
+    $renderHTML .= leaveGroup($form);
 
     return $renderHTML;
 }
@@ -273,9 +292,9 @@ function set_member_to_form($form_id)
         $pos = get_member_postion($form_id, $member->member_id);
         $member_name = get_userdata($member->member_id)->user_login;
         if (is_null($pos)) {
-            $renderHTML .= '<a href="'.home_url('user').'?user-id='.$member->member_id.'" class="btn btn-sm btn-info" >'.$member_name.'</a>';
+            $renderHTML .= '<p><a href="'.home_url('user').'?user-id='.$member->member_id.'" class="btn btn-sm btn-info" >'.$member_name.'</p></a>';
         } else {
-            $renderHTML .= '<a href="'.home_url('user').'?user-id='.$member->member_id.'" class="btn btn-sm btn-info" >'.$member_name.' - '.$pos.'</a>';
+            $renderHTML .= '<p><a href="'.home_url('user').'?user-id='.$member->member_id.'" class="btn btn-sm btn-info" >'.$member_name.' - '.$pos.'</p></a>';
         }
     }
 
@@ -335,16 +354,18 @@ function get_members_to_form($form_id)
 
     return $get_member;
 }
-function leaveGroup()
+function leaveGroup($form)
 {
     global $wpdb;
 
     $renderHTML = '';
     $user_id = get_current_user_id();
-    if (isFormExist($user_id)) {
-        $renderHTML .= '<div class="col-lg-12" style="text-align:right;margin-top:20px;">
-        <button name="leave-group" id="leave-group" class="btn btn-danger">Leave</button>
-    </div>';
+    $semester_check = set_status_form_finder_student($form);
+    $form_check = isFormExist($user_id);
+    if ($form_check && !$semester_check) {
+        $renderHTML .= '<div class="col-lg-12" style="text-align:right;margin-top:20px;">';
+        $renderHTML .= '<button name="leave-group" id="leave-group" class="btn btn-danger">Leave</button>';
+        $renderHTML .= '</div>';
     }
 
     return $renderHTML;

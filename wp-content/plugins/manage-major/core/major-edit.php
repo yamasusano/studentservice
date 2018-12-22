@@ -60,7 +60,10 @@ function update_major()
 {
     global $wpdb;
     $MAX_SIZE = 3000000;
-    $directory = dirname(__FILE__).'/major_images/';
+    // $directory = dirname(__FILE__).'/major_images';
+    // $directory = dirname(__FILE__.'/..').'/major_images';
+    $directory = realpath(dirname(__FILE__).'/..').'/major_images/';
+
     $get_path = content_url('plugins/manage-major/major_images/');
     $major_id = $_POST['major-id'];
     $code = $_POST['major-code'];
@@ -82,7 +85,7 @@ function update_major()
         }
 
         //update major
-        if (!empty($img_path)) {
+        if (!empty($_FILES['my_image_upload']['type'])) {
             $img_t = $wpdb->get_var("
             SELECT image_type 
             FROM {$wpdb->prefix}major 
@@ -100,22 +103,6 @@ function update_major()
                         'name' => $name,
                         'comment' => $comment,
                         'url_image' => $get_path.$img_name,
-                        'status' => $status,
-                    ],
-                    [
-                        'ID' => $major_id,
-                    ]
-                );
-            }
-            echo '<div class="message-error">Update major fail</div>';
-        } else {
-            if (isset($major_id)) {
-                $updated = $wpdb->update(
-                    "{$wpdb->prefix}major",
-                    [
-                        'code' => $code,
-                        'name' => $name,
-                        'comment' => $comment,
                         'image_type' => substr($img_type, 6),
                         'status' => $status,
                     ],
@@ -124,9 +111,24 @@ function update_major()
                     ]
                 );
             }
+        } else {
+            if (isset($major_id)) {
+                $updated = $wpdb->update(
+                    "{$wpdb->prefix}major",
+                    [
+                        'code' => $code,
+                        'name' => $name,
+                        'comment' => $comment,
+                        'status' => $status,
+                    ],
+                    [
+                        'ID' => $major_id,
+                    ]
+                );
+            }
         }
-        echo '<div class="message-success">Update major success</div>';
     }
+    echo '<div class="message-success">Update major success</div>';
 }
 function get_major_skill($major_id)
 {

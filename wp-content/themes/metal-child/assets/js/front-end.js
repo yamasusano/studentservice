@@ -1,12 +1,28 @@
 jQuery(function ($) {
     jQuery(document).ready(function () {
         var keyword = $('b#keyword-search').text().trim();
+        var check = document.getElementById('wpua-file-existing');
+        if (check != null) {
+            $(check).change(function () {
+                readURL(this);
+            });
+        }
+        var updated = $('div.updated');
+        if (updated) {
+            setTimeout(() => {
+                $('div.updated').remove();
+            }, 5000);
+        }
         if (keyword) {
             $('div.finder-post-title h5').unmark().mark(keyword);
         }
         $('button#btn-alert-join').on('click', function () {
             verifyUserLogin();
         });
+        $('.profile-userpic img').click(function () {
+            $('#avatar-box').toggleClass('show');
+        });
+
         var maxLength = 200;
         $('textarea#request-message').keyup(function () {
             var length = $(this).val().length;
@@ -38,5 +54,17 @@ jQuery(function ($) {
 
             }
         }
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('div#show-avatar img.avatar').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
     });
 })

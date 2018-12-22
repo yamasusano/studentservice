@@ -42,7 +42,7 @@ function get_time_close_form($semester)
     ");
     $semester_check = $wpdb->get_var("
     SELECT * FROM {$wpdb->prefix}semester
-    WHERE status = 1
+    WHERE status = 0
     AND name = '".$semester."'
     ");
     $close_date = new DateTime(date());

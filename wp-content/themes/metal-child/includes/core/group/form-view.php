@@ -42,11 +42,14 @@ function get_btn_case($btn)
 function get_edit_btn($form_id)
 {
     $renderHTML = '';
+    $semester_check = set_status_form_finder_student($form_id);
     if (!is_user_logged_in()) {
         $renderHTML = '<div class="btn-edit-content">'.get_btn_case('edit').'</div>';
     } else {
         if (get_form_value($form_id, 'user_id') == get_current_user_id() && check_student_form() == $form_id) {
-            $renderHTML = '<div class="btn-edit-content"><a href="'.home_url('profile').'?mode=edit"class="btn btn-primary">Edit</a></div>';
+            if (!$semester_check) {
+                $renderHTML = '<div class="btn-edit-content"><a href="'.home_url('profile').'?mode=edit"class="btn btn-primary">Edit</a></div>';
+            }
         }
     }
 
@@ -64,10 +67,13 @@ function handle_request_form($form_id)
         echo get_button_join($form_id);
     }
 }
+
 // in processing : tạo button action join group
 function get_button_join($form_id)
 {
     $status_form = checkStatusForm($form_id);
+    $form_type = checkFormType($form_id);
+    $semester = set_status_form_finder_student($form_id);
     if (is_user_logged_in()) {
         $user_role = info('role');
         if ($user_role != 'Teacher') {
@@ -78,6 +84,8 @@ function get_button_join($form_id)
                 $renderHTML .= get_btn_case('closed');
             } elseif (is_member_in_group($form_id, get_current_user_id())) {
                 $renderHTML .= get_btn_case('chat');
+            } elseif ($form_type == 'Student' && $semester) {
+                $renderHTML .= get_btn_case('closed');
             } else {
                 $renderHTML .= get_btn_case('alert-join');
             }
@@ -223,9 +231,9 @@ function get_list_member($form_id)
         $pos = get_member_postion($form_id, $members->member_id);
         $member_name = get_userdata($members->member_id)->user_login;
         if (is_null($pos)) {
-            $renderHTML .= '<a href="'.home_url('user').'?user-id='.$members->member_id.'" class="btn btn-sm btn-info" >'.$member_name.'</a>';
+            $renderHTML .= '<p><a href="'.home_url('user').'?user-id='.$member->member_id.'" class="btn btn-sm btn-info" >'.$member_name.'</p></a>';
         } else {
-            $renderHTML .= '<a href="'.home_url('user').'?user-id='.$members->member_id.'" class="btn btn-sm btn-info" >'.$member_name.' - '.$pos.'</a>';
+            $renderHTML .= '<p><a href="'.home_url('user').'?user-id='.$member->member_id.'" class="btn btn-sm btn-info" >'.$member_name.' - '.$pos.'</p></a>';
         }
     }
 

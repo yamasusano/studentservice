@@ -129,15 +129,6 @@ li>div.main-bar-item, ul#main-menu {
   font-weight: 600;
 }
 
-.profile-userpic img {
-  display: block;
-  margin: 0 auto;
-  width: 50%;
-  -webkit-border-radius: 50% !important;
-  -moz-border-radius: 50% !important;
-  border-radius: 50% !important;
-}
-
 .profile-usertitle {
   text-align: center;
   margin-top: 20px;

@@ -120,6 +120,7 @@ function get_semester_page($semester)
     $semesters = array_merge($semesters, $wpdb->get_results("
     SELECT name
     FROM {$wpdb->prefix}semester
+    WHERE status != 0
     ORDER BY start ASC
     "));
     $renderHTML = '<div id="semesters" class="col-lg-2 col-md-2">';
@@ -198,7 +199,7 @@ function search_field_page($poster)
 }
 function backgroundImage()
 {
-    $backgroundImg = wp_get_attachment_image_src(54, 'full');
+    $backgroundImg = wp_get_attachment_image_src(133, 'full');
 
     return $backgroundImg[0];
 }
@@ -261,12 +262,13 @@ function result_form_content($post_type, $semester, $major, $poster)
         $major = user_metadata('major', $form->user_id);
         $renderHTML .= '<div class="finder-form-items">';
         $renderHTML .= '<div class="col-lg-2"><div class="finder-poster-box">';
-        $renderHTML .= get_avatar(get_the_author_meta($form->user_id), 110).'<br>';
+        $renderHTML .= get_avatar($form->user_id).'<br>';
         $renderHTML .= '<a href="'.home_url('search-form').'?major-value='.$major.'" target="_blank">'.$major.'</a>';
         $renderHTML .= '</div></div>';
         $renderHTML .= '<div class="col-lg-8"><div class="finder-post">';
         $renderHTML .= '<div class="finder-post-title">';
         $renderHTML .= '<h5>'.wp_trim_words($form->title, 10, '..').'</h5></div> ';
+        $renderHTML .= '<div class="form-content-semester"><b>'.$form->semester.'</b></div>';
         $renderHTML .= '<div class="form-content-author">';
         $renderHTML .= '<p>By <a href="'.home_url('user').'?user-id='.$form->user_id.'"> '.get_userdata($form->user_id)->user_login.'</a></p>&nbsp;&nbsp;&nbsp;';
         $renderHTML .= '<p><b>created at :</b> '.$form->created_date.'</p> </div>';

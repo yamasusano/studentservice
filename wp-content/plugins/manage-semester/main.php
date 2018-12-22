@@ -26,7 +26,7 @@ function get_admin_semester_list()
 {
     $HTML = '<div class="wrap"> ';
     $HTML .= '<h1 class="wp-heading-inline">Manage Semester List</h1>';
-    $HTML .= '<button class="btn btn-md page-title-action" id="add-new-semester">Add new</button>';
+    $HTML .= '<a href="'.admin_url('admin.php').'?page=add-new-semester" class="btn btn-md page-title-action" id="add-new-semester">Add new</a>';
     $HTML .= '<div class="form-add-new"></div>';
     $HTML .= '<div class="message">';
     if (isset($_POST['save-semester'])) {
@@ -53,7 +53,7 @@ function admin_semester_list()
     $HTML = '';
     $HTML = '<table class="semester-view wp-list-table widefat fixed striped pages">';
     $HTML .= '<tr>';
-    $HTML .= '<th>Name</th>  <th>Start date</th> <th>End date</th> <th>Status</th> <th>Action</th>';
+    $HTML .= '<th>Name</th>  <th>Start date</th> <th>End date</th> <th>Status</th>';
     $HTML .= '</tr>';
     $semester = query_semester();
     foreach ($semester as $semester) {
@@ -62,7 +62,6 @@ function admin_semester_list()
         $HTML .= '<td><input id="start-date-view" type="date" class="editable-major" value="'.$semester->start.'" disabled/></td>';
         $HTML .= '<td><input id="end-date-view" type="date" class="editable-major" value="'.$semester->end.'" disabled/></td>';
         $HTML .= '<td><input value="'.get_semester_status($semester->status).'" type="text" class="editable-major" disabled/></td>';
-        $HTML .= '<td>'.action_semester_item($semester).'</td>';
         $HTML .= '</tr>';
     }
     $HTML .= '</table>';
@@ -80,20 +79,6 @@ function get_semester_status($status)
         $HTML .= 'Available';
         break;
     }
-
-    return $HTML;
-}
-
-function action_semester_item($semester)
-{
-    $HTML = '';
-    $HTML .= '<form method="POST" style="padding:20px 0px">';
-    $HTML .= '<input type="hidden" name="semester-id" value="'.$semester->ID.'"/>';
-    $HTML .= '<input type="hidden" name="semester-name" class="editable-major"  value="'.$semester->name.'" />';
-    $HTML .= '<input name="semester-start-date" type="hidden" class="editable-major" value="'.$semester->start.'" />';
-    $HTML .= '<input name="semester-end-date" id="semester-end-date" type="hidden" class="editable-major" value="'.$semester->end.'"/>';
-    $HTML .= '<button type="button" id="edit-semester" class= "btn btn-sm edit-major">Edit</button>';
-    $HTML .= '</form>';
 
     return $HTML;
 }

@@ -4,14 +4,29 @@ include 'includes/core/profile/teacher-form.php';
 function teacher_list_form($form)
 {
     $renderHTML .= '<tr>';
+    $renderHTML .= '<td><b>'.$form->semester.'</b></td>';
     $renderHTML .= '<td><a href='.home_url('user').'?user-id='.$form->user_id.'>'.teacher_info_detail($form->user_id, 'username').'</a></td>';
     $renderHTML .= '<td> <p class="title-form-other">'.$form->title.'</p>';
     $renderHTML .= '<input type="hidden" id="teacher-form-id" value="'.$form->ID.'"/> </td>';
+    $renderHTML .= '<td>'.members_in_group_teacher($form->ID).'</td>';
+    $renderHTML .= '<td>'.($form->status == 0 ? 'Closed' : 'Opening').'</td>';
     $renderHTML .= '</tr>';
 
     return $renderHTML;
 }
 
+function members_in_group_teacher($form_id)
+{
+    global $wpdb;
+    $members = $wpdb->get_results("
+    SELECT * FROM {$wpdb->prefix}members
+    WHERE member_role = 1 
+    AND form_id = '".$form_id."'
+    ");
+    $renderHTML = count($members);
+
+    return $renderHTML;
+}
 function form_lists($user_id)
 {
     global $wpdb;
@@ -47,7 +62,7 @@ function gen_list_form_teacher()
     $current_user = get_current_user_id();
     $renderHTML = '';
     $renderHTML .= '<table id="teacher-lists">';
-    $renderHTML .= '<tr> <th>Leader</th> <th>Groups Name</th> </tr>';
+    $renderHTML .= '<tr><th>Semester</th><th>Teacher</th> <th>Name</th><th>Member(s)</th><th>Status</th></tr>';
     $renderHTML .= form_lists($current_user);
     $renderHTML .= '</table>';
 
@@ -82,11 +97,22 @@ function form_teacher_detail($form_id)
 
     return $renderHTML;
 }
+function get_form_mation($form_id)
+{
+    global $wpdb;
+    $select = $wpdb->get_results("
+    SELECT * FROM {$wpdb->prefix}finder_form 
+    WHERE ID = '".$form_id."'
+    ");
 
+    return $select;
+}
 function form_teacher_view_detail($form_id)
 {
     $members = set_member_to_form($form_id);
-    $status = get_form_teacher_info($form_id, 'status');
+    $type = form_type_via_teach($form_id);
+    $status = set_sts_form_student($form_id);
+    $form = get_form_mation($form_id);
     if ($form_id) {
         $renderHTML .= '<div class="form-view" style="position:relative;">';
         $renderHTML .= '<h3 style="text-transform: uppercase;">'.get_form_teacher_info($form_id, 'title').'</h3>';
@@ -97,12 +123,27 @@ function form_teacher_view_detail($form_id)
         $renderHTML .= '<div class="members"><div class="col-lg-3 col">Members</div><div class="col-lg-9 col">'.$members.'</div></div>';
         $renderHTML .= '<div class="skill-set"><div class="col-lg-3">Responsibilities</div><div class="col-lg-9">'.get_skill_teacher_form($form_id).'</div></div>';
         $renderHTML .= '<div class="Others"><div class="col-lg-3">Others</div><div class="col-lg-9">'.get_form_teacher_info($form_id, 'other_skill').'</div></div>';
-        $renderHTML .= '<div class="status"><div class="col-lg-3">Status</div><div class="col-lg-9">'.(($status == 1) ? 'Opening' : 'Closed').'</div></div>';
+        $renderHTML .= '<div class="status"><div class="col-lg-3">Status</div><div class="col-lg-9">'.action_check_status_form_student($form).'</div></div>';
         $renderHTML .= '</div></div>';
-        $renderHTML .= '<button id="leave-group-teacher" class="btn btn-danger">Leave</button>';
+        if ($type == 'Student' && !$status) {
+            $renderHTML .= '<button id="leave-group-teacher" class="btn btn-danger">Leave</button>';
+        } elseif ($type == 'Teacher') {
+            $renderHTML .= '<button id="leave-group-teacher" class="btn btn-danger">Leave</button>';
+        }
     }
 
     return $renderHTML;
+}
+function form_type_via_teach($form_id)
+{
+    global $wpdb;
+    $type = $wpdb->get_var("
+    SELECT type 
+    FROM {$wpdb->prefix}groups
+    WHERE form_id = '".$form_id."'
+    ");
+
+    return $type;
 }
 function leave_teacher_group($form_id, $user_id)
 {

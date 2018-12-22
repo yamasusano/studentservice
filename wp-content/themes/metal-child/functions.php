@@ -88,7 +88,7 @@ add_action('admin_init', 'wpse_136058_remove_menu_pages');
 function wpse_136058_remove_menu_pages()
 {
     remove_menu_page('metal');
-    remove_menu_page('upload.php');                 //Media
+    // remove_menu_page('upload.php');                 //Media
     remove_menu_page('index.php');                 //Media
     // remove_menu_page('themes.php');                 //Appearance
     // remove_menu_page('plugins.php');                //Plugins
@@ -664,9 +664,9 @@ function delete_teach_form()
     $user_id = get_current_user_id();
     $delete = teacher_delete_form($form_id, $user_id);
     if ($delete) {
-        $message = '<div class="message-fail"><b>'.$title.'</b> has been deleted.</div>';
+        $message = '<b>'.$title.'</b> has been deleted.';
     } else {
-        $message = '<div class="message-fail"><b>'.$title.'</b> has been deleted.</div>';
+        $message = '<b>'.$title.'</b> has been deleted.';
     }
     echo wp_send_json(['message' => $message]);
     die();
@@ -937,36 +937,16 @@ function leave_group_teacher()
     echo wp_send_json(['check' => $leave]);
     die();
 }
-// update user avatar
-function my_avatar_filter()
+remove_action('wpua_before_avatar', 'wpua_do_before_avatar');
+remove_action('wpua_after_avatar', 'wpua_do_after_avatar');
+function my_avatar_before()
 {
-    // Remove from show_user_profile hook
-    remove_action('show_user_profile', array('wp_user_avatar', 'wpua_action_show_user_profile'));
-    remove_action('show_user_profile', array('wp_user_avatar', 'wpua_media_upload_scripts'));
-
-    // Remove from edit_user_profile hook
-    remove_action('edit_user_profile', array('wp_user_avatar', 'wpua_action_show_user_profile'));
-    remove_action('edit_user_profile', array('wp_user_avatar', 'wpua_media_upload_scripts'));
-
-    // Add to edit_user_avatar hook
-    add_action('edit_user_avatar', array('wp_user_avatar', 'wpua_action_show_user_profile'));
-    add_action('edit_user_avatar', array('wp_user_avatar', 'wpua_media_upload_scripts'));
+    echo '<div id="update-user-avatar">';
 }
+add_action('wpua_before_avatar', 'my_avatar_before');
 
-  // Loads only outside of administration panel
-  if (!is_admin()) {
-      add_action('init', 'my_avatar_filter');
-  }
-  remove_action('wpua_before_avatar', 'wpua_do_before_avatar');
-  remove_action('wpua_after_avatar', 'wpua_do_after_avatar');
-  function my_before_avatar()
-  {
-      echo '<div id="my-avatar">';
-  }
-  add_action('wpua_before_avatar', 'my_before_avatar');
-
-  function my_after_avatar()
-  {
-      echo '</div>';
-  }
-  add_action('wpua_after_avatar', 'my_after_avatar');
+function my_after_avatar_s()
+{
+    echo '</div>';
+}
+add_action('wpua_after_avatar', 'my_after_avatar_s');

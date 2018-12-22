@@ -5,7 +5,6 @@ jQuery(function ($) {
         });
         $('div#my-group').on('click', function () {
             setMenuGroup();
-            // $('.invite-members').show();
         });
         $('div#teacher-group').on('click', function () {
             get_teacher_group_list();
@@ -124,12 +123,12 @@ jQuery(function ($) {
             });
         } else if (tech == 'view') {
             $(window).load(function () {
-                setMenuGroup();
+                $('div#group-view div').first().click();
                 var group = $('#group-view');
                 group.addClass('active');
                 group.find('.sub-menu-items').slideDown();
                 group.siblings().removeClass('active');
-                $('#my-group').addClass('active');
+
             });
         } else {
             $(window).load(function () {

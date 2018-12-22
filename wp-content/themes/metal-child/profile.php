@@ -13,14 +13,13 @@ get_header();
             <div class="zozo-row row">
                 <div id="primary" class="content-area <?php zozo_primary_content_classes(); ?>">
                     <div id="content" class="site-content">
-                        <div class="container"><h3><?php echo info('role'); ?> Profile</h3><b><?php echo getSemester(); ?></b>
+                        <div class="container"></b>
                             <div class="row profile">
                                 <div class="col-md-3">
                                     <div class="profile-sidebar">
                                         <!-- SIDEBAR USERPIC -->
                                         <div class="profile-userpic">
-                                            <?php echo get_avatar($current_user->user_email); ?>
-                                            <?php echo custom_update_avatar(); ?>
+                                                <?php custom_update_avatar(); ?>
                                         </div>
                                         <!-- END SIDEBAR USERPIC -->
                                         <!-- SIDEBAR USER TITLE -->

@@ -270,7 +270,7 @@ function list_form_semester($form)
     $type = checkFormType($form->ID);
     $renderHTML .= '<div class="col-lg-12"><div class="form-item"> ';
     $renderHTML .= '<div class="col-lg-2" style="width:10%">';
-    $renderHTML .= get_avatar(get_the_author_meta($form->user_id), 70).'<br>';
+    $renderHTML .= get_avatar($form->user_id).'<br>';
     $renderHTML .= '<a href="'.home_url('search-form').'?major-value='.$major.'" target="_blank">'.$major.'</a>';
     $renderHTML .= '</div>';
     $renderHTML .= '<div class="col-lg-10 form-item-content">';

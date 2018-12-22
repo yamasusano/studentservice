@@ -13,7 +13,7 @@ jQuery(function ($) {
         $('body').on('click', 'button#delete-form-teacher', function () {
             $row = $(this).parents('tr');
             $form_id = $(this).parent().find('input').val();
-            $title = $row.find('td :first').text();
+            $title = $row.find('p#title-form-teacher').text();
             deleteTeacherForm($row, $form_id, $title);
         });
 

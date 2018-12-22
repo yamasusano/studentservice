@@ -35,7 +35,7 @@ function get_list_student_form_via_teacher($user_id)
 {
     $renderHTML = '';
     $renderHTML .= '<table id="list-group-student-via-teacher"> ';
-    $renderHTML .= '<tr><th>Semester</th> <th>Name</th> <th>Members</th><th>Status</th> </tr>';
+    $renderHTML .= '<tr><th>Semester</th> <th>Name</th> <th>Member(s)</th><th>Status</th> </tr>';
     $renderHTML .= query_list_student_form_via_teacher($user_id);
     $renderHTML .= '</table>';
 
@@ -50,17 +50,51 @@ function list_student_form($form)
     $renderHTML .= '<input type="hidden" id="student-form-id" value="'.$form->ID.'" /></td>';
     $renderHTML .= '<td>'.members_in_group_student($form->ID).'</td>';
     $renderHTML .= '<td><div class="delete-form-group">';
-    if ($form->status == 0) {
-        $renderHTML .= 'Closed';
-    } else {
-        $renderHTML .= 'Openning';
-    }
-
+    $renderHTML .= action_check_status_form_student($form);
     $renderHTML .= '</div></td>';
     $renderHTML .= '</tr>';
 
     return $renderHTML;
 }
+
+function action_check_status_form_student($form)
+{
+    global $wpdb;
+    $status = set_sts_form_student($form->ID);
+    if ($status) {
+        $renderHTML .= 'Closed';
+    } else {
+        $status = $form->status;
+        if ($status == 0) {
+            $renderHTML .= 'Closed';
+        } else {
+            $renderHTML .= 'Opening';
+        }
+    }
+
+    return $renderHTML;
+}
+
+function set_sts_form_student($form_id)
+{
+    global $wpdb;
+    $semester = $wpdb->get_var("
+    SELECT semester
+    FROM {$wpdb->prefix}finder_form
+    WHERE ID = '".$form_id."' 
+    ");
+    $check = $wpdb->get_var("
+    SELECT status
+    FROM {$wpdb->prefix}semester
+    WHERE name = '".$semester."'
+    ");
+    if ($check == 0) {
+        return true;
+    }
+
+    return false;
+}
+
 function members_in_group_student($form_id)
 {
     global $wpdb;
@@ -69,15 +103,7 @@ function members_in_group_student($form_id)
     WHERE member_role != 2 
     AND form_id = '".$form_id."'
     ");
-    foreach ($members as $member) {
-        $pos = member_pos($form_id, $member->member_id);
-        $member_name = get_userdata($member->member_id)->user_login;
-        if (is_null($pos)) {
-            $renderHTML .= '<p><a href="'.home_url('user').'?user-id='.$member->member_id.'" class="btn btn-sm btn-info" >'.$member_name.'</a></p>';
-        } else {
-            $renderHTML .= '<p><a href="'.home_url('user').'?user-id='.$member->member_id.'" class="btn btn-sm btn-info" >'.$member_name.' - '.$pos.'</a></p>';
-        }
-    }
+    $renderHTML = count($members);
 
     return $renderHTML;
 }

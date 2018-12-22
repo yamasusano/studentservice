@@ -67,25 +67,36 @@ jQuery(function ($) {
             });
         }
         window.deleteTeacherForm = function (row, $form_id, $title) {
+            $.confirm({
+                title: 'Do you want delete "' + $title + '" group?',
+                buttons: {
+                    confirm: function () {
+                        $.ajax({
+                            url: zozo_js_vars.zozo_ajax_url,
+                            data: { 'action': 'delete_teach_form', 'ID': $form_id, 'title': $title },
+                            type: 'post',
+                            success: function (result) {
+                                $.alert({
+                                    title: result.message,
+                                    content: '',
+                                    theme: 'my-theme',
+                                    animation: 'none'
+                                });
+                                row.slideUp('slow', function () {
+                                    row.remove();
+                                });
+                            },
+                            errors: function (result) { }
 
-            $.ajax({
-                url: zozo_js_vars.zozo_ajax_url,
-                data: { 'action': 'delete_teach_form', 'ID': $form_id, 'title': $title },
-                type: 'post',
-                success: function (result) {
-                    $('div.message-show').html(result.message);
-                    setTimeout(function () {
-                        $('div.message-show').slideUp('slow', function () {
-                            $('div.message-show').html('');
                         });
-                    }, 3000);
-                    row.slideUp('slow', function () {
-                        row.remove();
-                    });
+                    },
+                    cancel: function () {
+                    }
                 },
-                errors: function (result) { }
-
+                theme: 'my-theme',
+                animation: 'none'
             });
+
         }
         window.getTeacherForm = function (form_id) {
             $.ajax({

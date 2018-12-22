@@ -6,6 +6,7 @@ function menu_bar_profile()
 {
     $renderHTML = '';
     $user_id = get_current_user_id();
+
     $user_name = explode(' ', info('username'));
     $last_name = end($user_name);
     $renderHTML .= '<div class="group-menu-right">';
