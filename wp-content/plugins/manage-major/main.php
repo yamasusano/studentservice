@@ -31,7 +31,6 @@ function get_admin_major_list()
     $HTML .= '<script type="text/javascript">';
     $HTML .= 'var ajaxurl= "'.admin_url('admin-ajax.php').'"';
     $HTML .= '</script>';
-    echo  $HTML;
     $HTML .= '<h1 class="wp-heading-inline">Major List</h1>';
     $HTML .= '<a href="'.admin_url('admin.php').'?page=add-new-major" class="btn btn-md page-title-action" id="add-new-major">Add new</a>';
     $HTML .= '<div class="form-add-new"></div>';

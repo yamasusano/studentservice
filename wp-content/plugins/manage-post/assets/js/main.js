@@ -1,25 +1,46 @@
 jQuery(function ($) {
-    jQuery(document).ready(function () {
-        var major_status;
-        $('button#edit-semester').on('click', function () {
-            $grandPar = $(this).parents('tr');
-            $input = $grandPar.find('input#end-date-view');
-            $input.prop('disabled', false);
-            $input.addClass('enable-major');
-            $par = $(this).parent();
-            $(this).remove();
-            $par.append('<button type="submit" name="save-semester" class="btn btn-sm edit-major" style="margin-right:10px;">Save</button>');
-            $par.append('<button type="button" id="cancel-edit-major" class="btn btn-sm edit-major">Cancel</button>');
-            $('button#cancel-edit-major').on('click', function () {
-                window.location.reload();
-            });
-            $('input#end-date-view').change(function () {
-                $('input#semester-end-date').val($(this).val());
-            });
+    $(document).ready(function () {
+        var checkAll = $('table#post-view').find($('input#select-all'));
+        var setcheck = $('table#post-view').find($('tr input[name=check-item]'));
+        var post_id = [];
+        checkAll.click(function () {
+            var check = $(checkAll).prop('checked');
+            if (check) {
+                $(setcheck).prop('checked', true);
+                checkListItem(setcheck);
+
+            } else {
+                $(setcheck).prop('checked', false);
+                checkListItem(setcheck);
+            }
+            $('#str').val(JSON.stringify(post_id));
+
         });
-        var check = $('div.message').text();
-        if (check != '') {
-            setTimeout(function () { window.location.reload(); }, 1500);
+        setcheck.click(function () {
+            checkItem($(this));
+            $('#str').val(JSON.stringify(post_id));
+        });
+        function checkItem(clicked) {
+            var check = $(clicked).prop('checked');
+            var par = $(clicked).parents('tr');
+            var id = $(par).find('input[name=post-id]').val();
+            if (check) {
+                post_id.push(id);
+            } else {
+                post_id.splice($.inArray(id, post_id), 1);
+            }
+        }
+        function checkListItem(callCheck) {
+            $(callCheck).each(function () {
+                var check = $(this).prop('checked');
+                var par = $(this).parents('tr');
+                var id = $(par).find('input[name=post-id]').val();
+                if (check) {
+                    post_id.push(id);
+                } else {
+                    post_id.splice($.inArray(id, post_id), 1);
+                }
+            })
         }
     });
 })

@@ -60,8 +60,6 @@ function update_major()
 {
     global $wpdb;
     $MAX_SIZE = 3000000;
-    // $directory = dirname(__FILE__).'/major_images';
-    // $directory = dirname(__FILE__.'/..').'/major_images';
     $directory = realpath(dirname(__FILE__).'/..').'/major_images/';
 
     $get_path = content_url('plugins/manage-major/major_images/');

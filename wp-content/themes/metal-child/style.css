@@ -9,7 +9,7 @@ Text Domain: zozothemes
 */
 
 @media only screen and (-webkit-min-device-pixel-ratio: 0) and (min-device-width: 1025px) {
-  #group-contents .result-search::-webkit-scrollbar {
+  #group-contents .zresult-search::-webkit-scrollbar {
     width: 5px;
   }
   .box-chat-content::-webkit-scrollbar {
@@ -26,8 +26,11 @@ Text Domain: zozothemes
   ::-webkit-scrollbar-button:vertical:increment {
     height: 0;
   }
-  ::-webkit-scrollbar-track-piece {
+  #group-contents .zresult-search::-webkit-scrollbar-track-piece {
     background-color: #ccc;
+  }
+  ::-webkit-scrollbar-track-piece {
+    background-color: #fff;
     -webkit-border-radius: 2px;
   }
   ::-webkit-scrollbar-thumb:vertical {

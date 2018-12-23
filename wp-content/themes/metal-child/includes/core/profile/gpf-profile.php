@@ -95,7 +95,7 @@ function get_user_group_name($disabled)
 }
 function get_user_group_mail($disabled)
 {
-    $value = checkGender(info('major'), 'Select your major');
+    $value = checkGender(info('major'), 'Select your batch');
     $renderHTML .= '<div class="col-lg-12"><div class="row">';
     $renderHTML .= '<div class="col-lg-6"><div class="row">';
     $renderHTML .= '<div class="col-lg-2" style="padding:0"><label for="email">Email</label></div>';
@@ -118,7 +118,7 @@ function get_student_block($disabled)
     if (is_student()) {
         $renderHTML .= '<div class="col-lg-6"><div class="row">';
         $renderHTML .= '<div class="col-lg-2" style="padding:0"><label for="phone">Batch</label></div>';
-        $renderHTML .= '<div class="col-lg-10"><div class="semester-level"><input type="text" name="user-level" id="user-level" value="'.checkGender(info('phone'), 'Select your semester level').'" '.$disabled.' ></div></div>';
+        $renderHTML .= '<div class="col-lg-10"><div class="semester-level"><input type="text" name="user-level" id="user-level" value="'.checkGender(info('phone'), 'Select your batch').'" '.$disabled.' ></div></div>';
         $renderHTML .= '</div></div>';
     }
     $renderHTML .= '<div class="col-lg-6"><div class="row">';
@@ -217,7 +217,7 @@ function selectMajor()
                 }
             }
         } else {
-            $renderHTML .= '<option value="" disabled selected>Select a major</option>';
+            $renderHTML .= '<option value="" disabled selected>Select your batch</option>';
             foreach ($majors as $major) {
                 $renderHTML .= '<option value="'.$major->name.'">'.$major->name.'</option>';
             }
@@ -247,7 +247,7 @@ function select_semester_level()
             }
         }
     } else {
-        $renderHTML .= '<option value="" disabled selected>Select a major</option>';
+        $renderHTML .= '<option value="" disabled selected>Select your batch</option>';
         foreach ($user_level as $level) {
             $renderHTML .= '<option value="'.$level->level.'">'.$level->level.'</option>';
         }

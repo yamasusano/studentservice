@@ -60,7 +60,7 @@ function search_student_via_teacher($keyword, $form_id)
     } else {
         $renderHTML .= '<div class="member-message"></div>';
         $renderHTML .= '<table class="table-striped prefix-table">';
-        $renderHTML .= '<tr><th>Role_ID</th><th>User name</th><th>Major</th><th>Action</th></tr>';
+        $renderHTML .= '<tr><th>Role</th><th>User name</th><th>Major</th><th>Action</th></tr>';
         $renderHTML .= '</table>';
         $renderHTML .= '<div class="result-search">';
         $renderHTML .= '<table id="result_list_users" class="table-striped">';
