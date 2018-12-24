@@ -94,3 +94,20 @@ section#fanpage-project-wrap {
 div.author-info {
     display: none;
 }
+
+.contact-wrap {
+    overflow: hidden;
+    padding: 10px;
+}
+
+.contact-site {
+    background: #f5f5f5;
+}
+
+.contact-site form input, .contact-site form textarea {
+    background: #fff;
+}
+
+.form-google-map iframe {
+    border: 1px solid gainsboro !important;
+}
