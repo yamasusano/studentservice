@@ -30,6 +30,7 @@ get_header();
 											<div class="row">
 											<?php echo form_by_major(); ?>
 												<div class="my-container">
+													<?php echo get_post_fanpage(); ?>
 													<?php echo current_semster_form(); ?>
 												</div>
 											</div>		

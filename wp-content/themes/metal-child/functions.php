@@ -39,7 +39,7 @@ function zozo_enqueue_child_theme_styles()
     wp_enqueue_style('notification', get_stylesheet_directory_uri().'/assets/css/notification.css');
     wp_enqueue_style('animation-load', get_stylesheet_directory_uri().'/assets/css/animation-load.css');
     wp_enqueue_style('group', get_stylesheet_directory_uri().'/assets/css/group.css');
-
+    wp_enqueue_style('load-fa', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
     //js
     wp_enqueue_script('jquery-v2.2.4.min', get_stylesheet_directory_uri().'/assets/js/jquery.min.js', array('jquery'), null, true);
     wp_enqueue_script('mark.min', get_stylesheet_directory_uri().'/assets/js/mark.min.js', array('jquery'), null, true);

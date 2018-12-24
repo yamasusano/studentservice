@@ -264,6 +264,38 @@ function current_semster_form()
 
     return $renderHTML;
 }
+function get_post_fanpage()
+{
+    $args = array(
+        'numberposts' => 10,
+    );
+    $latest_posts = get_posts($args);
+    $renderHTML .= '<section id="fanpage-project-wrap"><h3>reference project</h3>';
+    $renderHTML .= '<div class="fanpage-project-box">';
+    // var_dump($latest_posts);
+    $renderHTML .= '<div class="col-lg-6"> ';
+    foreach ($latest_posts as $index => $posts) {
+        if ($index < 5) {
+            $renderHTML .= '<p><a href="'.get_post_permalink($posts->ID).'"> '.wp_trim_words($posts->post_title, 10, '..').'</a></p>';
+        }
+    }
+
+    $renderHTML .= '</div>';
+    $renderHTML .= '<div class="col-lg-6"> ';
+    foreach ($latest_posts as $index => $posts) {
+        if ($index >= 5) {
+            $renderHTML .= '<p><a href="'.get_post_permalink($posts->ID).'">'.wp_trim_words($posts->post_title, 10, '..').'</a></p>';
+        }
+    }
+    $renderHTML .= '</div>';
+    $renderHTML .= '</div>';
+    $renderHTML .= '<div class="button-group">';
+    $renderHTML .= '<a href="'.home_url('fanpage').'" class="btn btn-default" >More&nbsp;<i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>';
+    $renderHTML .= '</div>';
+    $renderHTML .= '</section>';
+
+    return $renderHTML;
+}
 function list_form_semester($form)
 {
     $major = user_metadata('major', $form->user_id);
