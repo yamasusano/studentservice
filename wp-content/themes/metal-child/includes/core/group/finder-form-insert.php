@@ -230,7 +230,7 @@ function actionJoinForm($form_id, $user_id)
 
         return array('result' => false, 'message' => $message);
     } elseif ($has_form && $form_type == 'Student') {
-        $message = 'Your have already joined in student group.';
+        $message = 'You have already joined in student group.';
 
         return array('result' => false, 'message' => $message);
     }

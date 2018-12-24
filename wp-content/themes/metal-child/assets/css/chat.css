@@ -92,7 +92,7 @@ table.chat-form-input td:last-child {
     border: 0;
     box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
     right: 7px;
-    bottom: 84px;
+    bottom: 55px;
 }
 
 .box-chat-title {
@@ -194,4 +194,11 @@ div.current_user .content-message {
     color: #fff;
     float: right;
     background-color: #3578e5;
+}
+
+span.notice-dot {
+    display: none;
+    right: 40%;
+    top: 20%;
+    background-color: red !important;
 }

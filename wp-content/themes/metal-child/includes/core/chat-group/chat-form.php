@@ -58,3 +58,9 @@ function history_chat_user($user_id, $current_user_id)
 
     return $renderHTML;
 }
+function get_notice_for_user()
+{
+    $user_id = have_new_message();
+
+    return $user_id;
+}

@@ -91,4 +91,29 @@ function get_user_message($chat_id)
 function have_new_message()
 {
     global $wpdb;
+    $index = $wpdb->get_results(" 
+    SELECT * FROM {$wpdb->prefix}chat_user
+    WHERE status = 1
+    ");
+    $user_id;
+    foreach ($index as $i) {
+        $check = $wpdb->get_results(" 
+        SELECT user_send FROM {$wpdb->prefix}user_chat
+        WHERE ID = '".$i->chat_id."' 
+        AND user_recevive = '".$i->sender."'
+        ");
+        if ($check) {
+            $user_id = $check[0]->user_send;
+        } else {
+            $check = $wpdb->get_results(" 
+            SELECT user_recevive FROM {$wpdb->prefix}user_chat
+            WHERE ID = '".$i->chat_id."' 
+            AND user_send = '".$i->sender."'
+            ");
+
+            $user_id = $check[0]->user_receive;
+        }
+    }
+
+    return $user_id;
 }

@@ -199,7 +199,7 @@ function search_field_page($poster)
 }
 function backgroundImage()
 {
-    $backgroundImg = wp_get_attachment_image_src(133, 'full');
+    $backgroundImg = wp_get_attachment_image_src(147, 'full');
 
     return $backgroundImg[0];
 }

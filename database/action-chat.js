@@ -1,7 +1,7 @@
 jQuery(function ($) {
     jQuery(document).ready(function () {
         var conn;
-        var uri = 'ws://localhost:8080';
+        var uri = 'ws://miconshow.com:8080';
         setInterval(function () {
             var el = $('#list-member-chat').find('a');
             var box_title = $('.box-chat-title');

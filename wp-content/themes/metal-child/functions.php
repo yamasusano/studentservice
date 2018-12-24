@@ -927,6 +927,20 @@ function notification_chat()
     echo wp_send_json(['message' => $chat]);
     die();
 }
+add_action('wp_ajax_set_notice_for_user', 'set_notice_for_user');
+add_action('wp_ajax_set_notice_for_user', 'set_notice_for_user');
+function set_notice_for_user()
+{
+    $user_id = get_notice_for_user();
+    $current_user_id = get_current_user_id();
+    $check = false;
+    if ($user_id == $current_user_id) {
+        $check = true;
+    }
+    echo wp_send_json(['check' => $check, 'current_id' => $current_user_id]);
+    die();
+}
+
 add_action('wp_ajax_nopriv_leave_group_teacher', 'leave_group_teacher');
 add_action('wp_ajax_leave_group_teacher', 'leave_group_teacher');
 function leave_group_teacher()

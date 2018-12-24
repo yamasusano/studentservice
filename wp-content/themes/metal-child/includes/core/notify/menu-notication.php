@@ -36,7 +36,7 @@ function get_menu_notification()
 
 function get_menu_chat()
 {
-    $renderHTML .= '<div id="chat-bar" class="dropdown-notification">';
+    $renderHTML .= '<div id="chat-bar" class="dropdown-notification"><span class="notice-dot dot"></span>';
     $renderHTML .= '<div class="dropbtn"><a href="#" class="prefix-icon"><i class="fa fa-lg fa-comments-o" aria-hidden="true"></i></a></div>';
     $renderHTML .= '<div class="dropdown-content col-lg-3">';
     $renderHTML .= '<div class="notice-chat">Group Chat</div>';

@@ -26,16 +26,19 @@ Text Domain: zozothemes
   ::-webkit-scrollbar-button:vertical:increment {
     height: 0;
   }
-  #group-contents .zresult-search::-webkit-scrollbar-track-piece {
+  #group-contents .result-search::-webkit-scrollbar-track-piece {
     background-color: #ccc;
   }
   ::-webkit-scrollbar-track-piece {
     background-color: #fff;
     -webkit-border-radius: 2px;
   }
+  #group-contents .result-search::-webkit-scrollbar-thumb:vertical {
+    background-color: #fec105;
+  }
   ::-webkit-scrollbar-thumb:vertical {
     height: 50px;
-    background-color: #fec105;
+    background-color: #ccc;
     -webkit-border-radius: 2px;
   }
   ::-webkit-scrollbar-thumb:horizontal {

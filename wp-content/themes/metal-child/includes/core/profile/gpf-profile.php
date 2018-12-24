@@ -95,7 +95,7 @@ function get_user_group_name($disabled)
 }
 function get_user_group_mail($disabled)
 {
-    $value = checkGender(info('major'), 'Select your batch');
+    $value = checkGender(info('major'), 'Select your major');
     $renderHTML .= '<div class="col-lg-12"><div class="row">';
     $renderHTML .= '<div class="col-lg-6"><div class="row">';
     $renderHTML .= '<div class="col-lg-2" style="padding:0"><label for="email">Email</label></div>';
@@ -217,7 +217,7 @@ function selectMajor()
                 }
             }
         } else {
-            $renderHTML .= '<option value="" disabled selected>Select your batch</option>';
+            $renderHTML .= '<option value="" disabled selected>Select your major</option>';
             foreach ($majors as $major) {
                 $renderHTML .= '<option value="'.$major->name.'">'.$major->name.'</option>';
             }
