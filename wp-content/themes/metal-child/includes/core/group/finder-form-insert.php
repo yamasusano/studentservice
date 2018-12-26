@@ -35,6 +35,7 @@ function insert_finder_form($semester, $title, $description, $other, $contact, $
         return false;
     }
 }
+
 function insert_member_leader($form_id, $user_id)
 {
     global $wpdb;
@@ -69,7 +70,22 @@ function insert_group($form_id, $group_type)
         return false;
     }
 }
-
+function create_group_finder_chat($form_id, $title)
+{
+    global $wpdb;
+    $set_group_chat = $wpdb->insert(
+        "{$wpdb->prefix}group_chat",
+        [
+            'form_id' => $form_id,
+            'name' => $title,
+        ]
+    );
+    if ($set_group_chat) {
+        return true;
+    } else {
+        return false;
+    }
+}
 function insert_skill($form_id, $skillString)
 {
     global $wpdb;

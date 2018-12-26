@@ -61,6 +61,7 @@ function zozo_enqueue_child_theme_styles()
     wp_enqueue_script('other-form', get_stylesheet_directory_uri().'/assets/js/other-form.js', array('jquery'), null, true);
     //chat
     wp_enqueue_script('chat', get_stylesheet_directory_uri().'/assets/js/chat.js', array('jquery'), null, true);
+    wp_enqueue_script('group-chat', get_stylesheet_directory_uri().'/assets/js/group-chat.js', array('jquery'), null, true);
     wp_enqueue_script('action-chat', get_stylesheet_directory_uri().'/assets/js/action-chat.js', array('jquery'), null, true);
 }
 //start session to login.
@@ -249,7 +250,7 @@ function post_finder_form()
                 $insert_member_table = insert_member_leader($form_id, $user_id);
                 $insert_group_table = insert_group($form_id, $group_type);
                 $insert_skill_table = insert_skill($form_id, $skill);
-
+                $insert_group_chat = create_group_finder_chat($form_id, $title);
                 $message = '<div class="message-success">Publish success</div>';
                 $type = 1;
             } else {
@@ -628,6 +629,7 @@ add_action('wp_ajax_get_chat_form', 'get_chat_form');
 function get_chat_form()
 {
     $form_id = $_POST['ID'];
+
     echo wp_send_json(['chat_form' => get_form_chat($form_id)]);
     die();
 }
@@ -650,7 +652,6 @@ add_action('wp_ajax_teacher_menu_group', 'teacher_menu_group');
 function teacher_menu_group()
 {
     $create_menu = teacherGroupMenu();
-
     echo wp_send_json(['create_menu' => $create_menu]);
     die();
 }
@@ -964,3 +965,13 @@ function my_after_avatar_s()
     echo '</div>';
 }
 add_action('wpua_after_avatar', 'my_after_avatar_s');
+add_action('wp_ajax_nopriv_show_msg_group_chat', 'show_msg_group_chat');
+add_action('wp_ajax_show_msg_group_chat', 'show_msg_group_chat');
+function show_msg_group_chat()
+{
+    $form_id = $_POST['ID'];
+    $current_user = get_current_user_id();
+    $content = show_message_group($form_id, $current_user);
+    echo wp_send_json(['content' => $content]);
+    die();
+}

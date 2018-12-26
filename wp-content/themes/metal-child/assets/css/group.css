@@ -57,6 +57,14 @@ table.view-member-list tr th:nth-child(2) {
     width: 15%;
 }
 
+a#infor-view {
+    margin: 0px 10px;
+}
+
+table.view-member-list tr th:nth-child(3) {
+    padding-left: 20px;
+}
+
 button#kick-out, button#change-admin, button#infor-view, a#infor-view {
     width: 130px;
 }

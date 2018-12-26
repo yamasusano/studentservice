@@ -1,7 +1,7 @@
 jQuery(function ($) {
     jQuery(document).ready(function () {
         var conn;
-        var uri = 'ws://localhost:8080';
+        window.uri = 'ws://localhost:8080';
         setInterval(function () {
             var el = $('#list-member-chat').find('a');
             var box_title = $('.box-chat-title');
@@ -58,6 +58,23 @@ jQuery(function ($) {
                 success: function (result) {
                     var html = $.parseHTML(result.chat_form);
                     $('div#group-contents').html(html);
+                    content_group_chat(ID);
+
+                },
+                errors: function (result) { }
+
+            });
+        }
+        window.content_group_chat = function (ID) {
+            $('.chat-box>#wait').show();
+            $.ajax({
+                url: zozo_js_vars.zozo_ajax_url,
+                data: { 'action': 'show_msg_group_chat', 'ID': ID },
+                type: 'post',
+                success: function (result) {
+                    $('.chat-box>#wait').hide();
+                    $('.chat-box').html(result.content);
+                    $('.chat-box').scrollTop($('.chat-box')[0].scrollHeight);
                 },
                 errors: function (result) { }
 
@@ -107,6 +124,7 @@ jQuery(function ($) {
 
         window.generate_content_chat = function (current_user_id, user_id, message) {
             var data = {
+                type: 1,
                 sender: current_user_id,
                 recievier: user_id,
                 msg: message,

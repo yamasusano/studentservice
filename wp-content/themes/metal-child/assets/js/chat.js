@@ -1,7 +1,7 @@
 jQuery(function ($) {
     jQuery(document).ready(function () {
         var user_id;
-        var current_user_id;
+        window.current_user_id;
         $.ajax({
             url: zozo_js_vars.zozo_ajax_url,
             data: { 'action': 'set_notice_for_user' },
@@ -35,12 +35,6 @@ jQuery(function ($) {
                 create_chat_box2($sender_id, $receiver_id);
                 get_port_chat(current_user_id, user_id);
             }
-        });
-
-        $('body').on('click', 'button#group-chat', function () {
-            $form_id = $(this).parent().find('input#form-id').val();
-            getChatForm($form_id);
-
         });
         $('body').on('click', 'button#chat-with-user', function () {
             $user_id = $(this).parent().find('input#user-id').val();

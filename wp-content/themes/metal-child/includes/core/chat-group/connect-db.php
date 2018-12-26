@@ -57,7 +57,6 @@ function get_history_chat($user_id, $current_user_id)
         $contents = $wpdb->get_results("
         SELECT * FROM {$wpdb->prefix}chat_user 
         WHERE chat_id = '".$chat_id."'
-        
         ");
     }
 
@@ -116,4 +115,15 @@ function have_new_message()
     }
 
     return $user_id;
+}
+
+function show_message_group_chat($form_id, $current_user)
+{
+    global $wpdb;
+    $content = $wpdb->get_results("
+    SELECT * FROM {$wpdb->prefix}chat
+    WHERE form_id = '".$form_id."'
+    ");
+
+    return $content;
 }

@@ -24,6 +24,8 @@
     background: #fff;
     height: 330px;
     border-top: 1px solid #CFCFCF;
+    overflow-y: scroll;
+    padding-bottom: 10px;
 }
 
 textarea#message-chat {
@@ -181,7 +183,6 @@ div.current_user {
 }
 
 .content-message {
-    /* border: 1px solid; */
     padding: 5px;
     max-width: 75%;
     line-height: 1.28;
@@ -201,4 +202,15 @@ span.notice-dot {
     right: 40%;
     top: 20%;
     background-color: red !important;
+}
+
+#input-message-group {
+    outline: unset;
+    background: #fff;
+    padding: 10px 10px;
+    border-radius: 5px;
+}
+
+.chat-box .other_user {
+    margin-left: 10px;
 }

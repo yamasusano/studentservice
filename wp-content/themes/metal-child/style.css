@@ -12,7 +12,7 @@ Text Domain: zozothemes
   #group-contents .zresult-search::-webkit-scrollbar {
     width: 5px;
   }
-  .box-chat-content::-webkit-scrollbar {
+  .chat-box::-webkit-scrollbar, .box-chat-content::-webkit-scrollbar {
     width: 10px;
   }
   ::-webkit-scrollbar {
@@ -411,6 +411,10 @@ div.finder-form {
   height: auto;
   overflow: hidden;
   padding: 0px 70px 50px 70px;
+}
+
+div.finder-form .form-btn {
+  margin-top: 90px;
 }
 
 div.finder-form .row {

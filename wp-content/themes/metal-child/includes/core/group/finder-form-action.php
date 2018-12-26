@@ -372,7 +372,7 @@ function get_member_list()
     $is_leader = is_leader($form_id);
     $renderHTML = '';
     $get_member = get_all_member($form_id);
-    $semester_check = set_status_form_finder_student($form);
+    $semester_check = set_status_form_finder_student($form_id);
     $renderHTML .= '<div class="member-message"></div>';
     $renderHTML .= '<table class="view-member-list"><tr><th>Name</th><th>role</th><th>action</th></tr>';
     foreach ($get_member as $member_id) {

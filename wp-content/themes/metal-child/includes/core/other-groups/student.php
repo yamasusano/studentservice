@@ -126,9 +126,9 @@ function form_teacher_view_detail($form_id)
         $renderHTML .= '<div class="status"><div class="col-lg-3">Status</div><div class="col-lg-9">'.action_check_status_form_student($form).'</div></div>';
         $renderHTML .= '</div></div>';
         if ($type == 'Student' && !$status) {
-            $renderHTML .= '<button id="leave-group-teacher" class="btn btn-danger">Leave</button>';
+            $renderHTML .= '<button id="leave-group-teacher" class="btn btn-danger">Leave<input type="hidden" value="'.$form_id.'"/> </button>';
         } elseif ($type == 'Teacher') {
-            $renderHTML .= '<button id="leave-group-teacher" class="btn btn-danger">Leave</button>';
+            $renderHTML .= '<button id="leave-group-teacher" class="btn btn-danger">Leave<input type="hidden" value="'.$form_id.'"/></button>';
         }
     }
 
