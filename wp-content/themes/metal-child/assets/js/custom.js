@@ -27,6 +27,9 @@ jQuery(function ($) {
         $('body').on('click', 'button#search-users', function () {
             resultSearch();
         });
+        $('body').on('click', 'div#privacy', function () {
+            get_privacy();
+        });
 
         $('body').on('click', 'button#action-invite-student', function () {
             $user_id = $(this).parent().find($('input#user-id')).val();
@@ -129,6 +132,15 @@ jQuery(function ($) {
                 group.find('.sub-menu-items').slideDown();
                 group.siblings().removeClass('active');
 
+            });
+        } else if (tech == 'request') {
+            $(window).load(function () {
+                var group = $('#group-view');
+                group.addClass('active');
+                group.find('.sub-menu-items').slideDown();
+                group.siblings().removeClass('active');
+                $('#manage-request').addClass('active');
+                $('#manage-request').click();
             });
         } else {
             $(window).load(function () {

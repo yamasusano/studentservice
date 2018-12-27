@@ -31,7 +31,7 @@ function get_action_form_teacher($form_id)
     if ($is_leader) {
         $renderHTML .= '<button id="finder-form-teacher" class="btn btn-info">Finder Form</button>';
     }
-    $renderHTML .= '<button id="group-chat" class="btn btn-info">Chating</button>';
+    $renderHTML .= '<button id="group-chat" class="btn btn-info">Messenger</button>';
     $renderHTML .= '<button id="members-list" class="btn btn-info">Members</button>';
     $renderHTML .= '</div></div></div>';
 

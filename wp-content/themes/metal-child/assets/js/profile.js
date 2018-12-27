@@ -142,6 +142,18 @@ jQuery(function ($) {
                 errors: function (result) { }
             });
         }
+        window.get_privacy = function () {
+            $.ajax({
+                url: zozo_js_vars.zozo_ajax_url,
+                data: { 'action': 'get_privacy' },
+                type: 'post',
+                success: function (result) {
+                    var html = $.parseHTML(result.content);
+                    $('#profile-contents').html(html);
+                },
+                errors: function (result) { }
 
+            });
+        }
     })
 })

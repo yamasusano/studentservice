@@ -25,9 +25,18 @@ function menu_bar_profile()
 
 function get_menu_notification()
 {
-    $renderHTML .= '<div id="notification-bar" class="dropdown-notification">';
+    $renderHTML .= '<div id="notification-bar" class="dropdown-notification"><span class="notice-dot dot"></span>';
     $renderHTML .= '<div class="dropbtn" ><a href="#" class="prefix-icon"><i class="fa fa-bell" aria-hidden="true"></i></a></div>';
-    $renderHTML .= '<div class="dropdown-content col-lg-3">';
+    $renderHTML .= '<div class="dropdown-content col-lg-4">';
+    $renderHTML .= '<div class="classify-notification">';
+    $renderHTML .= '<div id="noti-notify" class="notice-notification col-lg-4 notice-selected">Nofitication&nbsp;<b>(<span>0</span>)</b>&nbsp;</div>';
+    $renderHTML .= '<div id="noti-request" class="notice-notification col-lg-4">Request&nbsp;<b>(<span>0</span>)</b>&nbsp;</div>';
+    $renderHTML .= '<div id="noti-system" class="notice-notification col-lg-4">System&nbsp;<b>(<span>0</span>)</b>&nbsp;</div>';
+    $renderHTML .= '</div>';
+    $renderHTML .= '<div class="list-notification">';
+    $renderHTML .= '<div class="notification-message">Nofitication</div>';
+    $renderHTML .= get_icon_wait();
+    $renderHTML .= '</div>';
     $renderHTML .= '</div>';
     $renderHTML .= '</div>';
 
@@ -41,22 +50,7 @@ function get_menu_chat()
     $renderHTML .= '<div class="dropdown-content col-lg-3">';
     $renderHTML .= '<div class="notice-chat">Group Chat</div>';
     $renderHTML .= '<div class="list-notice-chat">';
-    $renderHTML .= '<div id="wait">
-    <div class="sk-circle">
-    <div class="sk-circle1 sk-child"></div>
-    <div class="sk-circle2 sk-child"></div>
-    <div class="sk-circle3 sk-child"></div>
-    <div class="sk-circle4 sk-child"></div>
-    <div class="sk-circle5 sk-child"></div>
-    <div class="sk-circle6 sk-child"></div>
-    <div class="sk-circle7 sk-child"></div>
-    <div class="sk-circle8 sk-child"></div>
-    <div class="sk-circle9 sk-child"></div>
-    <div class="sk-circle10 sk-child"></div>
-    <div class="sk-circle11 sk-child"></div>
-    <div class="sk-circle12 sk-child"></div>
-    </div>
-    </div>';
+    $renderHTML .= get_icon_wait();
     $renderHTML .= '</div>';
     $renderHTML .= '</div>';
     $renderHTML .= '</div>';
@@ -104,4 +98,26 @@ function get_name_of_user($user_id)
     $name = get_user_by('ID', $user_id)->user_login;
 
     return $name;
+}
+
+function get_icon_wait()
+{
+    $renderHTML .= '<div id="wait">
+    <div class="sk-circle">
+    <div class="sk-circle1 sk-child"></div>
+    <div class="sk-circle2 sk-child"></div>
+    <div class="sk-circle3 sk-child"></div>
+    <div class="sk-circle4 sk-child"></div>
+    <div class="sk-circle5 sk-child"></div>
+    <div class="sk-circle6 sk-child"></div>
+    <div class="sk-circle7 sk-child"></div>
+    <div class="sk-circle8 sk-child"></div>
+    <div class="sk-circle9 sk-child"></div>
+    <div class="sk-circle10 sk-child"></div>
+    <div class="sk-circle11 sk-child"></div>
+    <div class="sk-circle12 sk-child"></div>
+    </div>
+    </div>';
+
+    return $renderHTML;
 }

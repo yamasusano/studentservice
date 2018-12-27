@@ -52,7 +52,7 @@ function groupMenu()
             $renderHTML .= '<button id="finder-form" class="btn btn-info">Finder Form</button>';
         }
     }
-    $renderHTML .= '<button id="student-group-chat" class="btn btn-info">Chating</button><button id="member-list" class="btn btn-info">Members</button></div>';
+    $renderHTML .= '<button id="student-group-chat" class="btn btn-info">Messenger</button><button id="member-list" class="btn btn-info">Members</button></div>';
     $renderHTML .= '<div class="invite-members"><input type="text" name="user-name" id="user-names" placeholder="search student,suppervisor here...">';
     $renderHTML .= '<button class="btn btn-info" name="search-users" id="search-users" >Search</button></div>';
     $renderHTML .= '</div></div></div>';

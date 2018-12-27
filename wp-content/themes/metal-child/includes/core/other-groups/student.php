@@ -85,7 +85,7 @@ function list_form_teacher()
 }
 function get_group_button()
 {
-    $renderHTML .= '<button id="group-chat" class="btn btn-info">Chating</button>';
+    $renderHTML .= '<button id="group-chat" class="btn btn-info">Messenger</button>';
     $renderHTML .= '<button id="members-lists" class="btn btn-info">Members</button>';
 
     return $renderHTML;

@@ -11,6 +11,20 @@ jQuery(function ($) {
             },
             errors: function (result) { }
         });
+
+        $('body').on('click', '#noti-request', function () {
+            $('.list-notification').find('#wait').show();
+            $.ajax({
+                url: zozo_js_vars.zozo_ajax_url,
+                data: { 'action': 'show_notification_request' },
+                type: 'post',
+                success: function (result) {
+                    $('.list-notification').find('#wait').hide();
+                    $('.notification-message').html(result.content);
+                },
+                errors: function (result) { }
+            });
+        });
         $('body').on('click', '.dropdown-notification', function () {
             var el_id = $(this).attr('id');
             if (el_id == 'chat-bar') {
@@ -77,11 +91,25 @@ jQuery(function ($) {
             }
         });
 
-
+        $('body').on('click', '.notice-notification', function () {
+            switchTabNotification($(this));
+        });
+        function accordionToggle(self) {
+            var el_id = $(self).attr('id');
+            if (el_id == 'chat-bar') {
+                $(self).find('.dropdown-content').toggleClass('active-noti');
+            } else if (el_id == 'notification-bar') {
+                $(self).find('.dropdown-content').addClass('active-noti');
+            }
+            $(self).siblings().find('.dropdown-content').removeClass('active-noti');
+        }
+        function switchTabNotification(self) {
+            $(self).addClass('notice-selected');
+            $(self).siblings().removeClass('notice-selected');
+        }
+        $('body').on('click', '.notice-request-show', function () {
+            $link = $(this).find('input#redirect-link').val();
+            window.location.replace($link);
+        });
     });
-    function accordionToggle(self) {
-        $(self).find('.dropdown-content').toggleClass('active-noti');
-        $(self).siblings().find('.dropdown-content').removeClass('active-noti');
-
-    }
 });

@@ -47,9 +47,9 @@ get_header();
                                                 </a>
                                                 <?php do_action('groups'); ?>
                                             </div>
-                                            <div id="pivacy" class="menu-items">
+                                            <div id="privacy" class="menu-items">
                                                 <a>
-                                                    <i class="glyphicon glyphicon-eye-close"></i> Pivacy </a>
+                                                    <i class="glyphicon glyphicon-eye-close"></i> Privacy </a>
                                             </div>
                                         </div>
                                         <!-- END MENU -->

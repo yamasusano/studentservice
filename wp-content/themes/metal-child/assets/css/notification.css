@@ -124,3 +124,52 @@ div.dropdown-profile-bar {
     margin-right: 30px;
     padding-left: 10px;
 }
+
+.notice-notification {
+    padding-left: 10px;
+}
+
+.notice-notification:hover {
+    cursor: pointer;
+}
+
+.notice-selected {
+    font-weight: bold;
+}
+
+.classify-notification {
+    display: table-cell
+}
+
+.list-notification {
+    border-top: 1px solid;
+    font-size: 12px;
+}
+
+.list-notification {
+    padding: 0px 10px;
+}
+
+.notice-request-show {
+    display: flex;
+    justify-content: start;
+}
+
+.notification-message .notice-request-show:not(:last-child) {
+    border-bottom: 1px solid gainsboro;
+}
+
+.notice-request-show:hover {
+    cursor: pointer;
+}
+
+.notice-request-show a {
+    font-weight: bold;
+    line-height: 3 !important;
+    padding: 0 !important;
+}
+
+.notice-request-show a:hover {
+    background: none !important;
+    padding-left: 0px !important;
+}

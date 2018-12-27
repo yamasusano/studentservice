@@ -11,19 +11,28 @@ jQuery(function ($) {
         }, 5000);
 
         setInterval(function () {
+            var count = 0;
             $.ajax({
                 url: zozo_js_vars.zozo_ajax_url,
                 data: { 'action': 'set_notice_for_user' },
                 type: 'post',
                 success: function (result) {
                     if (result.check == true) {
-                        $('span.notice-dot').show();
+                        $('#chat-bar').find('span').show();
                     }
+                    count += result.count;
+                    if (count > 0) {
+                        $('body').find('#notification-bar span.notice-dot').show();
+                    } else {
+                        $('body').find('#notification-bar span.notice-dot').hide();
+                    }
+                    $('body').find('#noti-request span').html(result.count);
+
                 },
                 errors: function (result) { }
             });
 
-        }, 3000);
+        }, 2000);
 
 
         function listUserID(el) {
@@ -172,7 +181,6 @@ jQuery(function ($) {
 
             });
         }
-
     });
 
 });

@@ -156,6 +156,14 @@ function sendRequest($form_id, $leader_id, $request_message, $postion)
             ");
             if (isset($get_request)) {
                 $message = 'Thanks for joining us, we will contact you soon .';
+            //     $notification = $wpdb->insert("
+            // {$wpdb->prefix}",
+            //     [
+            //         'form_id' => $form_id,
+            //         'user_id' => get_current_user_id(),
+            //         'type' => 2,
+            //     ]
+            //     );
             } else {
                 $user_join_in = $wpdb->insert(
                     "{$wpdb->prefix}members",

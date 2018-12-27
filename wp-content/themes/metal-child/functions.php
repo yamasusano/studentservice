@@ -928,19 +928,6 @@ function notification_chat()
     echo wp_send_json(['message' => $chat]);
     die();
 }
-add_action('wp_ajax_set_notice_for_user', 'set_notice_for_user');
-add_action('wp_ajax_set_notice_for_user', 'set_notice_for_user');
-function set_notice_for_user()
-{
-    $user_id = get_notice_for_user();
-    $current_user_id = get_current_user_id();
-    $check = false;
-    if ($user_id == $current_user_id) {
-        $check = true;
-    }
-    echo wp_send_json(['check' => $check, 'current_id' => $current_user_id]);
-    die();
-}
 
 add_action('wp_ajax_nopriv_leave_group_teacher', 'leave_group_teacher');
 add_action('wp_ajax_leave_group_teacher', 'leave_group_teacher');
@@ -972,6 +959,40 @@ function show_msg_group_chat()
     $form_id = $_POST['ID'];
     $current_user = get_current_user_id();
     $content = show_message_group($form_id, $current_user);
+    echo wp_send_json(['content' => $content]);
+    die();
+}
+add_action('wp_ajax_set_notice_for_user', 'set_notice_for_user');
+add_action('wp_ajax_set_notice_for_user', 'set_notice_for_user');
+function set_notice_for_user()
+{
+    $user_id = get_notice_for_user();
+    $current_user_id = get_current_user_id();
+    $count = count_numb_request($current_user_id);
+    $check = false;
+    if ($user_id == $current_user_id) {
+        $check = true;
+    }
+    echo wp_send_json(['check' => $check, 'current_id' => $current_user_id, 'count' => $count]);
+    die();
+}
+add_action('wp_ajax_nopriv_show_notification_request', 'show_notification_request');
+add_action('wp_ajax_show_notification_request', 'show_notification_request');
+function show_notification_request()
+{
+    $user_id = get_current_user_id();
+    $content = analys_request($user_id);
+
+    echo wp_send_json(['content' => $content]);
+    die();
+}
+add_action('wp_ajax_nopriv_get_privacy', 'get_privacy');
+add_action('wp_ajax_get_privacy', 'get_privacy');
+function get_privacy()
+{
+    $my_id = 165;
+    $privacy = get_post($my_id);
+    $content = html_entity_decode($privacy->post_content);
     echo wp_send_json(['content' => $content]);
     die();
 }
