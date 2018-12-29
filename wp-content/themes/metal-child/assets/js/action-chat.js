@@ -12,26 +12,28 @@ jQuery(function ($) {
 
         setInterval(function () {
             var count = 0;
-            $.ajax({
-                url: zozo_js_vars.zozo_ajax_url,
-                data: { 'action': 'set_notice_for_user' },
-                type: 'post',
-                success: function (result) {
-                    if (result.check == true) {
-                        $('#chat-bar').find('span').show();
-                    }
-                    count += result.count;
-                    if (count > 0) {
-                        $('body').find('#notification-bar span.notice-dot').show();
-                    } else {
-                        $('body').find('#notification-bar span.notice-dot').hide();
-                    }
-                    $('body').find('#noti-request span').html(result.count);
+            var check = $('body #notification-bar');
+            if ($(check).length > 0) {
+                $.ajax({
+                    url: zozo_js_vars.zozo_ajax_url,
+                    data: { 'action': 'set_notice_for_user' },
+                    type: 'post',
+                    success: function (result) {
+                        if (result.check == true) {
+                            $('#chat-bar').find('span').show();
+                        }
+                        count += result.count;
+                        if (count > 0) {
+                            $('body').find('#notification-bar span.notice-dot').show();
+                        } else {
+                            $('body').find('#notification-bar span.notice-dot').hide();
+                        }
+                        $('body').find('#noti-request span').html(result.count);
 
-                },
-                errors: function (result) { }
-            });
-
+                    },
+                    errors: function (result) { }
+                });
+            }
         }, 2000);
 
 

@@ -11,7 +11,10 @@ jQuery(function ($) {
             },
             errors: function (result) { }
         });
-
+        $('body').on('click', '.notice-request-show', function () {
+            $link = $(this).find('input#redirect-link').val();
+            window.location.replace($link);
+        });
         $('body').on('click', '#noti-request', function () {
             $('.list-notification').find('#wait').show();
             $.ajax({
@@ -25,13 +28,7 @@ jQuery(function ($) {
                 errors: function (result) { }
             });
         });
-        $('body').on('click', '.dropdown-notification', function () {
-            var el_id = $(this).attr('id');
-            if (el_id == 'chat-bar') {
-                notification_chat(this);
-            }
-            accordionToggle(this);
-        });
+
 
         $('body').on('click', '.get-chat', function () {
             $sender_id = $(this).find('input#user-send-id').val();
@@ -49,6 +46,8 @@ jQuery(function ($) {
                 create_chat_box2($sender_id, $receiver_id);
                 get_port_chat(current_user_id, user_id);
             }
+            var other = $('body #notice-chat').find('.dropdown-content');
+            $(other).removeClass('active-noti');
         });
         $('body').on('click', 'button#chat-with-user', function () {
             $user_id = $(this).parent().find('input#user-id').val();
@@ -79,37 +78,39 @@ jQuery(function ($) {
                 document.execCommand('insertHTML', false, '');
                 return false;
             }
-
         });
-
         $('body').on('click', '.box-chat-title', function () {
             $('.group-box-chat').toggleClass('hidden');
         });
-        $(window).scroll(function () {
-            if ($(window).scrollTop() == $(document).height() - $(window).height()) {
-                // ajax call get data from server and append to the div
-            }
-        });
-
         $('body').on('click', '.notice-notification', function () {
             switchTabNotification($(this));
         });
-        function accordionToggle(self) {
-            var el_id = $(self).attr('id');
-            if (el_id == 'chat-bar') {
-                $(self).find('.dropdown-content').toggleClass('active-noti');
-            } else if (el_id == 'notification-bar') {
-                $(self).find('.dropdown-content').addClass('active-noti');
-            }
-            $(self).siblings().find('.dropdown-content').removeClass('active-noti');
-        }
         function switchTabNotification(self) {
             $(self).addClass('notice-selected');
             $(self).siblings().removeClass('notice-selected');
         }
-        $('body').on('click', '.notice-request-show', function () {
-            $link = $(this).find('input#redirect-link').val();
-            window.location.replace($link);
+        $('body').on('click', '#chat-bar', function () {
+            var notice = $(this).parent('.dropdown-notification');
+            notification_chat(notice);
+            var notice = $(this).parent('.dropdown-notification');
+            $(notice).find('.dropdown-content').toggleClass('active-noti');
+            var other = $('body #notice-bar').find('.dropdown-content');
+            $(other).removeClass('active-noti');
         });
+        $('body').on('click', '#notification-bar', function () {
+            var notice = $(this).parent('.dropdown-notification');
+            $(notice).find('.dropdown-content').toggleClass('active-noti');
+            var other = $('body #notice-chat').find('.dropdown-content');
+            $(other).removeClass('active-noti');
+        });
+        $(document).mouseup(function (e) {
+            var container = $('.group-menu-right');
+            // if the target of the click isn't the container nor a descendant of the container
+            if (!container.is(e.target) && container.has(e.target).length === 0) {
+                var other = $('body ').find('.dropdown-content');
+                $(other).removeClass('active-noti');
+            }
+        });
+
     });
 });

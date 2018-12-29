@@ -1,5 +1,10 @@
 jQuery(function ($) {
     jQuery(document).ready(function () {
+
+        var check = $('#respond');
+        if ($(check).length == 1) {
+            $('#footer').css({ 'position': 'static' });
+        }
         var keyword = $('b#keyword-search').text().trim();
         var check = document.getElementById('wpua-file-existing');
         if (check != null) {
@@ -61,10 +66,8 @@ jQuery(function ($) {
                 reader.onload = function (e) {
                     $('div#show-avatar img.avatar').attr('src', e.target.result);
                 }
-
                 reader.readAsDataURL(input.files[0]);
             }
         }
-
     });
 })

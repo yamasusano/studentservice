@@ -25,8 +25,8 @@ function menu_bar_profile()
 
 function get_menu_notification()
 {
-    $renderHTML .= '<div id="notification-bar" class="dropdown-notification"><span class="notice-dot dot"></span>';
-    $renderHTML .= '<div class="dropbtn" ><a href="#" class="prefix-icon"><i class="fa fa-bell" aria-hidden="true"></i></a></div>';
+    $renderHTML .= '<div id="notice-bar" class="dropdown-notification"><span class="notice-dot dot"></span>';
+    $renderHTML .= '<div id="notification-bar" class="dropbtn" ><a href="#" class="prefix-icon"><i class="fa fa-bell" aria-hidden="true"></i></a></div>';
     $renderHTML .= '<div class="dropdown-content col-lg-4">';
     $renderHTML .= '<div class="classify-notification">';
     $renderHTML .= '<div id="noti-notify" class="notice-notification col-lg-4 notice-selected">Nofitication&nbsp;<b>(<span>0</span>)</b>&nbsp;</div>';
@@ -45,8 +45,8 @@ function get_menu_notification()
 
 function get_menu_chat()
 {
-    $renderHTML .= '<div id="chat-bar" class="dropdown-notification"><span class="notice-dot dot"></span>';
-    $renderHTML .= '<div class="dropbtn"><a href="#" class="prefix-icon"><i class="fa fa-lg fa-comments-o" aria-hidden="true"></i></a></div>';
+    $renderHTML .= '<div id="notice-chat" class="dropdown-notification"><span class="notice-dot dot"></span>';
+    $renderHTML .= '<div id="chat-bar" class="dropbtn"><a href="#" class="prefix-icon"><i class="fa fa-lg fa-comments-o" aria-hidden="true"></i></a></div>';
     $renderHTML .= '<div class="dropdown-content col-lg-3">';
     $renderHTML .= '<div class="notice-chat">Group Chat</div>';
     $renderHTML .= '<div class="list-notice-chat">';
