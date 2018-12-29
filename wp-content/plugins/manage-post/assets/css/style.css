@@ -62,3 +62,15 @@ table#post-view tr td:nth-child(7) input, table#post-view tr td:nth-child(6) inp
 .pagination a.active {
     background: #ffffff;
 }
+
+table#history_file tr th:nth-child(1) {
+    width: 10%;
+}
+
+table#history_file tr th:nth-child(3) {
+    width: 15%;
+}
+
+i#dowload-file:hover {
+    cursor: pointer;
+}

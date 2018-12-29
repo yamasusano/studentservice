@@ -181,3 +181,11 @@ button#add-new-skill {
 .btn {
     margin: 4px 4px;
 }
+
+form#form-add-new-batch {
+    display: none;
+}
+
+.active-show {
+    display: block !important;
+}

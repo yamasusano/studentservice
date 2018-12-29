@@ -9,6 +9,7 @@ Author URI: www.facebook.com/huymasterle
  */
 include 'core/filter.php';
 include 'core/delete.php';
+include 'core/history.php';
 add_action('admin_init', 'manage_post_style');
 function manage_post_style()
 {
@@ -20,6 +21,7 @@ add_action('admin_menu', 'manage_post_plugin_menu');
 function manage_post_plugin_menu()
 {
     add_menu_page('Manage Posts', 'Manage Post', 'manage_options', 'manage-post', 'get_admin_post_list');
+    add_submenu_page('manage-post', 'Form Saved', 'Form Saved', 'manage_options', 'history-form', 'get_history_form');
 }
 
 function get_admin_post_list()
@@ -27,7 +29,6 @@ function get_admin_post_list()
     $semester = $_GET['semester'];
     $currPage = $_GET['pagin'];
     $HTML .= '<div class="wrap"> ';
-
     $HTML .= '<h1 class="wp-heading-inline">Manage Projects</h1>';
     $HTML .= '<div class="message">';
     if (isset($_GET['do-action'])) {

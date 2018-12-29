@@ -9,6 +9,7 @@ Author URI: www.facebook.com/huymasterle
  */
 include 'core/major-add-new.php';
 include 'core/major-edit.php';
+include 'core/student-batch.php';
 add_action('admin_init', 'manage_major_style');
 function manage_major_style()
 {
@@ -22,6 +23,7 @@ add_action('admin_menu', 'manage_major_plugin_menu');
  {
      add_menu_page(null, 'Manage Major', 'manage_options', 'major-settings', 'get_admin_major_list');
      add_submenu_page('major-settings', 'Add New', 'Add New', 'manage_options', 'add-new-major', 'form_major_add');
+     add_submenu_page('major-settings', 'student batch', 'Student Batch', 'manage_options', 'student-batch', 'get_admin_batch_list');
      add_submenu_page(null, '', '', 'administrator', 'major-edit', 'get_major_detail');
  }
 

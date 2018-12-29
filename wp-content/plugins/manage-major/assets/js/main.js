@@ -6,6 +6,9 @@ jQuery(function ($) {
         if (check != null) {
             loadImg();
         }
+        $('#add-new-batch').click(function () {
+            $('#form-add-new-batch').toggleClass('active-show');
+        });
         $('button#add-new-skill').click(function () {
             $render = '<tr><td><input type="text" class="skill-code" value="" required/></td>' +
                 '<td><input type="text" class="skill-name" value=""/></td>' +
@@ -23,7 +26,7 @@ jQuery(function ($) {
         });
         $('button.save-skill').on('click', function () {
             update_skill($(this));
-            var r = '<div class="message-success"> update responsibility success</div>';
+            var r = '<div class="message-success"> Update responsibility success</div>';
             $('div#message').html(r);
             setTimeout(function () {
                 $('div#message').html('');
