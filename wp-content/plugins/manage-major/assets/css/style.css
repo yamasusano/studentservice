@@ -37,6 +37,10 @@ table.major-view th:nth-child(4) {
     width: 30%;
 }
 
+table.major-view tr td>img {
+    width: 100% !important;
+}
+
 input.editable-major {
     width: 100%;
     border: none;

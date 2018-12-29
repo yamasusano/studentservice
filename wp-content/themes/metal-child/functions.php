@@ -89,17 +89,20 @@ add_action('admin_init', 'wpse_136058_remove_menu_pages');
 function wpse_136058_remove_menu_pages()
 {
     remove_menu_page('metal');
-    // remove_menu_page('upload.php');                 //Media
+    remove_menu_page('upload.php');                 //Media
     remove_menu_page('index.php');                 //Media
-    // remove_menu_page('themes.php');                 //Appearance
-    // remove_menu_page('plugins.php');                //Plugins
+    remove_menu_page('themes.php');                 //Appearance
+    remove_menu_page('plugins.php');                //Plugins
     remove_menu_page('tools.php');                  //Tools
+    remove_menu_page('zozo_options');
     remove_menu_page('options-general.php');        //Settings
     remove_menu_page('vc-general');
     remove_menu_page('edit.php?post_type=zozo_team_member');
     remove_menu_page('edit.php?post_type=zozo_portfolio');
     remove_menu_page('edit.php?post_type=zozo_services');
     remove_menu_page('edit.php?post_type=zozo_testimonial');
+    remove_menu_page('edit.php?post_type=wp_show_posts');
+    remove_menu_page('wpcf7');
 }
 // add_action('admin_init', 'wpse_136058_debug_admin_menu');
 
