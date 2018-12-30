@@ -127,3 +127,42 @@ function show_message_group_chat($form_id, $current_user)
 
     return $content;
 }
+
+function save_recommended($form_id, $message)
+{
+    global $wpdb;
+    $insert = $wpdb->insert(
+      "{$wpdb->prefix}recommended",
+        [
+            'form_id' => $form_id,
+            'note' => $message,
+        ]
+    );
+    if ($insert) {
+        return true;
+    }
+
+    return false;
+}
+function get_recommended_list($form_id)
+{
+    global $wpdb;
+    $result = $wpdb->get_results("
+    SELECT * FROM {$wpdb->prefix}recommended 
+    WHERE form_id = '".$form_id."'
+    ");
+
+    return $result;
+}
+function action_remove_recommend($ID)
+{
+    global $wpdb;
+    $delete = $wpdb->delete(
+        "{$wpdb->prefix}recommended",
+          [
+              'ID' => $ID,
+          ]
+      );
+
+    return $delete;
+}

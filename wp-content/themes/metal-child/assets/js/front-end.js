@@ -69,5 +69,53 @@ jQuery(function ($) {
                 reader.readAsDataURL(input.files[0]);
             }
         }
+        window.save_recommended = function (form_id, message) {
+            $.ajax({
+                url: zozo_js_vars.zozo_ajax_url,
+                data: { 'action': 'recommended_message_chat', 'ID': form_id, 'message': message },
+                type: 'post',
+                success: function (result) {
+                    $('.save-popup').html(result.message);
+                    $('.save-popup').show();
+                    setTimeout(function () {
+                        $('.save-popup').hide();
+                    }, 700);
+                },
+                errors: function (result) { }
+            });
+        }
+        window.get_recommend_list = function (form_id) {
+            $('#waiting').show();
+            $.ajax({
+                url: zozo_js_vars.zozo_ajax_url,
+                data: { 'action': 'get_list_recommend', 'ID': form_id },
+                type: 'post',
+                success: function (result) {
+                    $('#waiting').hide();
+                    if (result.count > 0) {
+                        $('.recommend-list').html(result.content);
+                    } else {
+                        $('.recommend-list').html('No recommended');
+                    }
+
+                },
+                errors: function (result) { }
+            });
+        }
+        window.remove_recommended = function (ID, recommend) {
+            $('#waiting').show();
+            $.ajax({
+                url: zozo_js_vars.zozo_ajax_url,
+                data: { 'action': 'remove_recommended', 'ID': ID },
+                type: 'post',
+                success: function (result) {
+                    if (result.check) {
+                        $(recommend).remove();
+                    }
+                },
+                errors: function (result) { }
+
+            });
+        }
     });
 })

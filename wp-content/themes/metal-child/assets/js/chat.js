@@ -103,9 +103,9 @@ jQuery(function ($) {
             var other = $('body #notice-chat').find('.dropdown-content');
             $(other).removeClass('active-noti');
         });
+
         $(document).mouseup(function (e) {
             var container = $('.group-menu-right');
-            // if the target of the click isn't the container nor a descendant of the container
             if (!container.is(e.target) && container.has(e.target).length === 0) {
                 var other = $('body ').find('.dropdown-content');
                 $(other).removeClass('active-noti');

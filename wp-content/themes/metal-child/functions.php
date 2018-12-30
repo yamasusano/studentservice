@@ -43,18 +43,19 @@ function zozo_enqueue_child_theme_styles()
     //js
     wp_enqueue_script('jquery-v2.2.4.min', get_stylesheet_directory_uri().'/assets/js/jquery.min.js', array('jquery'), null, true);
     wp_enqueue_script('mark.min', get_stylesheet_directory_uri().'/assets/js/mark.min.js', array('jquery'), null, true);
-    wp_enqueue_script('front-end-js', get_stylesheet_directory_uri().'/assets/js/front-end.js', array('jquery'), null, true);
-    wp_enqueue_script('confirm-js', get_stylesheet_directory_uri().'/assets/js/jquery-confirm.min.js', array('jquery'), null, true);
+    wp_enqueue_script('front-end', get_stylesheet_directory_uri().'/assets/js/front-end.js', array('jquery'), null, true);
+    wp_enqueue_script('confirm', get_stylesheet_directory_uri().'/assets/js/jquery-confirm.min.js', array('jquery'), null, true);
     wp_enqueue_script('datatables', get_stylesheet_directory_uri().'/assets/js/datatables.js', array('jquery'), null, true);
+    wp_enqueue_script('jquery-ui', get_stylesheet_directory_uri().'/assets/js/jquery-ui.js', array('jquery'), null, true);
     //ckeditor-js
-    wp_enqueue_script('ckeditor-js', get_stylesheet_directory_uri().'/ckeditor/ckeditor.js', array('jquery'), null, true);
-    wp_enqueue_script('config-ckeditor-js', get_stylesheet_directory_uri().'/ckeditor/config.js', array('jquery'), null, true);
-    wp_enqueue_script('style-ckeditor-js', get_stylesheet_directory_uri().'/ckeditor/styles.js', array('jquery'), null, true);
+    wp_enqueue_script('ckeditor', get_stylesheet_directory_uri().'/ckeditor/ckeditor.js', array('jquery'), null, true);
+    wp_enqueue_script('config-ckeditor', get_stylesheet_directory_uri().'/ckeditor/config.js', array('jquery'), null, true);
+    wp_enqueue_script('style-ckeditor', get_stylesheet_directory_uri().'/ckeditor/styles.js', array('jquery'), null, true);
     //profile-js
-    wp_enqueue_script('custom-js', get_stylesheet_directory_uri().'/assets/js/custom.js', array('jquery'), null, true);
-    wp_enqueue_script('profile-js', get_stylesheet_directory_uri().'/assets/js/profile.js', array('jquery'), null, true);
-    wp_enqueue_script('form-js', get_stylesheet_directory_uri().'/assets/js/form.js', array('jquery'), null, true);
-    wp_enqueue_script('requestHandle-js', get_stylesheet_directory_uri().'/assets/js/requestHandle.js', array('jquery'), null, true);
+    wp_enqueue_script('custom', get_stylesheet_directory_uri().'/assets/js/custom.js', array('jquery'), null, true);
+    wp_enqueue_script('profile', get_stylesheet_directory_uri().'/assets/js/profile.js', array('jquery'), null, true);
+    wp_enqueue_script('form', get_stylesheet_directory_uri().'/assets/js/form.js', array('jquery'), null, true);
+    wp_enqueue_script('requestHandle', get_stylesheet_directory_uri().'/assets/js/requestHandle.js', array('jquery'), null, true);
     //teacher-js
     wp_enqueue_script('teacher-action', get_stylesheet_directory_uri().'/assets/js/teacher-action.js', array('jquery'), null, true);
     wp_enqueue_script('teacher-handle', get_stylesheet_directory_uri().'/assets/js/teacher-handle-action.js', array('jquery'), null, true);
@@ -997,5 +998,34 @@ function get_privacy()
     $privacy = get_post($my_id);
     $content = html_entity_decode($privacy->post_content);
     echo wp_send_json(['content' => $content]);
+    die();
+}
+add_action('wp_ajax_nopriv_recommended_message_chat', 'recommended_message_chat');
+add_action('wp_ajax_recommended_message_chat', 'recommended_message_chat');
+function recommended_message_chat()
+{
+    $form_id = $_POST['ID'];
+    $message = $_POST['message'];
+    $message = set_recommend($form_id, $message);
+    echo wp_send_json(['message' => $message]);
+    die();
+}
+
+add_action('wp_ajax_nopriv_get_list_recommend', 'get_list_recommend');
+add_action('wp_ajax_get_list_recommend', 'get_list_recommend');
+function get_list_recommend()
+{
+    $form_id = $_POST['ID'];
+    $content = set_recommend_list($form_id);
+    echo wp_send_json(['content' => $content['content'], 'count' => $content['count']]);
+    die();
+}
+add_action('wp_ajax_nopriv_remove_recommended', 'remove_recommended');
+add_action('wp_ajax_remove_recommended', 'remove_recommended');
+function remove_recommended()
+{
+    $ID = $_POST['ID'];
+    $check = remove_recommended_list($ID);
+    echo wp_send_json(['check' => $check]);
     die();
 }

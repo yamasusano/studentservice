@@ -15,10 +15,27 @@ function get_form_chat($form_id)
     $renderHTML .= '<div id="list-member-chat" class="col-lg-9">';
     $renderHTML .= generate_member($form_id);
     $renderHTML .= '</div>';
-    $renderHTML .= '<div class="col-lg-1"><b><button class="btn btn-success btn-sm" >Recommended</button></b></div>';
-    $renderHTML .= '<div class="recommend-list"></div>';
+    $renderHTML .= '<div class="col-lg-1"><button id="manage-recommand" class="btn btn-success btn-sm">Recommended</button></div>';
+    $renderHTML .= '<div class="recommend-list">';
+    $renderHTML .= '<div id="waiting">
+    <div class="sk-circle">
+    <div class="sk-circle1 sk-child"></div>
+    <div class="sk-circle2 sk-child"></div>
+    <div class="sk-circle3 sk-child"></div>
+    <div class="sk-circle4 sk-child"></div>
+    <div class="sk-circle5 sk-child"></div>
+    <div class="sk-circle6 sk-child"></div>
+    <div class="sk-circle7 sk-child"></div>
+    <div class="sk-circle8 sk-child"></div>
+    <div class="sk-circle9 sk-child"></div>
+    <div class="sk-circle10 sk-child"></div>
+    <div class="sk-circle11 sk-child"></div>
+    <div class="sk-circle12 sk-child"></div>
+    </div>
+    </div>';
     $renderHTML .= '</div>';
-    $renderHTML .= '<div class="chat-form-content"><div class="chat-box">';
+    $renderHTML .= '</div>';
+    $renderHTML .= '<div class="chat-form-content"><div class="save-popup"></div><div class="chat-box">';
     $renderHTML .= '<div id="wait">
         <div class="sk-circle">
         <div class="sk-circle1 sk-child"></div>
@@ -35,7 +52,6 @@ function get_form_chat($form_id)
         <div class="sk-circle12 sk-child"></div>
         </div>
         </div>';
-
     $renderHTML .= '</div></div>';
     $renderHTML .= '<div name="box-chat-text" id="input-message-group" contenteditable="true" data-placeholder="Type a message..."></div>';
     $renderHTML .= '</div>';
@@ -80,4 +96,42 @@ function get_notice_for_user()
     $user_id = have_new_message();
 
     return $user_id;
+}
+
+function set_recommend($form_id, $message)
+{
+    $save = save_recommended($form_id, $message);
+    if ($save) {
+        return 'recommended';
+    } else {
+        return 'save failed';
+    }
+}
+function set_recommend_list($form_id)
+{
+    $result = get_recommended_list($form_id);
+    $count = count($result);
+    $renderHTML = '';
+    $in = 1;
+    foreach ($result as $index) {
+        $renderHTML .= '<div class="recommend-item">';
+        $renderHTML .= '<input type="hidden" name="recommend-index" value="'.$index->ID.'" />';
+        $renderHTML .= '<b>'.$in.'</b>.&nbsp;&nbsp;';
+        $renderHTML .= '<span>'.$index->note.'</span>';
+        $renderHTML .= '<span class="remove-recommend"><i class="fa fa-times" aria-hidden="true"></i></span>';
+        $renderHTML .= '</div>';
+        ++$in;
+    }
+
+    return array('count' => $count, 'content' => $renderHTML);
+}
+
+function remove_recommended_list($ID)
+{
+    $check = action_remove_recommend($ID);
+    if ($check) {
+        return true;
+    } else {
+        return false;
+    }
 }

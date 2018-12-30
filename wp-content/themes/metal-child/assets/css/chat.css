@@ -21,6 +21,7 @@
 }
 
 .chat-box {
+    position: relative;
     background: #fff;
     height: 330px;
     border-top: 1px solid #CFCFCF;
@@ -213,4 +214,43 @@ span.notice-dot {
 
 .chat-box .other_user {
     margin-left: 10px;
+}
+
+.content-message:hover, .remove-recommend:hover {
+    cursor: pointer;
+}
+
+.save-popup {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    display: none;
+    left: 45%;
+    background: #f5f5f5;
+    padding: 10px;
+    border-radius: 10px;
+    color: black;
+}
+
+.recommend-list {
+    display: none;
+    position: absolute;
+    border-radius: 5px;
+    background: #ffff;
+    right: 8%;
+    top: 18.5%;
+    border: 1px solid gainsboro;
+    z-index: 2;
+    padding: 10px;
+    min-width: 250px;
+}
+
+.remove-recommend {
+    float: right;
+    margin-left: 10px;
+}
+
+.recommend-item {
+    margin: 10px;
+    border-bottom: 1px solid gainsboro;
 }

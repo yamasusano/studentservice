@@ -105,6 +105,7 @@ jQuery(function ($) {
                         $('body').append(result.box_chat);
                         $('body div.box-chat-content').html(result.history_chat);
                         $('#box-chat-text').focus();
+
                     }
                     $(".box-chat-content").scrollTop($(".box-chat-content")[0].scrollHeight);
                 },
@@ -126,6 +127,7 @@ jQuery(function ($) {
                         $('body div.box-chat-content').html(result.history_chat);
                         $('#box-chat-text').focus();
                         $(".box-chat-content").scrollTop($(".box-chat-content")[0].scrollHeight);
+
                     }
                 },
                 errors: function (result) { }

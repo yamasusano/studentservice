@@ -50,12 +50,32 @@ jQuery(function ($) {
             }
             event_close_connect();
         });
+        $('body').on('click', '.content-message', function () {
+            var message = $(this).find('span').text();
+            save_recommended(form_id, message);
+        });
+        $('body').on('click', 'button#manage-recommand', function () {
+            $('.recommend-list').toggleClass('active-noti');
+            get_recommend_list(form_id);
+        });
+        $('body').on('click', 'span.remove-recommend', function () {
+            var par = $(this).parent();
+            var item = par.find('input[name=recommend-index]').val();
+            remove_recommended(item, par);
+        });
+
+        $(document).mouseup(function (e) {
+            var container = $('.recommend-list');
+            if (!container.is(e.target) && container.has(e.target).length === 0) {
+                $(container).removeClass('active-noti');
+            }
+        });
         $('body').on('keydown', 'div#input-message-group', function (event) {
             if (event.keyCode === 13 && !event.shiftKey) {
                 var message = $(this).text();
                 if ($.trim(message) != '') {
                     push_content_message(form_id, current_user_id, message);
-                    // $('span.notice-dot').hide();
+                    $('span.notice-dot').hide();
                 }
                 $(this).empty();
                 document.execCommand('insertHTML', false, '');
