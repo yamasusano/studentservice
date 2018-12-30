@@ -8,7 +8,7 @@ function generate_member($form_id)
     $renderHTML = '';
     foreach ($member_list as $user_id) {
         $user_id = $user_id->member_id;
-        $renderHTML = get_user_status_activitive($user_id);
+        $renderHTML .= get_user_status_activitive($user_id);
     }
 
     return $renderHTML;
