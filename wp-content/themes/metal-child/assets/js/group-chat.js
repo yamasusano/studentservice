@@ -10,11 +10,50 @@ jQuery(function ($) {
         });
         $('body').on('click', 'p.title-form-other', function () {
             $par = $(this).parents('tr');
-
             $form_id = $par.find('input#teacher-form-id').val();
             form_id = $form_id;
             form_title = $(this).text();
             teacher_form_detail($form_id, form_title);
+        });
+        $('body').on('click', 'button#action-invite-via-teacher', function () {
+            invite_student_via_teacher(form_id, $(this));
+            $(this).remove();
+        });
+        $('body').on('click', 'button#cancel-invite-user-via-teacher', function () {
+            re_action_intive_user_via_teacher($form_id, $(this));
+            $(this).remove();
+        });
+        $('body').on('click', 'button#finder-form-teacher', function () {
+            teacherFormAction(form_id);
+        });
+        $('body').on('click', 'button#members-list', function () {
+            members_list(form_id);
+        });
+        $('body').on('click', 'button#search-students', function () {
+            find_student(form_id);
+        });
+        $('body').on('click', 'button#edit-form-teach', function () {
+            teacherFormAction(form_id);
+        });
+        $('body').on('click', 'button#save-form-finder-teach', function () {
+            update_form_finder_teacher(form_id);
+        });
+        $('body').on('click', 'button#close-form-finder-teach', function () {
+            close_form_finder_teacher(form_id);
+        });
+        $('body').on('click', 'button#reopen-form-finder-teach', function () {
+            re_open_form_finder_teacher(form_id);
+        });
+        $('body').on('click', 'button#kick-out-member', function () {
+            kick_out_member(form_id, $(this));
+        });
+        $('body').on('click', 'p#title-form-teacher', function () {
+            $par = $(this).parents('tr');
+            $form_id = $par.find('input#teacher-form-id').val();
+            form_id = $form_id;
+            console.log(form_id);
+            getTeacherForm($form_id);
+            $('div#btn-quick-link').html('<button id="btn-view-list-group" class="btn btn-primary">Back</button>');
         });
         $('body').on('click', 'button#delete-form-teacher', function () {
             $row = $(this).parents('tr');
@@ -23,10 +62,10 @@ jQuery(function ($) {
             deleteTeacherForm($row, $form_id, $title);
         });
         $('body').on('click', 'button#group-chat', function () {
+            var check = $('.group-chat-form');
             if (form_title == '') {
                 form_id = $(this).parent().find('input#form-id').val();
             }
-            var check = $('.group-chat-form');
             if (check.length > 0) {
                 $('#input-message-group').focus();
 
@@ -163,6 +202,19 @@ jQuery(function ($) {
             $('#search-students').click(function () {
                 closeConnection();
             });
+            $('#finder-form-teacher').click(function () {
+                closeConnection();
+            });
+            $('#members-list').click(function () {
+                closeConnection();
+            });
+            $('#privacy').click(function () {
+                closeConnection();
+            });
+            $('#members-lists').click(function () {
+                closeConnection();
+            });
+
         }
     });
 });

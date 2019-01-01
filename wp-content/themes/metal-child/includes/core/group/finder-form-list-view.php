@@ -175,9 +175,11 @@ function form_by_major()
 {
     $renderHTML = '';
     $major_list = major_list();
-    $renderHTML .= '<section id="major-form-view"><h3>Finder Form In Major</h3>
-    <div class="major-form-view-content">
-    <div class="container-inner">';
+    $renderHTML .= '<section id="major-form-view"><h2>Finder Form In Major</h2>';
+    $renderHTML .= '<div class="text-center" style="text-align: center;">';
+    $renderHTML .= '<hr class="hr-center" style="width: 75px;height: 5px;background-color: #989898;border-radius: 2px;margin-bottom:20px;">';
+    $renderHTML .= '</div>';
+    $renderHTML .= '<div class="major-form-view-content"><div class="container-inner">';
     foreach ($major_list as $major) {
         $renderHTML .= '<div class="form-major-item">';
         $renderHTML .= '<a href="'.home_url('search-form').'?major-value='.$major->name.'" target="_blank">'.major_analyst($major->ID).'</a>';
@@ -228,7 +230,12 @@ function current_semster_form()
     } else {
         $total_page = floor((count($forms)) / 5) + 1;
     }
-    $renderHTML .= '<section id="current-semster-view"><h3>CALL FOR APPLICATIONS FOR '.get_current_semester().'</h3>';
+    $renderHTML .= '<section id="current-semster-view">';
+    $renderHTML .= '<div class="my-container">';
+    $renderHTML .= '<h2>CALL FOR APPLICATIONS FOR '.get_current_semester().'</h2>';
+    $renderHTML .= '<div class="text-center" style="text-align: center;">';
+    $renderHTML .= '<hr class="hr-center" style="width: 75px;height: 5px;background-color: #989898;border-radius: 2px;margin-bottom:20px;">';
+    $renderHTML .= '</div>';
     $renderHTML .= '<div class="tabs-container"> <div id="myCarousel" class="carousel slide">';
     $renderHTML .= '<ol class="carousel-indicators">';
     for ($x = 0; $x < $total_page; ++$x) {
@@ -257,10 +264,10 @@ function current_semster_form()
         }
     }
     $renderHTML .= '</div>';
-    $renderHTML .= '<a class="previous-control" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span>
-            <span class="sr-only">Previous</span></a><a class="next-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span>
-            <span class="sr-only">Next</span></a>
-    </div></div></section>';
+    $renderHTML .= '<a class="previous-control" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span>';
+    $renderHTML .= '<span class="sr-only">Previous</span></a><a class="next-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span>';
+    $renderHTML .= '<span class="sr-only">Next</span></a>';
+    $renderHTML .= '</div></div></div></section>';
 
     return $renderHTML;
 }
@@ -270,9 +277,13 @@ function get_post_fanpage()
         'numberposts' => 10,
     );
     $latest_posts = get_posts($args);
-    $renderHTML .= '<section id="fanpage-project-wrap"><h3>reference project</h3>';
+    $renderHTML .= '<section id="fanpage-project-wrap">';
+    $renderHTML .= '<div class="my-container">';
+    $renderHTML .= '<h2>reference project</h2>';
+    $renderHTML .= '<div class="text-center" style="text-align: center;">';
+    $renderHTML .= '<hr class="hr-center" style="width: 75px;height: 5px;background-color: #989898;border-radius: 2px;margin-bottom:20px;">';
+    $renderHTML .= '</div>';
     $renderHTML .= '<div class="fanpage-project-box">';
-    // var_dump($latest_posts);
     $renderHTML .= '<div class="col-lg-6"> ';
     foreach ($latest_posts as $index => $posts) {
         if ($index < 5) {
@@ -289,8 +300,11 @@ function get_post_fanpage()
     }
     $renderHTML .= '</div>';
     $renderHTML .= '</div>';
+    $renderHTML .= '<div class="button-group-box">';
     $renderHTML .= '<div class="button-group">';
-    $renderHTML .= '<a href="'.home_url('fanpage').'" class="btn btn-default" >More&nbsp;<i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>';
+    $renderHTML .= '<a href="'.home_url('fanpage').'" >Read more&nbsp;<i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>';
+    $renderHTML .= '</div>';
+    $renderHTML .= '</div>';
     $renderHTML .= '</div>';
     $renderHTML .= '</section>';
 

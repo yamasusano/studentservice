@@ -117,15 +117,16 @@ function analys_request($user_id)
         $request = select_all_request($form->ID);
     }
     foreach ($request as $rq) {
+        $createDate = new DateTime($rq->time_request);
         $status = $rq->request;
         $user_name = get_user_by('ID', $rq->member_id)->user_login;
         $title = get_value_finder_form($rq->form_id, 'title');
         if ($status == 1) {
             $renderHTML .= '<div class="notice-request-show">';
             $renderHTML .= '<input type="hidden" id="redirect-link" value="'.home_url('profile').'?mode=request">';
+            $renderHTML .= $createDate->format('Y-m-d').'&nbsp;&nbsp;';
             $renderHTML .= user_link_detail($rq->member_id, $user_name).'&nbsp;';
             $renderHTML .= 'has send request to project &nbsp;<b>'.$title.'</b>';
-            $renderHTML .= '<div>'.$rq->time_request.'</div>';
             $renderHTML .= '</div>';
         }
     }

@@ -66,9 +66,21 @@ function create_new_group($title)
         if ($member_lead && $groups) {
             $renderHTML = teacher_forms($form);
         }
+        create_new_group_chat($finder_form[0]->ID, $title);
     }
 
     return $renderHTML;
+}
+function create_new_group_chat($form_id, $title)
+{
+    global $wpdb;
+    $create_group_chat = $wpdb->insert(
+        "{$wpdb->prefix}group_chat",
+        [
+            'form_id' => $form_id,
+            'name' => $title,
+        ]
+    );
 }
 function insert_teacher_finder_form($title, $user_id)
 {

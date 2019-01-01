@@ -393,24 +393,12 @@ function result_search_check($post_type, $semester, $major, $poster)
 
 function support_ideas()
 {
-    global $wpdb;
-    if (!is_user_logged_in()) {
-    } else {
-        $is_student = info('role');
-        $has_form = has_form_id();
-        if ($is_student == 'Student' && !isset($has_form)) {
-            $list_forms = $wpdb->get_results("
-            SELECT f.* FROM {$wpdb->prefix}finder_form as f
-            JOIN {$wpdb->prefix}usermetaData as u 
-            ON u.user_id = f.user_id 
-            WHERE u.meta_key = 'role'
-            AND u.meta_value = 1
-            order by f.created_date DESC
-            limit 1,5");
+    $args = array(
+        'numberposts' => 5,
+    );
+    $latest_posts = get_posts($args);
 
-            return $list_forms;
-        }
-    }
+    return $latest_posts;
 }
 
 function get_ideas_form()
@@ -418,11 +406,11 @@ function get_ideas_form()
     $forms = support_ideas();
     $renderHTML = '';
     foreach ($forms as $form) {
+        $createDate = new DateTime($form->post_date);
         $renderHTML .= '<div class="new-feed-contents">';
-        $renderHTML .= '<div class="content-title">'.$form->title.'</div> ';
-        $renderHTML .= '<div class="content-author">By '.get_userdata($form->user_id)->user_login.'</div> ';
-        $renderHTML .= '<div class="content-updated"><b>created at</b> '.$form->created_date.'</div> ';
-        $renderHTML .= '<div class="content-description">'.$form->description.'</div> ';
+        $renderHTML .= '<div class="content-title"><a href="'.get_post_permalink($form->ID).'">'.wp_trim_words($form->post_title, 5, '').'</a></div> ';
+        $renderHTML .= '<div class="content-updated"><b>created at</b> '.$createDate->format('Y-m-d').'</div> ';
+        $renderHTML .= '<div class="content-description">'.wp_trim_words($form->post_content, 10, '...').'</div> ';
         $renderHTML .= '</div>';
     }
 

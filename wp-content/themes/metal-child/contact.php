@@ -8,7 +8,7 @@ get_header(); ?>
 	<div id="main-wrapper" class="zozo-row row">
 		<div id="single-sidebar-container" class="single-sidebar-container <?php zozo_content_sidebar_classes(); ?>">
 			<div class="zozo-row row">	
-				<div id="primary" class="content-area <?php zozo_primary_content_classes(); ?>">
+				<div id="primary" class="content-area <?php zozo_primary_content_classes(); ?>" style="padding:0">
 					<div id="content" class="site-content">
                         <div class="my-container" >
                             <h3>Contact Us</h3>

@@ -184,5 +184,6 @@ div#respond {
     background-color: #f0ad4e;
     font-size: 16px;
     border: 1px solid #eea236;
-    border-radius: 10px;
+    border-radius: 20px;
+    padding: 9px;
 }
